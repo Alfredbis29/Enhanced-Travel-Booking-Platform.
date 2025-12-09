@@ -28,7 +28,7 @@ export default function RegisterPage() {
     try {
       const response = await authApi.register({ first_name: formData.first_name, last_name: formData.last_name, email: formData.email, password: formData.password, phone: formData.phone || undefined })
       setAuth(response.data.user, response.data.token)
-      toast({ title: 'Welcome to SafariRides!', description: 'Your account has been created successfully.', variant: 'success' })
+      toast({ title: 'Welcome to Twende!', description: 'Your account has been created. Let\'s Go!', variant: 'success' })
       navigate('/')
     } catch (error: unknown) { console.error('Registration failed:', error); toast({ title: 'Registration failed', description: 'Registration failed. Please try again.', variant: 'destructive' }) } 
     finally { setIsLoading(false) }
@@ -37,11 +37,11 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="absolute inset-0 bg-hero-pattern" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-maroon-700/10 rounded-full blur-3xl" />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 w-full max-w-md">
-        <div className="flex justify-center mb-8"><Link to="/" className="flex items-center gap-2"><div className="bg-gradient-to-br from-primary to-accent p-2 rounded-lg"><Bus className="h-6 w-6 text-white" /></div><span className="font-display text-2xl font-bold"><span className="text-gradient">Safari</span><span className="text-foreground">Rides</span></span></Link></div>
-        <Card className="glass border-white/10"><CardHeader className="text-center"><CardTitle className="font-display text-2xl flex items-center justify-center gap-2"><Sparkles className="h-5 w-5 text-primary" />Create Account</CardTitle><CardDescription>Join SafariRides and start your journey</CardDescription></CardHeader><CardContent>
+        <div className="flex justify-center mb-8"><Link to="/" className="flex items-center gap-2"><div className="bg-gradient-to-br from-sky-500 to-maroon-700 p-2 rounded-lg"><Bus className="h-6 w-6 text-white" /></div><span className="font-display text-2xl font-bold"><span className="text-gradient">Twende</span></span></Link></div>
+        <Card className="glass border-white/10"><CardHeader className="text-center"><CardTitle className="font-display text-2xl flex items-center justify-center gap-2"><Sparkles className="h-5 w-5 text-primary" />Create Account</CardTitle><CardDescription>Join Twende and start your journey across East Africa</CardDescription></CardHeader><CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4"><div className="space-y-2"><Label htmlFor="first_name">First Name</Label><Input id="first_name" name="first_name" placeholder="John" value={formData.first_name} onChange={handleChange} icon={<User className="h-4 w-4" />} /></div><div className="space-y-2"><Label htmlFor="last_name">Last Name</Label><Input id="last_name" name="last_name" placeholder="Doe" value={formData.last_name} onChange={handleChange} /></div></div>
             <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} icon={<Mail className="h-4 w-4" />} autoComplete="email" /></div>
@@ -57,4 +57,3 @@ export default function RegisterPage() {
     </div>
   )
 }
-

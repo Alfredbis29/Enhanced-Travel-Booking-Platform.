@@ -9,10 +9,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="bg-gradient-to-br from-primary to-accent p-2 rounded-lg"><Bus className="h-5 w-5 text-white" /></div>
-              <span className="font-display text-xl font-bold"><span className="text-gradient">Safari</span><span className="text-foreground">Rides</span></span>
+              <div className="bg-gradient-to-br from-sky-500 to-maroon-700 p-2 rounded-lg"><Bus className="h-5 w-5 text-white" /></div>
+              <span className="font-display text-xl font-bold"><span className="text-gradient">Twende</span></span>
             </Link>
-            <p className="text-sm text-muted-foreground">Your AI-powered travel companion for seamless bus booking across East Africa.</p>
+            <p className="text-sm text-muted-foreground">Your AI-powered travel companion for seamless bus booking across East Africa. Let's Go!</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Globe className="h-3 w-3" />
               <span>🇰🇪 🇺🇬 🇷🇼 🇨🇩 🇹🇿</span>
@@ -46,7 +46,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-primary" /><span>Nairobi, Kenya (HQ)</span></li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground"><Phone className="h-4 w-4 text-primary" /><span>+254 700 123 456</span></li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground"><Mail className="h-4 w-4 text-primary" /><span>support@safarirides.africa</span></li>
+              <li className="flex items-center gap-2 text-sm text-muted-foreground"><Mail className="h-4 w-4 text-primary" /><span>hello@twende.africa</span></li>
             </ul>
             <div className="mt-4 pt-4 border-t border-border">
               <p className="text-xs text-muted-foreground">Offices in:</p>
@@ -55,7 +55,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">© {currentYear} SafariRides. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">© {currentYear} Twende. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a>
             <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a>

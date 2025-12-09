@@ -4,26 +4,31 @@
 
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 25 95% 53%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 38 92% 50%;
-    --accent-foreground: 222 47% 6%;
+    /* Twende Theme: Skyblue, White, Maroon */
+    --background: 210 50% 8%;
+    --foreground: 0 0% 100%;
+    --card: 210 50% 10%;
+    --card-foreground: 0 0% 100%;
+    --popover: 210 50% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 197 71% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 18%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 18%;
+    --muted-foreground: 210 20% 70%;
+    --accent: 0 100% 30%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 25 95% 53%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 40% 20%;
+    --input: 210 40% 20%;
+    --ring: 197 71% 52%;
     --radius: 0.75rem;
+    
+    /* Custom colors */
+    --skyblue: 197 71% 52%;
+    --maroon: 0 100% 30%;
   }
 }
 
@@ -41,11 +46,20 @@
     @apply bg-white/5 backdrop-blur-xl border border-white/10;
   }
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-amber-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-cyan-300 to-sky-500;
+  }
+  .text-gradient-maroon {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-rose-600 via-red-700 to-rose-800;
   }
   .pattern-dots {
-    background-image: radial-gradient(circle, rgba(255, 107, 53, 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(135, 206, 235, 0.15) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+  .bg-gradient-skyblue {
+    @apply bg-gradient-to-r from-sky-500 via-cyan-400 to-sky-600;
+  }
+  .bg-gradient-maroon {
+    @apply bg-gradient-to-r from-rose-700 via-red-800 to-rose-900;
   }
 }
 
@@ -58,4 +72,3 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-muted rounded-full;
 }
-

@@ -48,12 +48,12 @@ export default function HomePage() {
     <div className="min-h-screen">
       <section className="relative overflow-hidden bg-hero-pattern py-20 md:py-32">
         <div className="absolute inset-0 pattern-dots opacity-30" />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-maroon-700/20 rounded-full blur-3xl" />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-6"><Sparkles className="h-4 w-4 text-primary" /><span className="text-sm text-muted-foreground">AI-Powered Travel Booking</span></div>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6"><span className="text-foreground">Travel Across</span><br /><span className="text-gradient">East Africa with Ease</span></h1>
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6"><span className="text-foreground">Twende!</span><br /><span className="text-gradient">Let's Go Across East Africa</span></h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">Book buses across Kenya, Uganda, Rwanda, Congo & Tanzania with our AI-powered platform.</p>
             <div className="flex items-center justify-center gap-3 text-2xl mb-8">
               {countries.map((country) => (
@@ -69,11 +69,11 @@ export default function HomePage() {
       <section className="py-20 bg-card/50">
         <div className="container mx-auto px-4">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Why Choose <span className="text-gradient">SafariRides</span></h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Why Choose <span className="text-gradient">Twende</span></h2>
             <p className="text-muted-foreground max-w-xl mx-auto">Your gateway to seamless East African travel</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (<motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}><Card className="h-full hover:border-primary/50 transition-colors group"><CardContent className="p-6"><div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">{feature.icon}</div><h3 className="font-display font-semibold text-lg mb-2">{feature.title}</h3><p className="text-sm text-muted-foreground">{feature.description}</p></CardContent></Card></motion.div>))}
+            {features.map((feature, index) => (<motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}><Card className="h-full hover:border-primary/50 transition-colors group"><CardContent className="p-6"><div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500/20 to-maroon-700/20 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">{feature.icon}</div><h3 className="font-display font-semibold text-lg mb-2">{feature.title}</h3><p className="text-sm text-muted-foreground">{feature.description}</p></CardContent></Card></motion.div>))}
           </div>
         </div>
       </section>
@@ -95,7 +95,7 @@ export default function HomePage() {
                 transition={{ delay: index * 0.1 }}
                 className="group"
               >
-                <Card className="h-full hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10 cursor-pointer" onClick={() => navigate(`/search?destination=${country.cities[0]}`)}>
+                <Card className="h-full hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-sky-500/10 cursor-pointer" onClick={() => navigate(`/search?destination=${country.cities[0]}`)}>
                   <CardContent className="p-6 text-center">
                     <div className="text-4xl mb-3">{country.flag}</div>
                     <h3 className="font-display font-semibold text-lg mb-2">{country.name}</h3>
@@ -129,14 +129,14 @@ export default function HomePage() {
 
       <section className="py-20 bg-card/50">
         <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-orange-500 to-accent p-8 md:p-16 text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-sky-500 to-maroon-700 p-8 md:p-16 text-center">
             <div className="absolute inset-0 pattern-dots opacity-20" />
             <div className="relative z-10">
               <div className="flex justify-center mb-6"><div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm"><Bus className="h-8 w-8 text-white" /></div></div>
               <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-4">Ready to Explore East Africa?</h2>
-              <p className="text-white/80 text-lg max-w-xl mx-auto mb-8">Join thousands of travelers exploring Kenya, Uganda, Rwanda, Congo & Tanzania.</p>
+              <p className="text-white/80 text-lg max-w-xl mx-auto mb-8">Join thousands of travelers exploring Kenya, Uganda, Rwanda, Congo & Tanzania. Twende!</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="xl" className="bg-white text-primary hover:bg-white/90" onClick={() => navigate('/register')}><Sparkles className="mr-2 h-5 w-5" />Get Started Free</Button>
+                <Button size="xl" className="bg-white text-sky-600 hover:bg-white/90" onClick={() => navigate('/register')}><Sparkles className="mr-2 h-5 w-5" />Get Started Free</Button>
                 <Button size="xl" variant="glass" onClick={() => navigate('/search')}><Star className="mr-2 h-5 w-5" />Explore Trips</Button>
               </div>
             </div>

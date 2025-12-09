@@ -1,6 +1,16 @@
-# 🚌 SafariRides - AI-Enhanced Travel Booking Platform
+# 🚌 Twende - AI-Enhanced Travel Booking Platform
 
-A modern, full-stack travel booking platform with AI-powered search capabilities, built for the East African market.
+**Twende** (Swahili for "Let's Go!") - A modern, full-stack travel booking platform with AI-powered search capabilities, built for the East African market.
+
+## 🎨 Brand Identity
+
+| Element | Value |
+|---------|-------|
+| **Name** | Twende |
+| **Meaning** | "Let's Go!" in Swahili |
+| **Primary Color** | Skyblue (#0ea5e9) |
+| **Accent Color** | Maroon (#991b1b) |
+| **Theme** | Dark with skyblue/maroon accents |
 
 ## 🌍 Coverage
 
@@ -161,3 +171,5 @@ A modern, full-stack travel booking platform with AI-powered search capabilities
 ---
 
 Built with ❤️ for East Africa's travelers
+
+**Twende!** 🚌

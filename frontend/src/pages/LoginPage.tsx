@@ -36,10 +36,10 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="absolute inset-0 bg-hero-pattern" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-maroon-700/10 rounded-full blur-3xl" />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 w-full max-w-md">
-        <div className="flex justify-center mb-8"><Link to="/" className="flex items-center gap-2"><div className="bg-gradient-to-br from-primary to-accent p-2 rounded-lg"><Bus className="h-6 w-6 text-white" /></div><span className="font-display text-2xl font-bold"><span className="text-gradient">Safari</span><span className="text-foreground">Rides</span></span></Link></div>
+        <div className="flex justify-center mb-8"><Link to="/" className="flex items-center gap-2"><div className="bg-gradient-to-br from-sky-500 to-maroon-700 p-2 rounded-lg"><Bus className="h-6 w-6 text-white" /></div><span className="font-display text-2xl font-bold"><span className="text-gradient">Twende</span></span></Link></div>
         <Card className="glass border-white/10"><CardHeader className="text-center"><CardTitle className="font-display text-2xl">Welcome Back</CardTitle><CardDescription>Sign in to your account to continue</CardDescription></CardHeader><CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} icon={<Mail className="h-4 w-4" />} autoComplete="email" /></div>
@@ -52,4 +52,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
