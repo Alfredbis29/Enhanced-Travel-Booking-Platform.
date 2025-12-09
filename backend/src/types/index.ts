@@ -37,6 +37,8 @@ export interface Booking {
 
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
 
+export type TravelMode = 'bus' | 'flight' | 'train' | 'ferry' | 'shuttle';
+
 export interface Trip {
   id: string;
   provider: string;
@@ -50,7 +52,10 @@ export interface Trip {
   currency: string;
   available_seats: number;
   total_seats: number;
-  bus_type?: string;
+  travel_mode?: TravelMode;
+  vehicle_type?: string;
+  bus_type?: string; // kept for backward compatibility
+  class?: string; // economy, business, first class
   amenities?: string[];
   rating?: number;
   image_url?: string;
@@ -62,6 +67,7 @@ export interface SearchParams {
   date?: string;
   min_price?: number;
   max_price?: number;
+  travel_mode?: TravelMode;
   page?: number;
   limit?: number;
   sort_by?: 'price' | 'departure_time' | 'duration' | 'rating';

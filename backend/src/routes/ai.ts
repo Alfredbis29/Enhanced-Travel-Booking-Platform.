@@ -97,18 +97,14 @@ router.get('/suggestions', optionalAuth, async (req: AuthenticatedRequest, res: 
 
     const suggestions = await aiService.generateTripSuggestions(preferences);
 
-    // Also get some featured trips
-    const featuredTrips = await safirioService.searchTrips({
-      sort_by: 'rating',
-      sort_order: 'desc',
-      limit: 4
-    });
+    // Get featured trips with multiple travel modes (bus, flight, train, ferry, shuttle)
+    const featuredTrips = await safirioService.getFeaturedTrips();
 
     res.json({
       success: true,
       data: {
         text_suggestions: suggestions,
-        featured_trips: featuredTrips.trips,
+        featured_trips: featuredTrips,
         popular_destinations: await safirioService.getPopularDestinations()
       }
     });

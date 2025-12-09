@@ -7,6 +7,8 @@ export interface User {
   created_at?: string
 }
 
+export type TravelMode = 'bus' | 'flight' | 'train' | 'ferry' | 'shuttle'
+
 export interface Trip {
   id: string
   provider: string
@@ -20,10 +22,22 @@ export interface Trip {
   currency: string
   available_seats: number
   total_seats: number
-  bus_type?: string
+  travel_mode?: TravelMode
+  vehicle_type?: string // bus_type renamed for flexibility
+  bus_type?: string // kept for backward compatibility
   amenities?: string[]
   rating?: number
   image_url?: string
+  class?: string // economy, business, first class
+}
+
+// Travel mode display info
+export const TRAVEL_MODE_INFO: Record<TravelMode, { name: string; icon: string; color: string }> = {
+  bus: { name: 'Bus', icon: '🚌', color: 'bg-sky-600' },
+  flight: { name: 'Flight', icon: '✈️', color: 'bg-violet-600' },
+  train: { name: 'Train', icon: '🚂', color: 'bg-emerald-600' },
+  ferry: { name: 'Ferry', icon: '⛴️', color: 'bg-blue-600' },
+  shuttle: { name: 'Shuttle', icon: '🚐', color: 'bg-amber-600' }
 }
 
 export interface Booking {

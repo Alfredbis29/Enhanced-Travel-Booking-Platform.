@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Sparkles, Shield, CreditCard, ArrowRight, MapPin, Star, Bus, Globe } from 'lucide-react'
+import { Sparkles, Shield, CreditCard, ArrowRight, MapPin, Star, Bus, Globe, Plane, Train, Ship } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import AISearchBar from '@/components/search/AISearchBar'
 import SearchBar from '@/components/search/SearchBar'
 import TripCard from '@/components/trips/TripCard'
 import { TripCardSkeleton } from '@/components/ui/skeleton'
 import { searchApi, aiApi } from '@/lib/api'
-import type { Trip } from '@/types'
+import type { Trip, TravelMode } from '@/types'
 
 const features = [
   { icon: <Sparkles className="h-6 w-6" />, title: 'AI-Powered Search', description: 'Natural language queries to find your perfect trip' },
   { icon: <Globe className="h-6 w-6" />, title: 'East Africa Coverage', description: 'Kenya, Uganda, Rwanda, Congo & Tanzania routes' },
   { icon: <Shield className="h-6 w-6" />, title: 'Secure Booking', description: 'Safe and encrypted payment processing' },
   { icon: <CreditCard className="h-6 w-6" />, title: 'Multiple Currencies', description: 'Pay in KES, UGX, RWF, USD or local currency' }
+]
+
+// Travel modes available
+const travelModes = [
+  { mode: 'bus' as TravelMode, name: 'Buses', icon: <Bus className="h-5 w-5" />, emoji: '🚌', color: 'bg-sky-500' },
+  { mode: 'flight' as TravelMode, name: 'Flights', icon: <Plane className="h-5 w-5" />, emoji: '✈️', color: 'bg-violet-500' },
+  { mode: 'train' as TravelMode, name: 'Trains', icon: <Train className="h-5 w-5" />, emoji: '🚂', color: 'bg-emerald-500' },
+  { mode: 'ferry' as TravelMode, name: 'Ferries', icon: <Ship className="h-5 w-5" />, emoji: '⛴️', color: 'bg-blue-500' },
 ]
 
 const countries = [
@@ -52,9 +61,11 @@ const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b
 
 const fallbackDestinations = ['Nairobi', 'Mombasa', 'Kampala', 'Kigali', 'Goma', 'Dar es Salaam', 'Kisumu', 'Arusha', 'Jinja', 'Eldoret', 'Nakuru', 'Entebbe']
 
+// Multi-modal fallback trips - buses, flights, trains, ferries
 const fallbackTrips: Trip[] = [
+  // Buses
   {
-    id: 'trip-001',
+    id: 'bus-001',
     provider: 'easy-coach',
     provider_name: 'Easy Coach',
     origin: 'Nairobi',
@@ -66,15 +77,140 @@ const fallbackTrips: Trip[] = [
     currency: 'KES',
     available_seats: 24,
     total_seats: 45,
+    travel_mode: 'bus',
+    vehicle_type: 'Executive',
     bus_type: 'Executive',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Reclining Seats'],
     rating: 4.5,
     image_url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop&q=80'
   },
+  // Flights
   {
-    id: 'trip-009',
-    provider: 'easy-coach',
-    provider_name: 'Easy Coach',
+    id: 'flight-001',
+    provider: 'kenya-airways',
+    provider_name: 'Kenya Airways',
+    origin: 'Nairobi (JKIA)',
+    destination: 'Mombasa (MIA)',
+    departure_time: new Date(Date.now() + 86400000).toISOString(),
+    arrival_time: new Date(Date.now() + 86400000 + 3600000).toISOString(),
+    duration_minutes: 60,
+    price: 8500,
+    currency: 'KES',
+    available_seats: 45,
+    total_seats: 150,
+    travel_mode: 'flight',
+    vehicle_type: 'Boeing 737',
+    class: 'Economy',
+    amenities: ['WiFi', 'Entertainment', 'Meals', 'USB Charging'],
+    rating: 4.8,
+    image_url: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&h=400&fit=crop&q=80'
+  },
+  {
+    id: 'flight-002',
+    provider: 'rwandair',
+    provider_name: 'RwandAir',
+    origin: 'Nairobi (JKIA)',
+    destination: 'Kigali (KGL)',
+    departure_time: new Date(Date.now() + 172800000).toISOString(),
+    arrival_time: new Date(Date.now() + 172800000 + 5400000).toISOString(),
+    duration_minutes: 90,
+    price: 185,
+    currency: 'USD',
+    available_seats: 30,
+    total_seats: 120,
+    travel_mode: 'flight',
+    vehicle_type: 'Airbus A320',
+    class: 'Economy',
+    amenities: ['WiFi', 'Entertainment', 'Meals', 'USB Charging'],
+    rating: 4.7,
+    image_url: 'https://images.unsplash.com/photo-1569629743817-70d8db6c323b?w=600&h=400&fit=crop&q=80'
+  },
+  // Trains
+  {
+    id: 'train-001',
+    provider: 'sgr-kenya',
+    provider_name: 'Madaraka Express (SGR)',
+    origin: 'Nairobi Terminus',
+    destination: 'Mombasa Terminus',
+    departure_time: new Date(Date.now() + 86400000).toISOString(),
+    arrival_time: new Date(Date.now() + 86400000 + 18000000).toISOString(),
+    duration_minutes: 300,
+    price: 3000,
+    currency: 'KES',
+    available_seats: 120,
+    total_seats: 400,
+    travel_mode: 'train',
+    vehicle_type: 'Express Train',
+    class: 'First Class',
+    amenities: ['AC', 'USB Charging', 'Meals', 'Entertainment'],
+    rating: 4.6,
+    image_url: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&h=400&fit=crop&q=80'
+  },
+  {
+    id: 'train-002',
+    provider: 'tanzania-railway',
+    provider_name: 'Tanzania Railways',
+    origin: 'Dar es Salaam',
+    destination: 'Dodoma',
+    departure_time: new Date(Date.now() + 259200000).toISOString(),
+    arrival_time: new Date(Date.now() + 259200000 + 28800000).toISOString(),
+    duration_minutes: 480,
+    price: 45000,
+    currency: 'TZS',
+    available_seats: 80,
+    total_seats: 250,
+    travel_mode: 'train',
+    vehicle_type: 'Standard Rail',
+    class: 'Economy',
+    amenities: ['AC', 'Reclining Seats'],
+    rating: 4.2,
+    image_url: 'https://images.unsplash.com/photo-1532105956626-9569c03602f6?w=600&h=400&fit=crop&q=80'
+  },
+  // Ferries
+  {
+    id: 'ferry-001',
+    provider: 'likoni-ferry',
+    provider_name: 'Likoni Ferry Services',
+    origin: 'Mombasa Island',
+    destination: 'South Coast',
+    departure_time: new Date(Date.now() + 43200000).toISOString(),
+    arrival_time: new Date(Date.now() + 43200000 + 1200000).toISOString(),
+    duration_minutes: 20,
+    price: 50,
+    currency: 'KES',
+    available_seats: 200,
+    total_seats: 500,
+    travel_mode: 'ferry',
+    vehicle_type: 'Passenger Ferry',
+    amenities: ['Open Deck', 'Pedestrian Friendly'],
+    rating: 4.0,
+    image_url: 'https://images.unsplash.com/photo-1545890404-6d5b2f65c6b1?w=600&h=400&fit=crop&q=80'
+  },
+  {
+    id: 'ferry-002',
+    provider: 'lake-victoria-ferry',
+    provider_name: 'Lake Victoria Ferry',
+    origin: 'Kisumu Port',
+    destination: 'Mwanza Port',
+    departure_time: new Date(Date.now() + 172800000).toISOString(),
+    arrival_time: new Date(Date.now() + 172800000 + 21600000).toISOString(),
+    duration_minutes: 360,
+    price: 4500,
+    currency: 'KES',
+    available_seats: 50,
+    total_seats: 150,
+    travel_mode: 'ferry',
+    vehicle_type: 'Lake Cruiser',
+    class: 'Standard',
+    amenities: ['Cabin', 'Restaurant', 'WiFi'],
+    rating: 4.3,
+    image_url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop&q=80'
+  },
+  // More buses for cross-border
+  {
+    id: 'bus-002',
+    provider: 'modern-coast',
+    provider_name: 'Modern Coast',
     origin: 'Nairobi',
     destination: 'Kampala',
     departure_time: new Date(Date.now() + 86400000).toISOString(),
@@ -84,47 +220,13 @@ const fallbackTrips: Trip[] = [
     currency: 'KES',
     available_seats: 20,
     total_seats: 45,
-    bus_type: 'Executive',
-    amenities: ['WiFi', 'AC', 'USB Charging', 'Snacks'],
+    travel_mode: 'bus',
+    vehicle_type: 'VIP Sleeper',
+    bus_type: 'VIP',
+    amenities: ['WiFi', 'AC', 'USB Charging', 'Meals', 'Entertainment'],
     rating: 4.6,
     image_url: 'https://images.unsplash.com/photo-1557223562-6c77ef16210f?w=600&h=400&fit=crop&q=80'
   },
-  {
-    id: 'trip-014',
-    provider: 'modern-coast',
-    provider_name: 'Modern Coast',
-    origin: 'Nairobi',
-    destination: 'Kigali',
-    departure_time: new Date(Date.now() + 86400000).toISOString(),
-    arrival_time: new Date(Date.now() + 172800000).toISOString(),
-    duration_minutes: 1440,
-    price: 5500,
-    currency: 'KES',
-    available_seats: 18,
-    total_seats: 40,
-    bus_type: 'VIP',
-    amenities: ['WiFi', 'AC', 'USB Charging', 'Meals', 'Entertainment'],
-    rating: 4.7,
-    image_url: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop&q=80'
-  },
-  {
-    id: 'trip-018',
-    provider: 'trans-africa',
-    provider_name: 'Trans Africa Express',
-    origin: 'Kigali',
-    destination: 'Goma',
-    departure_time: new Date(Date.now() + 86400000).toISOString(),
-    arrival_time: new Date(Date.now() + 86400000 + 14400000).toISOString(),
-    duration_minutes: 240,
-    price: 15000,
-    currency: 'RWF',
-    available_seats: 25,
-    total_seats: 45,
-    bus_type: 'Executive',
-    amenities: ['AC', 'USB Charging', 'Reclining Seats'],
-    rating: 4.2,
-    image_url: 'https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?w=600&h=400&fit=crop&q=80'
-  }
 ]
 
 export default function HomePage() {
@@ -132,6 +234,7 @@ export default function HomePage() {
   const [featuredTrips, setFeaturedTrips] = useState<Trip[]>(fallbackTrips)
   const [destinations, setDestinations] = useState<string[]>(fallbackDestinations)
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedMode, setSelectedMode] = useState<TravelMode | 'all'>('all')
 
   useEffect(() => {
     async function loadData() {
@@ -167,6 +270,10 @@ export default function HomePage() {
     navigate(`/search?destination=${encodeURIComponent(city)}`)
   }
 
+  const filteredTrips = selectedMode === 'all' 
+    ? featuredTrips 
+    : featuredTrips.filter(t => t.travel_mode === selectedMode)
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -185,8 +292,19 @@ export default function HomePage() {
               <span className="text-gradient">Let's Go Across East Africa</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
-              Book buses across Kenya, Uganda, Rwanda, Congo & Tanzania with our AI-powered platform.
+              Book buses, flights, trains & ferries across Kenya, Uganda, Rwanda, Congo & Tanzania with our AI-powered platform.
             </p>
+            {/* Travel mode icons */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              {travelModes.map((mode) => (
+                <div key={mode.mode} className="flex flex-col items-center gap-1" title={mode.name}>
+                  <div className={`p-2 rounded-full ${mode.color} text-white`}>
+                    {mode.icon}
+                  </div>
+                  <span className="text-xs text-muted-foreground">{mode.name}</span>
+                </div>
+              ))}
+            </div>
             <div className="flex items-center justify-center gap-3 text-2xl mb-8">
               {countries.map((country) => (
                 <button 
@@ -205,6 +323,31 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground mb-4">Or search traditionally</p>
             <SearchBar variant="hero" />
           </motion.div>
+        </div>
+      </section>
+
+      {/* Travel Modes Section */}
+      <section className="py-12 bg-card/30">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {travelModes.map((mode, index) => (
+              <motion.div
+                key={mode.mode}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Button
+                  variant={selectedMode === mode.mode ? "default" : "outline"}
+                  className="flex items-center gap-2 px-6 py-3"
+                  onClick={() => navigate(`/search?mode=${mode.mode}`)}
+                >
+                  <span className="text-lg">{mode.emoji}</span>
+                  <span>{mode.name}</span>
+                </Button>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -314,19 +457,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Trips Section */}
+      {/* Featured Trips Section - Multi-modal */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">Featured <span className="text-gradient">Trips</span></h2>
-              <p className="text-muted-foreground">Top-rated journeys handpicked for you</p>
+              <p className="text-muted-foreground">Buses, flights, trains & ferries - all in one place</p>
             </div>
             <Button variant="outline" onClick={() => navigate('/search')} className="group">
               View All Trips
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </motion.div>
+          
+          {/* Travel mode filter */}
+          <div className="flex flex-wrap items-center gap-2 mb-8">
+            <Badge 
+              variant={selectedMode === 'all' ? 'default' : 'outline'} 
+              className="cursor-pointer px-4 py-2 text-sm"
+              onClick={() => setSelectedMode('all')}
+            >
+              All
+            </Badge>
+            {travelModes.map((mode) => (
+              <Badge 
+                key={mode.mode}
+                variant={selectedMode === mode.mode ? 'default' : 'outline'} 
+                className="cursor-pointer px-4 py-2 text-sm"
+                onClick={() => setSelectedMode(mode.mode)}
+              >
+                <span className="mr-1">{mode.emoji}</span>
+                {mode.name}
+              </Badge>
+            ))}
+          </div>
+
           {isLoading ? (
             <div className="grid gap-4 md:grid-cols-2">
               {[1, 2, 3, 4].map((i) => (
@@ -335,7 +501,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
-              {featuredTrips.slice(0, 4).map((trip, index) => (
+              {filteredTrips.slice(0, 6).map((trip, index) => (
                 <TripCard key={trip.id} trip={trip} index={index} />
               ))}
             </div>
@@ -349,13 +515,15 @@ export default function HomePage() {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-sky-500 to-maroon-700 p-8 md:p-16 text-center">
             <div className="absolute inset-0 pattern-dots opacity-20" />
             <div className="relative z-10">
-              <div className="flex justify-center mb-6">
-                <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
-                  <Bus className="h-8 w-8 text-white" />
-                </div>
+              <div className="flex justify-center gap-4 mb-6">
+                {travelModes.map((mode) => (
+                  <div key={mode.mode} className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
+                    <span className="text-2xl">{mode.emoji}</span>
+                  </div>
+                ))}
               </div>
               <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-4">Ready to Explore East Africa?</h2>
-              <p className="text-white/80 text-lg max-w-xl mx-auto mb-8">Join thousands of travelers exploring Kenya, Uganda, Rwanda, Congo & Tanzania. Twende!</p>
+              <p className="text-white/80 text-lg max-w-xl mx-auto mb-8">Book buses, flights, trains & ferries across Kenya, Uganda, Rwanda, Congo & Tanzania. Twende!</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="xl" className="bg-white text-sky-600 hover:bg-white/90" onClick={() => navigate('/register')}>
                   <Sparkles className="mr-2 h-5 w-5" />Get Started Free
