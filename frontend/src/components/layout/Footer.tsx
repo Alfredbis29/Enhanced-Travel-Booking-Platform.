@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Bus, Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
+import { Bus, Facebook, Twitter, Instagram, Mail, Phone, MapPin, Globe } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -12,7 +12,11 @@ export default function Footer() {
               <div className="bg-gradient-to-br from-primary to-accent p-2 rounded-lg"><Bus className="h-5 w-5 text-white" /></div>
               <span className="font-display text-xl font-bold"><span className="text-gradient">Safari</span><span className="text-foreground">Rides</span></span>
             </Link>
-            <p className="text-sm text-muted-foreground">Your AI-powered travel companion for seamless bus booking across Kenya.</p>
+            <p className="text-sm text-muted-foreground">Your AI-powered travel companion for seamless bus booking across East Africa.</p>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Globe className="h-3 w-3" />
+              <span>🇰🇪 🇺🇬 🇷🇼 🇨🇩 🇹🇿</span>
+            </div>
             <div className="flex gap-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Facebook className="h-5 w-5" /></a>
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Twitter className="h-5 w-5" /></a>
@@ -30,18 +34,24 @@ export default function Footer() {
           <div>
             <h4 className="font-display font-semibold mb-4">Popular Routes</h4>
             <ul className="space-y-2">
-              <li><Link to="/search?origin=Nairobi&destination=Mombasa" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nairobi → Mombasa</Link></li>
-              <li><Link to="/search?origin=Nairobi&destination=Kisumu" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nairobi → Kisumu</Link></li>
-              <li><Link to="/search?origin=Nairobi&destination=Eldoret" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nairobi → Eldoret</Link></li>
+              <li><Link to="/search?origin=Nairobi&destination=Kampala" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nairobi → Kampala 🇰🇪🇺🇬</Link></li>
+              <li><Link to="/search?origin=Nairobi&destination=Kigali" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nairobi → Kigali 🇰🇪🇷🇼</Link></li>
+              <li><Link to="/search?origin=Kampala&destination=Kigali" className="text-sm text-muted-foreground hover:text-primary transition-colors">Kampala → Kigali 🇺🇬🇷🇼</Link></li>
+              <li><Link to="/search?origin=Kigali&destination=Goma" className="text-sm text-muted-foreground hover:text-primary transition-colors">Kigali → Goma 🇷🇼🇨🇩</Link></li>
+              <li><Link to="/search?origin=Nairobi&destination=Mombasa" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nairobi → Mombasa 🇰🇪</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-display font-semibold mb-4">Contact Us</h4>
             <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-primary" /><span>Nairobi, Kenya</span></li>
+              <li className="flex items-center gap-2 text-sm text-muted-foreground"><MapPin className="h-4 w-4 text-primary" /><span>Nairobi, Kenya (HQ)</span></li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground"><Phone className="h-4 w-4 text-primary" /><span>+254 700 123 456</span></li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground"><Mail className="h-4 w-4 text-primary" /><span>support@safarirides.co.ke</span></li>
+              <li className="flex items-center gap-2 text-sm text-muted-foreground"><Mail className="h-4 w-4 text-primary" /><span>support@safarirides.africa</span></li>
             </ul>
+            <div className="mt-4 pt-4 border-t border-border">
+              <p className="text-xs text-muted-foreground">Offices in:</p>
+              <p className="text-xs text-muted-foreground mt-1">Kampala • Kigali • Goma • Dar es Salaam</p>
+            </div>
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -55,4 +65,3 @@ export default function Footer() {
     </footer>
   )
 }
-
