@@ -13,7 +13,7 @@ interface AISearchBarProps {
   onSearch?: (results: AIRecommendationResponse) => void
 }
 
-const SUGGESTIONS = ["Find me the cheapest bus to Mombasa", "Show VIP buses to Kisumu tomorrow", "What's the fastest route to Eldoret?", "Best rated buses to Nakuru this weekend"]
+const SUGGESTIONS = ["Find me buses from Nairobi to Kampala", "Show VIP buses to Kigali tomorrow", "Cheapest route from Kampala to Goma", "Night coaches to Mombasa this weekend"]
 
 export default function AISearchBar({ className, onSearch }: AISearchBarProps) {
   const navigate = useNavigate()
