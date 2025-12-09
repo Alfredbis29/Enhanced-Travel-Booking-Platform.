@@ -26,28 +26,29 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha'] },
 ]
 
-// Reliable destination images using picsum.photos
+// Real city images from Unsplash
 const destinationImages: Record<string, string> = {
-  'Nairobi': 'https://picsum.photos/seed/nairobi/400/400',
-  'Mombasa': 'https://picsum.photos/seed/mombasa/400/400',
-  'Kisumu': 'https://picsum.photos/seed/kisumu/400/400',
-  'Nakuru': 'https://picsum.photos/seed/nakuru/400/400',
-  'Eldoret': 'https://picsum.photos/seed/eldoret/400/400',
-  'Kampala': 'https://picsum.photos/seed/kampala/400/400',
-  'Jinja': 'https://picsum.photos/seed/jinja/400/400',
-  'Entebbe': 'https://picsum.photos/seed/entebbe/400/400',
-  'Kigali': 'https://picsum.photos/seed/kigali/400/400',
-  'Butare': 'https://picsum.photos/seed/butare/400/400',
-  'Gisenyi': 'https://picsum.photos/seed/gisenyi/400/400',
-  'Goma': 'https://picsum.photos/seed/goma/400/400',
-  'Bukavu': 'https://picsum.photos/seed/bukavu/400/400',
-  'Kinshasa': 'https://picsum.photos/seed/kinshasa/400/400',
-  'Dar es Salaam': 'https://picsum.photos/seed/dar/400/400',
-  'Arusha': 'https://picsum.photos/seed/arusha/400/400',
-  'Malindi': 'https://picsum.photos/seed/malindi/400/400',
+  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80',
+  'Mombasa': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80',
+  'Kisumu': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80',
+  'Nakuru': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
+  'Eldoret': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
+  'Kampala': 'https://images.unsplash.com/photo-1597476817120-7a87ec431a92?w=400&h=400&fit=crop&q=80',
+  'Jinja': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop&q=80',
+  'Entebbe': 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=400&h=400&fit=crop&q=80',
+  'Kigali': 'https://images.unsplash.com/photo-1580746738099-78d6833b3e86?w=400&h=400&fit=crop&q=80',
+  'Butare': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
+  'Gisenyi': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80',
+  'Goma': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
+  'Bukavu': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80',
+  'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80',
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80',
+  'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop&q=80',
+  'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80',
+  'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80',
 }
 
-const defaultCityImage = 'https://picsum.photos/seed/city/400/400'
+const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
 
 const fallbackDestinations = ['Nairobi', 'Mombasa', 'Kampala', 'Kigali', 'Goma', 'Dar es Salaam', 'Kisumu', 'Arusha', 'Jinja', 'Eldoret', 'Nakuru', 'Entebbe']
 
@@ -68,7 +69,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'Executive',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Reclining Seats'],
     rating: 4.5,
-    image_url: 'https://picsum.photos/seed/bus1/400/300'
+    image_url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop&q=80'
   },
   {
     id: 'trip-009',
@@ -86,7 +87,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'Executive',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Snacks'],
     rating: 4.6,
-    image_url: 'https://picsum.photos/seed/bus2/400/300'
+    image_url: 'https://images.unsplash.com/photo-1557223562-6c77ef16210f?w=600&h=400&fit=crop&q=80'
   },
   {
     id: 'trip-014',
@@ -104,7 +105,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'VIP',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Meals', 'Entertainment'],
     rating: 4.7,
-    image_url: 'https://picsum.photos/seed/bus3/400/300'
+    image_url: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop&q=80'
   },
   {
     id: 'trip-018',
@@ -122,7 +123,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'Executive',
     amenities: ['AC', 'USB Charging', 'Reclining Seats'],
     rating: 4.2,
-    image_url: 'https://picsum.photos/seed/bus4/400/300'
+    image_url: 'https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?w=600&h=400&fit=crop&q=80'
   }
 ]
 
@@ -159,7 +160,7 @@ export default function HomePage() {
   }, [])
 
   const getDestinationImage = (city: string): string => {
-    return destinationImages[city] || `https://picsum.photos/seed/${city.toLowerCase()}/400/400`
+    return destinationImages[city] || defaultCityImage
   }
 
   const handleDestinationClick = (city: string) => {
@@ -290,7 +291,7 @@ export default function HomePage() {
               >
                 <img 
                   src={getDestinationImage(city)} 
-                  alt={city} 
+                  alt={`${city} - East Africa`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                 />

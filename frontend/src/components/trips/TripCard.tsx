@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Clock, MapPin, Star, Users, Wifi, Zap, Wind, Headphones, ArrowRight, Bus } from 'lucide-react'
+import { Star, Users, Wifi, Zap, Wind, Headphones, ArrowRight, Bus } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -20,13 +20,13 @@ const amenityIcons: Record<string, React.ReactNode> = {
   'Entertainment': <Headphones className="h-3 w-3" />,
 }
 
-// Reliable bus images using picsum
+// Real bus images from Unsplash
 const defaultBusImages = [
-  'https://picsum.photos/seed/bus1/400/300',
-  'https://picsum.photos/seed/bus2/400/300',
-  'https://picsum.photos/seed/bus3/400/300',
-  'https://picsum.photos/seed/bus4/400/300',
-  'https://picsum.photos/seed/bus5/400/300',
+  'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1557223562-6c77ef16210f?w=600&h=400&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&h=400&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?w=600&h=400&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=600&h=400&fit=crop&q=80',
 ]
 
 // Format helpers
@@ -103,7 +103,7 @@ export default function TripCard({ trip, index = 0 }: TripCardProps) {
               )}
               <img 
                 src={getImageUrl()} 
-                alt={`${trip.provider_name} bus`}
+                alt={`${trip.provider_name} bus - ${trip.origin} to ${trip.destination}`}
                 className={cn(
                   "w-full h-full object-cover transition-all duration-500 group-hover:scale-110",
                   imageLoaded ? "opacity-100" : "opacity-0"
