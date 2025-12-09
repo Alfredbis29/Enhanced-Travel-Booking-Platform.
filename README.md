@@ -47,6 +47,26 @@
 - User registration and login
 - Profile management
 
+### 💳 Payment System
+Secure multi-provider payment integration:
+
+| Provider | Type | Countries | Currency |
+|----------|------|-----------|----------|
+| **M-Pesa** | Mobile Money | Kenya, Tanzania | KES, TZS |
+| **MTN MoMo** | Mobile Money | Uganda, Rwanda | UGX, RWF |
+| **Airtel Money** | Mobile Money | Congo, Uganda | CDF, UGX |
+| **PayPal** | Digital Wallet | All | USD |
+| **Visa** | Card | All | Multi |
+| **Mastercard** | Card | All | Multi |
+
+**Features:**
+- STK Push for M-Pesa (instant phone prompt)
+- Real-time payment status tracking
+- Webhook callbacks for all providers
+- Secure card tokenization via Stripe
+- Automatic currency conversion
+- Refund processing
+
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -107,6 +127,30 @@
    JWT_EXPIRES_IN=7d
    OPENAI_API_KEY=your-openai-api-key  # Optional
    FRONTEND_URL=http://localhost:5173
+
+   # M-Pesa (Kenya)
+   MPESA_CONSUMER_KEY=your-mpesa-consumer-key
+   MPESA_CONSUMER_SECRET=your-mpesa-consumer-secret
+   MPESA_PASSKEY=your-mpesa-passkey
+   MPESA_SHORTCODE=174379
+   MPESA_CALLBACK_URL=https://your-domain.com/api/payments/webhooks/mpesa
+
+   # MTN MoMo (Rwanda/Uganda)
+   MTN_API_KEY=your-mtn-api-key
+   MTN_USER_ID=your-mtn-user-id
+   MTN_ENVIRONMENT=sandbox
+
+   # Airtel Money (Congo)
+   AIRTEL_CLIENT_ID=your-airtel-client-id
+   AIRTEL_CLIENT_SECRET=your-airtel-client-secret
+
+   # PayPal
+   PAYPAL_CLIENT_ID=your-paypal-client-id
+   PAYPAL_CLIENT_SECRET=your-paypal-client-secret
+   PAYPAL_ENVIRONMENT=sandbox
+
+   # Stripe (Visa/Mastercard)
+   STRIPE_SECRET_KEY=your-stripe-secret-key
    ```
 
 3. **Set up PostgreSQL**
@@ -124,17 +168,35 @@
 
 ## 📡 API Endpoints
 
+### Authentication
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/auth/register` | Register user |
 | POST | `/api/auth/login` | Login user |
 | GET | `/api/auth/me` | Get profile |
+
+### Search & Bookings
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | GET | `/api/search` | Search trips |
 | GET | `/api/search/destinations` | Get all destinations |
 | GET | `/api/search/origins` | Get all origins |
 | POST | `/api/ai/recommendations` | AI-powered search |
 | POST | `/api/bookings` | Create booking |
 | GET | `/api/bookings` | Get bookings |
+
+### Payments
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/payments/methods` | Get payment methods |
+| POST | `/api/payments/initiate` | Start payment |
+| GET | `/api/payments/:id/verify` | Verify payment |
+| GET | `/api/payments/:id` | Get payment details |
+| POST | `/api/payments/:id/refund` | Request refund |
+| POST | `/api/payments/webhooks/mpesa` | M-Pesa callback |
+| POST | `/api/payments/webhooks/stripe` | Stripe webhook |
+| POST | `/api/payments/webhooks/mtn` | MTN callback |
+| POST | `/api/payments/webhooks/airtel` | Airtel callback |
 
 ## 🎯 AI Search Examples
 

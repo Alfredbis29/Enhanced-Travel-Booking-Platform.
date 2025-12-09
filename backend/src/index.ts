@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js';
 import searchRoutes from './routes/search.js';
 import bookingRoutes from './routes/bookings.js';
 import aiRoutes from './routes/ai.js';
+import paymentRoutes from './routes/payments.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { initializeDatabase } from './db/index.js';
 
@@ -25,6 +26,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
