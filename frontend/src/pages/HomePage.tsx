@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Sparkles, Shield, Clock, CreditCard, ArrowRight, MapPin, Star, Bus, Globe, Users } from 'lucide-react'
+import { Sparkles, Shield, CreditCard, ArrowRight, MapPin, Star, Bus, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import AISearchBar from '@/components/search/AISearchBar'
 import SearchBar from '@/components/search/SearchBar'
 import TripCard from '@/components/trips/TripCard'
@@ -27,29 +26,31 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha'] },
 ]
 
-// Reliable destination images
+// Reliable destination images using picsum.photos
 const destinationImages: Record<string, string> = {
-  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop',
-  'Mombasa': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop',
-  'Kisumu': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop',
-  'Nakuru': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop',
-  'Eldoret': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop',
-  'Kampala': 'https://images.unsplash.com/photo-1597476817120-7a87ec431a92?w=400&h=400&fit=crop',
-  'Jinja': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop',
-  'Kigali': 'https://images.unsplash.com/photo-1580746738099-78d6833b3e86?w=400&h=400&fit=crop',
-  'Goma': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop',
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop',
-  'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop',
-  'Entebbe': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop',
+  'Nairobi': 'https://picsum.photos/seed/nairobi/400/400',
+  'Mombasa': 'https://picsum.photos/seed/mombasa/400/400',
+  'Kisumu': 'https://picsum.photos/seed/kisumu/400/400',
+  'Nakuru': 'https://picsum.photos/seed/nakuru/400/400',
+  'Eldoret': 'https://picsum.photos/seed/eldoret/400/400',
+  'Kampala': 'https://picsum.photos/seed/kampala/400/400',
+  'Jinja': 'https://picsum.photos/seed/jinja/400/400',
+  'Entebbe': 'https://picsum.photos/seed/entebbe/400/400',
+  'Kigali': 'https://picsum.photos/seed/kigali/400/400',
+  'Butare': 'https://picsum.photos/seed/butare/400/400',
+  'Gisenyi': 'https://picsum.photos/seed/gisenyi/400/400',
+  'Goma': 'https://picsum.photos/seed/goma/400/400',
+  'Bukavu': 'https://picsum.photos/seed/bukavu/400/400',
+  'Kinshasa': 'https://picsum.photos/seed/kinshasa/400/400',
+  'Dar es Salaam': 'https://picsum.photos/seed/dar/400/400',
+  'Arusha': 'https://picsum.photos/seed/arusha/400/400',
+  'Malindi': 'https://picsum.photos/seed/malindi/400/400',
 }
 
-// Default image for cities without specific images
-const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop'
+const defaultCityImage = 'https://picsum.photos/seed/city/400/400'
 
-// Fallback destinations
 const fallbackDestinations = ['Nairobi', 'Mombasa', 'Kampala', 'Kigali', 'Goma', 'Dar es Salaam', 'Kisumu', 'Arusha', 'Jinja', 'Eldoret', 'Nakuru', 'Entebbe']
 
-// Fallback featured trips
 const fallbackTrips: Trip[] = [
   {
     id: 'trip-001',
@@ -67,7 +68,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'Executive',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Reclining Seats'],
     rating: 4.5,
-    image_url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400'
+    image_url: 'https://picsum.photos/seed/bus1/400/300'
   },
   {
     id: 'trip-009',
@@ -85,7 +86,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'Executive',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Snacks'],
     rating: 4.6,
-    image_url: 'https://images.unsplash.com/photo-1557223562-6c77ef16210f?w=400'
+    image_url: 'https://picsum.photos/seed/bus2/400/300'
   },
   {
     id: 'trip-014',
@@ -103,7 +104,7 @@ const fallbackTrips: Trip[] = [
     bus_type: 'VIP',
     amenities: ['WiFi', 'AC', 'USB Charging', 'Meals', 'Entertainment'],
     rating: 4.7,
-    image_url: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400'
+    image_url: 'https://picsum.photos/seed/bus3/400/300'
   },
   {
     id: 'trip-018',
@@ -121,30 +122,35 @@ const fallbackTrips: Trip[] = [
     bus_type: 'Executive',
     amenities: ['AC', 'USB Charging', 'Reclining Seats'],
     rating: 4.2,
-    image_url: 'https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?w=400'
+    image_url: 'https://picsum.photos/seed/bus4/400/300'
   }
 ]
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const [featuredTrips, setFeaturedTrips] = useState<Trip[]>([])
-  const [destinations, setDestinations] = useState<string[]>([])
+  const [featuredTrips, setFeaturedTrips] = useState<Trip[]>(fallbackTrips)
+  const [destinations, setDestinations] = useState<string[]>(fallbackDestinations)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     async function loadData() {
       try {
         const [suggestionsData, destinationsData] = await Promise.all([
-          aiApi.getSuggestions().catch(() => ({ featured_trips: fallbackTrips })),
-          searchApi.getDestinations().catch(() => ({ destinations: fallbackDestinations }))
+          aiApi.getSuggestions().catch(() => null),
+          searchApi.getDestinations().catch(() => null)
         ])
-        setFeaturedTrips(suggestionsData.featured_trips?.length ? suggestionsData.featured_trips : fallbackTrips)
-        const dests = Array.isArray(destinationsData) ? destinationsData : destinationsData.destinations
-        setDestinations(dests?.length ? dests : fallbackDestinations)
+        
+        if (suggestionsData?.featured_trips?.length) {
+          setFeaturedTrips(suggestionsData.featured_trips)
+        }
+        
+        if (destinationsData && Array.isArray(destinationsData) && destinationsData.length > 0) {
+          setDestinations(destinationsData)
+        } else if (destinationsData?.destinations?.length) {
+          setDestinations(destinationsData.destinations)
+        }
       } catch (error) {
         console.error('Failed to load homepage data:', error)
-        setFeaturedTrips(fallbackTrips)
-        setDestinations(fallbackDestinations)
       } finally {
         setIsLoading(false)
       }
@@ -153,7 +159,11 @@ export default function HomePage() {
   }, [])
 
   const getDestinationImage = (city: string): string => {
-    return destinationImages[city] || defaultCityImage
+    return destinationImages[city] || `https://picsum.photos/seed/${city.toLowerCase()}/400/400`
+  }
+
+  const handleDestinationClick = (city: string) => {
+    navigate(`/search?destination=${encodeURIComponent(city)}`)
   }
 
   return (
@@ -178,9 +188,14 @@ export default function HomePage() {
             </p>
             <div className="flex items-center justify-center gap-3 text-2xl mb-8">
               {countries.map((country) => (
-                <span key={country.name} title={country.name} className="hover:scale-125 transition-transform cursor-pointer">
+                <button 
+                  key={country.name} 
+                  title={country.name} 
+                  className="hover:scale-125 transition-transform cursor-pointer"
+                  onClick={() => handleDestinationClick(country.cities[0])}
+                >
                   {country.flag}
-                </span>
+                </button>
               ))}
             </div>
           </motion.div>
@@ -202,7 +217,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                <Card className="h-full hover:border-primary/50 transition-colors group cursor-pointer">
+                <Card className="h-full hover:border-primary/50 transition-colors group">
                   <CardContent className="p-6">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500/20 to-maroon-700/20 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
                       {feature.icon}
@@ -232,11 +247,10 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, scale: 1 }} 
                 viewport={{ once: true }} 
                 transition={{ delay: index * 0.1 }}
-                className="group"
               >
                 <Card 
-                  className="h-full hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-sky-500/10 cursor-pointer" 
-                  onClick={() => navigate(`/search?destination=${country.cities[0]}`)}
+                  className="h-full hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-sky-500/10 cursor-pointer group" 
+                  onClick={() => handleDestinationClick(country.cities[0])}
                 >
                   <CardContent className="p-6 text-center">
                     <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">{country.flag}</div>
@@ -271,17 +285,14 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                onClick={() => navigate(`/search?destination=${city}`)}
-                className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer"
+                onClick={() => handleDestinationClick(city)}
+                className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
               >
                 <img 
                   src={getDestinationImage(city)} 
                   alt={city} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = defaultCityImage
-                  }}
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors" />

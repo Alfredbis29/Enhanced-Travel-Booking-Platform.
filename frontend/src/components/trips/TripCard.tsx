@@ -5,7 +5,7 @@ import { Clock, MapPin, Star, Users, Wifi, Zap, Wind, Headphones, ArrowRight, Bu
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { formatCurrency, formatTime, formatDuration, formatDate } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import type { Trip } from '@/types'
 
 interface TripCardProps { 
@@ -20,28 +20,61 @@ const amenityIcons: Record<string, React.ReactNode> = {
   'Entertainment': <Headphones className="h-3 w-3" />,
 }
 
-// Default bus images
+// Reliable bus images using picsum
 const defaultBusImages = [
-  'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400',
-  'https://images.unsplash.com/photo-1557223562-6c77ef16210f?w=400',
-  'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400',
-  'https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?w=400',
+  'https://picsum.photos/seed/bus1/400/300',
+  'https://picsum.photos/seed/bus2/400/300',
+  'https://picsum.photos/seed/bus3/400/300',
+  'https://picsum.photos/seed/bus4/400/300',
+  'https://picsum.photos/seed/bus5/400/300',
 ]
+
+// Format helpers
+const formatCurrency = (amount: number, currency: string): string => {
+  const symbols: Record<string, string> = {
+    KES: 'Ksh',
+    UGX: 'USh',
+    RWF: 'FRw',
+    USD: '$',
+    CDF: 'FC'
+  }
+  return `${symbols[currency] || currency} ${amount.toLocaleString()}`
+}
+
+const formatTime = (dateString: string): string => {
+  const date = new Date(dateString)
+  return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+}
+
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
+}
+
+const formatDuration = (minutes: number): string => {
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  if (hours === 0) return `${mins}m`
+  if (mins === 0) return `${hours}h`
+  return `${hours}h ${mins}m`
+}
 
 export default function TripCard({ trip, index = 0 }: TripCardProps) {
   const navigate = useNavigate()
+  const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
 
   const getImageUrl = (): string => {
     if (trip.image_url && !imageError) {
       return trip.image_url
     }
-    // Use a consistent default based on trip id
-    const imageIndex = trip.id.charCodeAt(trip.id.length - 1) % defaultBusImages.length
-    return defaultBusImages[imageIndex]
+    // Use consistent image based on trip id
+    const hash = trip.id.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
+    return defaultBusImages[hash % defaultBusImages.length]
   }
 
-  const handleBookClick = () => {
+  const handleBookClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
     navigate(`/booking/${trip.id}`)
   }
 
@@ -63,11 +96,24 @@ export default function TripCard({ trip, index = 0 }: TripCardProps) {
           <div className="flex flex-col md:flex-row">
             {/* Image Section */}
             <div className="relative w-full md:w-48 h-48 md:h-auto overflow-hidden bg-secondary">
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-secondary animate-pulse flex items-center justify-center">
+                  <Bus className="h-12 w-12 text-muted-foreground/30" />
+                </div>
+              )}
               <img 
                 src={getImageUrl()} 
-                alt={trip.provider_name} 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                onError={() => setImageError(true)}
+                alt={`${trip.provider_name} bus`}
+                className={cn(
+                  "w-full h-full object-cover transition-all duration-500 group-hover:scale-110",
+                  imageLoaded ? "opacity-100" : "opacity-0"
+                )}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => {
+                  setImageError(true)
+                  setImageLoaded(true)
+                }}
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3">
@@ -156,10 +202,7 @@ export default function TripCard({ trip, index = 0 }: TripCardProps) {
                   </div>
                   <Button 
                     variant="gradient" 
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleBookClick()
-                    }} 
+                    onClick={handleBookClick}
                     className="group/btn"
                   >
                     Book Now
