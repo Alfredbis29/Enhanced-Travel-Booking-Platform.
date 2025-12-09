@@ -1,16 +1,27 @@
 # 🚌 SafariRides - AI-Enhanced Travel Booking Platform
 
-A modern, full-stack travel booking platform with AI-powered search capabilities, built for the Kenyan market.
+A modern, full-stack travel booking platform with AI-powered search capabilities, built for the East African market.
+
+## 🌍 Coverage
+
+| Country | Flag | Major Cities |
+|---------|------|--------------|
+| Kenya | 🇰🇪 | Nairobi, Mombasa, Kisumu, Nakuru, Eldoret |
+| Uganda | 🇺🇬 | Kampala, Jinja, Mbarara, Entebbe |
+| Rwanda | 🇷🇼 | Kigali, Butare, Gisenyi |
+| Congo (DRC) | 🇨🇩 | Goma, Bukavu, Kinshasa |
+| Tanzania | 🇹🇿 | Dar es Salaam, Arusha, Mwanza |
 
 ## ✨ Features
 
 ### 🤖 AI-Powered Search
-- Natural language queries (e.g., "Find me the cheapest bus to Mombasa tomorrow")
+- Natural language queries (e.g., "Find me the cheapest bus to Kampala tomorrow")
 - Smart parameter extraction from conversational input
 - OpenAI GPT integration for query understanding
 
 ### 🔍 Travel Search System
-- Search buses across Kenya (Safirio API integration)
+- Search buses across East Africa (Safirio API integration)
+- Cross-border routes (Kenya-Uganda, Uganda-Rwanda, Rwanda-Congo)
 - Advanced filters (date, price range, destination, origin)
 - Sort by price, departure time, duration, or rating
 - Pagination and loading states
@@ -19,6 +30,7 @@ A modern, full-stack travel booking platform with AI-powered search capabilities
 - Step-by-step booking (Select → Review → Confirm)
 - Seat selection with availability tracking
 - Booking reference generation
+- Multi-currency support (KES, UGX, RWF, USD)
 
 ### 🔐 Authentication
 - JWT-based authentication
@@ -108,18 +120,44 @@ A modern, full-stack travel booking platform with AI-powered search capabilities
 | POST | `/api/auth/login` | Login user |
 | GET | `/api/auth/me` | Get profile |
 | GET | `/api/search` | Search trips |
+| GET | `/api/search/destinations` | Get all destinations |
+| GET | `/api/search/origins` | Get all origins |
 | POST | `/api/ai/recommendations` | AI-powered search |
 | POST | `/api/bookings` | Create booking |
 | GET | `/api/bookings` | Get bookings |
 
 ## 🎯 AI Search Examples
 
-- "Find me the cheapest bus to Mombasa"
-- "Show VIP buses to Kisumu tomorrow"
-- "What's the fastest route to Eldoret?"
-- "Buses under 1500 KES to Malindi"
+- "Find me the cheapest bus to Kampala"
+- "Show VIP buses from Nairobi to Kigali tomorrow"
+- "What's the fastest route from Kampala to Goma?"
+- "Buses under 5000 KES to Mombasa"
+- "Night coaches from Kigali to Kinshasa"
+
+## 🌐 Supported Currencies
+
+| Currency | Code | Countries |
+|----------|------|-----------|
+| Kenyan Shilling | KES | Kenya |
+| Ugandan Shilling | UGX | Uganda |
+| Rwandan Franc | RWF | Rwanda |
+| US Dollar | USD | DRC, Cross-border |
+
+## 🚌 Popular Routes
+
+### Cross-Border
+- Nairobi → Kampala (Kenya → Uganda)
+- Nairobi → Kigali (Kenya → Rwanda)
+- Kampala → Kigali (Uganda → Rwanda)
+- Kigali → Goma (Rwanda → DRC)
+- Mombasa → Dar es Salaam (Kenya → Tanzania)
+
+### Domestic
+- Nairobi → Mombasa (Kenya)
+- Kampala → Jinja (Uganda)
+- Kigali → Butare (Rwanda)
+- Goma → Bukavu (DRC)
 
 ---
 
-Built with ❤️ for Kenya's travelers
-
+Built with ❤️ for East Africa's travelers
