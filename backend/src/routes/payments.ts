@@ -1,14 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { body, param, query, validationResult } from 'express-validator';
 import { paymentService } from '../services/payment.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import { 
-  AuthRequest, 
   PaymentMethod, 
   PaymentCurrency,
   PAYMENT_METHODS_BY_COUNTRY,
   PAYMENT_METHOD_INFO 
 } from '../types/index.js';
+
+// Use AuthenticatedRequest from middleware
+type AuthRequest = AuthenticatedRequest;
 
 const router = Router();
 
@@ -77,7 +79,7 @@ router.get('/methods', [
  * POST /api/payments/initiate
  * Initiate a new payment
  */
-router.post('/initiate', authenticateToken, [
+router.post('/initiate', authenticate, [
   body('booking_id').notEmpty().withMessage('Booking ID is required'),
   body('amount').isFloat({ min: 0.01 }).withMessage('Amount must be greater than 0'),
   body('currency').isIn(['KES', 'UGX', 'RWF', 'USD', 'CDF']).withMessage('Invalid currency'),
@@ -129,7 +131,7 @@ router.post('/initiate', authenticateToken, [
  * GET /api/payments/:paymentId/verify
  * Verify payment status
  */
-router.get('/:paymentId/verify', authenticateToken, [
+router.get('/:paymentId/verify', authenticate, [
   param('paymentId').notEmpty().withMessage('Payment ID is required')
 ], validate, async (req: AuthRequest, res: Response) => {
   try {
@@ -156,7 +158,7 @@ router.get('/:paymentId/verify', authenticateToken, [
  * GET /api/payments/:paymentId
  * Get payment details
  */
-router.get('/:paymentId', authenticateToken, [
+router.get('/:paymentId', authenticate, [
   param('paymentId').notEmpty().withMessage('Payment ID is required')
 ], validate, async (req: AuthRequest, res: Response) => {
   try {
@@ -196,7 +198,7 @@ router.get('/:paymentId', authenticateToken, [
  * GET /api/payments
  * Get all payments for authenticated user
  */
-router.get('/', authenticateToken, async (req: AuthRequest, res: Response) => {
+router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const payments = await paymentService.getPaymentsByUser(userId);
@@ -217,7 +219,7 @@ router.get('/', authenticateToken, async (req: AuthRequest, res: Response) => {
  * GET /api/payments/booking/:bookingId
  * Get all payments for a booking
  */
-router.get('/booking/:bookingId', authenticateToken, [
+router.get('/booking/:bookingId', authenticate, [
   param('bookingId').notEmpty().withMessage('Booking ID is required')
 ], validate, async (req: AuthRequest, res: Response) => {
   try {
@@ -240,7 +242,7 @@ router.get('/booking/:bookingId', authenticateToken, [
  * POST /api/payments/:paymentId/paypal/capture
  * Capture PayPal payment after user approval
  */
-router.post('/:paymentId/paypal/capture', authenticateToken, [
+router.post('/:paymentId/paypal/capture', authenticate, [
   param('paymentId').notEmpty().withMessage('Payment ID is required'),
   body('paypal_order_id').notEmpty().withMessage('PayPal order ID is required')
 ], validate, async (req: AuthRequest, res: Response) => {
@@ -270,7 +272,7 @@ router.post('/:paymentId/paypal/capture', authenticateToken, [
  * POST /api/payments/:paymentId/refund
  * Request a refund for a payment
  */
-router.post('/:paymentId/refund', authenticateToken, [
+router.post('/:paymentId/refund', authenticate, [
   param('paymentId').notEmpty().withMessage('Payment ID is required'),
   body('reason').notEmpty().withMessage('Refund reason is required')
 ], validate, async (req: AuthRequest, res: Response) => {
@@ -395,7 +397,7 @@ router.post('/webhooks/airtel', async (req: Request, res: Response) => {
  * POST /api/payments/:paymentId/simulate/complete
  * Simulate payment completion (for testing)
  */
-router.post('/:paymentId/simulate/complete', authenticateToken, [
+router.post('/:paymentId/simulate/complete', authenticate, [
   param('paymentId').notEmpty().withMessage('Payment ID is required')
 ], validate, async (req: AuthRequest, res: Response) => {
   try {
@@ -420,7 +422,7 @@ router.post('/:paymentId/simulate/complete', authenticateToken, [
  * POST /api/payments/:paymentId/simulate/fail
  * Simulate payment failure (for testing)
  */
-router.post('/:paymentId/simulate/fail', authenticateToken, [
+router.post('/:paymentId/simulate/fail', authenticate, [
   param('paymentId').notEmpty().withMessage('Payment ID is required'),
   body('reason').optional().isString()
 ], validate, async (req: AuthRequest, res: Response) => {
@@ -444,4 +446,5 @@ router.post('/:paymentId/simulate/fail', authenticateToken, [
 });
 
 export default router;
+
 
