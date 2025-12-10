@@ -24,12 +24,12 @@ export default function Navbar() {
           <Link to="/" className="flex items-center gap-2 group">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-lg blur-xl group-hover:bg-primary/30 transition-colors" />
-              <div className="relative bg-gradient-to-br from-primary to-accent p-2 rounded-lg">
+              <div className="relative bg-gradient-to-br from-sky-500 to-maroon-700 p-2 rounded-lg">
                 <Bus className="h-5 w-5 text-white" />
               </div>
             </div>
             <span className="font-display text-xl font-bold">
-              <span className="text-gradient">Safari</span><span className="text-foreground">Rides</span>
+              <span className="text-gradient">Twende</span>
             </span>
           </Link>
 
@@ -44,7 +44,7 @@ export default function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-white font-semibold">
+                    <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-maroon-700 text-white font-semibold">
                       {user ? getInitials(user.first_name, user.last_name) : 'U'}
                     </div>
                   </Button>
@@ -103,4 +103,3 @@ export default function Navbar() {
     </nav>
   )
 }
-

@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query as dbQuery } from '../db/index.js';
 import { safirioService } from '../services/safirio.js';
-import { SearchParams } from '../types/index.js';
+import { SearchParams, TravelMode } from '../types/index.js';
 import { optionalAuth, AuthenticatedRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -15,6 +15,7 @@ router.get('/', optionalAuth, async (req: AuthenticatedRequest, res: Response, n
       date: req.query.date as string,
       min_price: req.query.min_price ? parseInt(req.query.min_price as string) : undefined,
       max_price: req.query.max_price ? parseInt(req.query.max_price as string) : undefined,
+      travel_mode: req.query.mode as TravelMode,
       page: req.query.page ? parseInt(req.query.page as string) : 1,
       limit: req.query.limit ? Math.min(parseInt(req.query.limit as string), 50) : 10,
       sort_by: req.query.sort_by as SearchParams['sort_by'],
@@ -91,6 +92,43 @@ router.get('/origins', async (_req: Request, res: Response, next: NextFunction) 
     res.json({
       success: true,
       data: { origins }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get available travel modes
+router.get('/modes', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const modes = await safirioService.getTravelModes();
+    
+    res.json({
+      success: true,
+      data: { 
+        modes,
+        mode_info: {
+          bus: { name: 'Bus', emoji: '🚌', description: 'Comfortable bus travel across East Africa' },
+          flight: { name: 'Flight', emoji: '✈️', description: 'Fast air travel between major cities' },
+          train: { name: 'Train', emoji: '🚂', description: 'Scenic rail journeys including SGR' },
+          ferry: { name: 'Ferry', emoji: '⛴️', description: 'Lake and coastal ferry services' },
+          shuttle: { name: 'Shuttle', emoji: '🚐', description: 'Airport and city shuttle services' }
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get featured trips (multi-modal)
+router.get('/featured', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const featured_trips = await safirioService.getFeaturedTrips();
+    
+    res.json({
+      success: true,
+      data: { featured_trips }
     });
   } catch (error) {
     next(error);

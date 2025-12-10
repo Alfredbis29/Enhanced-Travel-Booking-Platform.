@@ -6,7 +6,14 @@ import type {
   Trip, 
   Booking, 
   AIRecommendationResponse,
-  ApiResponse 
+  ApiResponse,
+  Payment,
+  PaymentMethod,
+  PaymentCurrency,
+  PaymentMethodInfo,
+  PaymentInitiateRequest,
+  PaymentInitiateResponse,
+  PaymentVerifyResponse
 } from '@/types'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
@@ -157,6 +164,89 @@ export const bookingApi = {
   cancelBooking: async (bookingId: string): Promise<Booking> => {
     const { data } = await api.post<ApiResponse<{ booking: Booking }>>(`/bookings/${bookingId}/cancel`)
     return data.data.booking
+  },
+}
+
+// Payment endpoints
+export const paymentApi = {
+  // Get available payment methods
+  getPaymentMethods: async (country?: string): Promise<{
+    methods: PaymentMethodInfo[]
+    by_country?: Record<string, PaymentMethod[]>
+  }> => {
+    const params = country ? { country } : {}
+    const { data } = await api.get<ApiResponse<{
+      methods: PaymentMethodInfo[]
+      by_country?: Record<string, PaymentMethod[]>
+    }>>('/payments/methods', { params })
+    return data.data
+  },
+
+  // Initiate a payment
+  initiatePayment: async (request: {
+    booking_id: string
+    amount: number
+    currency: PaymentCurrency
+    method: PaymentMethod
+    phone_number?: string
+    return_url?: string
+  }): Promise<PaymentInitiateResponse> => {
+    const { data } = await api.post<ApiResponse<PaymentInitiateResponse>>('/payments/initiate', request)
+    return data.data
+  },
+
+  // Verify payment status
+  verifyPayment: async (paymentId: string): Promise<PaymentVerifyResponse> => {
+    const { data } = await api.get<ApiResponse<PaymentVerifyResponse>>(`/payments/${paymentId}/verify`)
+    return data.data
+  },
+
+  // Get payment details
+  getPayment: async (paymentId: string): Promise<Payment> => {
+    const { data } = await api.get<ApiResponse<Payment>>(`/payments/${paymentId}`)
+    return data.data
+  },
+
+  // Get all user payments
+  getUserPayments: async (): Promise<Payment[]> => {
+    const { data } = await api.get<ApiResponse<Payment[]>>('/payments')
+    return data.data
+  },
+
+  // Get payments for a booking
+  getBookingPayments: async (bookingId: string): Promise<Payment[]> => {
+    const { data } = await api.get<ApiResponse<Payment[]>>(`/payments/booking/${bookingId}`)
+    return data.data
+  },
+
+  // Capture PayPal payment
+  capturePayPalPayment: async (paymentId: string, paypalOrderId: string): Promise<PaymentVerifyResponse> => {
+    const { data } = await api.post<ApiResponse<PaymentVerifyResponse>>(
+      `/payments/${paymentId}/paypal/capture`,
+      { paypal_order_id: paypalOrderId }
+    )
+    return data.data
+  },
+
+  // Request refund
+  requestRefund: async (paymentId: string, reason: string): Promise<Payment> => {
+    const { data } = await api.post<ApiResponse<Payment>>(`/payments/${paymentId}/refund`, { reason })
+    return data.data
+  },
+
+  // Simulate payment completion (for testing)
+  simulateComplete: async (paymentId: string): Promise<Payment> => {
+    const { data } = await api.post<ApiResponse<Payment>>(`/payments/${paymentId}/simulate/complete`)
+    return data.data
+  },
+
+  // Simulate payment failure (for testing)
+  simulateFail: async (paymentId: string, reason?: string): Promise<Payment> => {
+    const { data } = await api.post<ApiResponse<Payment>>(
+      `/payments/${paymentId}/simulate/fail`,
+      { reason }
+    )
+    return data.data
   },
 }
 
