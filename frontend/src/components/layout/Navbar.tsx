@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
-import { Menu, X, User, LogOut, Ticket, Settings, Bus, Sparkles, Plane } from 'lucide-react'
+import { Menu, X, User, LogOut, Ticket, Settings, Bus, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useAuthStore } from '@/store'
@@ -297,7 +297,7 @@ export default function Navbar() {
             className="md:hidden border-t border-border overflow-hidden"
           >
             <div className="container mx-auto px-4 py-4 space-y-4">
-              {navLinks.map((link, i) => (
+              {navLinks.map((link) => (
                 <motion.div key={link.href} variants={menuItemVariants}>
                   <Link 
                     to={link.href} 

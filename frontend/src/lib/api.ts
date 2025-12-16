@@ -11,7 +11,6 @@ import type {
   PaymentMethod,
   PaymentCurrency,
   PaymentMethodInfo,
-  PaymentInitiateRequest,
   PaymentInitiateResponse,
   PaymentVerifyResponse
 } from '@/types'

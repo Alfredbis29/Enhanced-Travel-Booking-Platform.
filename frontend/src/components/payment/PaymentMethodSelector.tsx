@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check, Smartphone, CreditCard, Wallet } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -19,15 +18,6 @@ const methodIcons: Record<PaymentMethod, JSX.Element> = {
   paypal: <Wallet className="h-6 w-6" />,
   visa: <CreditCard className="h-6 w-6" />,
   mastercard: <CreditCard className="h-6 w-6" />
-}
-
-const methodLogos: Record<PaymentMethod, string> = {
-  mpesa: '/payment-logos/mpesa.svg',
-  mtn_momo: '/payment-logos/mtn.svg',
-  airtel_money: '/payment-logos/airtel.svg',
-  paypal: '/payment-logos/paypal.svg',
-  visa: '/payment-logos/visa.svg',
-  mastercard: '/payment-logos/mastercard.svg'
 }
 
 export default function PaymentMethodSelector({ 
@@ -159,6 +149,7 @@ function PaymentMethodCard({ method, isSelected, onSelect, index }: PaymentMetho
     </motion.div>
   )
 }
+
 
 
 
