@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Sparkles, Shield, CreditCard, ArrowRight, MapPin, Star, Bus, Globe, Plane, Train, Ship } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -11,6 +11,60 @@ import TripCard from '@/components/trips/TripCard'
 import { TripCardSkeleton } from '@/components/ui/skeleton'
 import { searchApi, aiApi } from '@/lib/api'
 import type { Trip, TravelMode } from '@/types'
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 12 }
+  }
+}
+
+const floatVariants = {
+  animate: {
+    y: [-10, 10, -10],
+    rotate: [-2, 2, -2],
+    transition: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+  }
+}
+
+const pulseVariants = {
+  animate: {
+    scale: [1, 1.05, 1],
+    opacity: [0.5, 0.8, 0.5],
+    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+  }
+}
+
+// Floating particle component
+const FloatingParticle = ({ delay, duration, x, size, color }: { delay: number; duration: number; x: number; size: number; color: string }) => (
+  <motion.div
+    className={`absolute rounded-full ${color}`}
+    style={{ width: size, height: size, left: `${x}%` }}
+    initial={{ y: '110vh', opacity: 0 }}
+    animate={{ 
+      y: '-10vh', 
+      opacity: [0, 1, 1, 0],
+      rotate: [0, 360]
+    }}
+    transition={{ 
+      duration, 
+      delay, 
+      repeat: Infinity, 
+      ease: "linear"
+    }}
+  />
+)
 
 const features = [
   { icon: <Sparkles className="h-6 w-6" />, title: 'AI-Powered Search', description: 'Natural language queries to find your perfect trip' },
@@ -417,6 +471,23 @@ export default function HomePage() {
   const [destinations, setDestinations] = useState<string[]>(fallbackDestinations)
   const [isLoading, setIsLoading] = useState(true)
   const [selectedMode, setSelectedMode] = useState<TravelMode | 'all'>('all')
+  
+  // Parallax scroll effect
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 500], [0, 150])
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0])
+
+  // Generate random particles
+  const particles = useMemo(() => 
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      delay: Math.random() * 10,
+      duration: 15 + Math.random() * 10,
+      x: Math.random() * 100,
+      size: 4 + Math.random() * 8,
+      color: i % 3 === 0 ? 'bg-sky-400/30' : i % 3 === 1 ? 'bg-cyan-400/20' : 'bg-rose-400/20'
+    })), []
+  )
 
   useEffect(() => {
     async function loadData() {
@@ -457,76 +528,205 @@ export default function HomePage() {
     : featuredTrips.filter(t => t.travel_mode === selectedMode)
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-hero-pattern py-20 md:py-32">
+        {/* Animated background elements */}
         <div className="absolute inset-0 pattern-dots opacity-30" />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-sky-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-maroon-700/20 rounded-full blur-3xl" />
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-6">
-              <Sparkles className="h-4 w-4 text-primary" />
+        
+        {/* Floating orbs with animation */}
+        <motion.div 
+          variants={floatVariants}
+          animate="animate"
+          className="absolute top-20 left-10 w-72 h-72 bg-sky-500/20 rounded-full blur-3xl"
+        />
+        <motion.div 
+          variants={floatVariants}
+          animate="animate"
+          style={{ animationDelay: '2s' }}
+          className="absolute bottom-20 right-10 w-96 h-96 bg-maroon-700/20 rounded-full blur-3xl"
+        />
+        <motion.div 
+          variants={pulseVariants}
+          animate="animate"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-sky-500/10 to-transparent rounded-full"
+        />
+        
+        {/* Floating particles */}
+        <div className="particles">
+          {particles.map((p) => (
+            <FloatingParticle key={p.id} {...p} />
+          ))}
+        </div>
+
+        <motion.div 
+          style={{ y: heroY, opacity: heroOpacity }}
+          className="container mx-auto px-4 relative z-10"
+        >
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="text-center mb-12"
+          >
+            {/* AI Badge with shimmer effect */}
+            <motion.div 
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-6 relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <motion.div
+                animate={{ rotate: [0, 15, -15, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Sparkles className="h-4 w-4 text-primary" />
+              </motion.div>
               <span className="text-sm text-muted-foreground">AI-Powered Travel Booking</span>
-            </div>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-              <span className="text-foreground">Twende!</span><br />
-              <span className="text-gradient">Let's Go Across East Africa</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+            </motion.div>
+            
+            {/* Animated heading */}
+            <motion.h1 
+              variants={itemVariants}
+              className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
+            >
+              <motion.span 
+                className="text-foreground inline-block"
+                animate={{ 
+                  textShadow: [
+                    "0 0 20px rgba(56, 189, 248, 0)",
+                    "0 0 40px rgba(56, 189, 248, 0.3)",
+                    "0 0 20px rgba(56, 189, 248, 0)"
+                  ]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                Twende!
+              </motion.span>
+              <br />
+              <span className="text-gradient animate-gradient bg-[length:200%_auto]">Let's Go Across East Africa</span>
+            </motion.h1>
+            
+            <motion.p 
+              variants={itemVariants}
+              className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4"
+            >
               Book buses, flights, trains & ferries across Kenya, Uganda, Rwanda, Congo & Tanzania with our AI-powered platform.
-            </p>
-            {/* Travel mode icons */}
-            <div className="flex items-center justify-center gap-4 mb-4">
-              {travelModes.map((mode) => (
-                <div key={mode.mode} className="flex flex-col items-center gap-1" title={mode.name}>
-                  <div className={`p-2 rounded-full ${mode.color} text-white`}>
+            </motion.p>
+            
+            {/* Travel mode icons with staggered animation */}
+            <motion.div 
+              variants={itemVariants}
+              className="flex items-center justify-center gap-4 mb-4"
+            >
+              {travelModes.map((mode, i) => (
+                <motion.div 
+                  key={mode.mode} 
+                  className="flex flex-col items-center gap-1" 
+                  title={mode.name}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 + i * 0.1, type: "spring", stiffness: 200 }}
+                  whileHover={{ scale: 1.2, y: -5 }}
+                >
+                  <motion.div 
+                    className={`p-2 rounded-full ${mode.color} text-white`}
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.3 }}
+                  >
                     {mode.icon}
-                  </div>
+                  </motion.div>
                   <span className="text-xs text-muted-foreground">{mode.name}</span>
-                </div>
+                </motion.div>
               ))}
-            </div>
-            <div className="flex items-center justify-center gap-3 text-2xl mb-8">
-              {countries.map((country) => (
-                <button 
+            </motion.div>
+            
+            {/* Country flags with bounce animation */}
+            <motion.div 
+              variants={itemVariants}
+              className="flex items-center justify-center gap-3 text-2xl mb-8"
+            >
+              {countries.map((country, i) => (
+                <motion.button 
                   key={country.name} 
                   title={country.name} 
-                  className="hover:scale-125 transition-transform cursor-pointer"
+                  className="cursor-pointer"
                   onClick={() => handleDestinationClick(country.cities[0])}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + i * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.3, 
+                    rotate: [0, -10, 10, 0],
+                    transition: { duration: 0.3 }
+                  }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   {country.flag}
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
-          <AISearchBar className="mb-8" />
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-center">
+          
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <AISearchBar className="mb-8" />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ delay: 0.8 }} 
+            className="text-center"
+          >
             <p className="text-sm text-muted-foreground mb-4">Or search traditionally</p>
             <SearchBar variant="hero" />
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Travel Modes Section */}
-      <section className="py-12 bg-card/30">
-        <div className="container mx-auto px-4">
+      <section className="py-12 bg-card/30 relative overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 opacity-50"
+          animate={{ 
+            background: [
+              "radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 80% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)"
+            ]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-wrap items-center justify-center gap-4">
             {travelModes.map((mode, index) => (
               <motion.div
                 key={mode.mode}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, type: "spring", stiffness: 150 }}
               >
-                <Button
-                  variant={selectedMode === mode.mode ? "default" : "outline"}
-                  className="flex items-center gap-2 px-6 py-3"
-                  onClick={() => navigate(`/search?mode=${mode.mode}`)}
-                >
-                  <span className="text-lg">{mode.emoji}</span>
-                  <span>{mode.name}</span>
-                </Button>
+                <motion.div whileHover={{ scale: 1.05, y: -3 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant={selectedMode === mode.mode ? "default" : "outline"}
+                    className="flex items-center gap-2 px-6 py-3 relative overflow-hidden group"
+                    onClick={() => navigate(`/search?mode=${mode.mode}`)}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <motion.span 
+                      className="text-lg"
+                      animate={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                    >
+                      {mode.emoji}
+                    </motion.span>
+                    <span>{mode.name}</span>
+                  </Button>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -534,24 +734,63 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-card/50">
+      <section className="py-20 bg-card/50 relative">
         <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Why Choose <span className="text-gradient">Twende</span></h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Your gateway to seamless East African travel</p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            className="text-center mb-12"
+          >
+            <motion.h2 
+              className="font-display text-3xl md:text-4xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              Why Choose <span className="text-gradient">Twende</span>
+            </motion.h2>
+            <motion.p 
+              className="text-muted-foreground max-w-xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              Your gateway to seamless East African travel
+            </motion.p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
-              <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                <Card className="h-full hover:border-primary/50 transition-colors group">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500/20 to-maroon-700/20 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
-                      {feature.icon}
-                    </div>
-                    <h3 className="font-display font-semibold text-lg mb-2">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, y: 40 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true }} 
+                transition={{ delay: index * 0.15, type: "spring", stiffness: 100 }}
+              >
+                <motion.div
+                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                  className="h-full"
+                >
+                  <Card className="h-full hover:border-primary/50 transition-all duration-300 group hover:shadow-xl hover:shadow-primary/10 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <CardContent className="p-6 relative">
+                      <motion.div 
+                        className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500/20 to-maroon-700/20 flex items-center justify-center mb-4 text-primary"
+                        whileHover={{ 
+                          rotate: [0, -10, 10, 0],
+                          scale: 1.1,
+                          transition: { duration: 0.4 }
+                        }}
+                      >
+                        {feature.icon}
+                      </motion.div>
+                      <h3 className="font-display font-semibold text-lg mb-2 group-hover:text-primary transition-colors">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -559,31 +798,89 @@ export default function HomePage() {
       </section>
 
       {/* Countries Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Travel Across <span className="text-gradient">5 Countries</span></h2>
+      <section className="py-20 relative overflow-hidden">
+        {/* Animated map dots background */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(30)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-primary rounded-full"
+              style={{
+                left: `${10 + (i % 10) * 10}%`,
+                top: `${10 + Math.floor(i / 10) * 30}%`,
+              }}
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                delay: i * 0.1,
+              }}
+            />
+          ))}
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            className="text-center mb-12"
+          >
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+              Travel Across <span className="text-gradient">5 Countries</span>
+            </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">Cross-border travel made simple</p>
           </motion.div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {countries.map((country, index) => (
               <motion.div 
                 key={country.name} 
-                initial={{ opacity: 0, scale: 0.9 }} 
-                whileInView={{ opacity: 1, scale: 1 }} 
+                initial={{ opacity: 0, scale: 0.8, rotateY: -30 }} 
+                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }} 
                 viewport={{ once: true }} 
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
               >
-                <Card 
-                  className="h-full hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-sky-500/10 cursor-pointer group" 
-                  onClick={() => handleDestinationClick(country.cities[0])}
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -10,
+                    transition: { type: "spring", stiffness: 300 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <CardContent className="p-6 text-center">
-                    <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">{country.flag}</div>
-                    <h3 className="font-display font-semibold text-lg mb-2">{country.name}</h3>
-                    <p className="text-xs text-muted-foreground">{country.cities.join(', ')}</p>
-                  </CardContent>
-                </Card>
+                  <Card 
+                    className="h-full hover:border-primary/50 transition-all hover:shadow-2xl hover:shadow-sky-500/20 cursor-pointer group relative overflow-hidden" 
+                    onClick={() => handleDestinationClick(country.cities[0])}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                    <CardContent className="p-6 text-center relative">
+                      <motion.div 
+                        className="text-5xl mb-3"
+                        animate={{ 
+                          y: [0, -5, 0],
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          ease: "easeInOut",
+                          delay: index * 0.2 
+                        }}
+                        whileHover={{ 
+                          scale: 1.3, 
+                          rotate: [0, -5, 5, 0],
+                          transition: { duration: 0.3 }
+                        }}
+                      >
+                        {country.flag}
+                      </motion.div>
+                      <h3 className="font-display font-semibold text-lg mb-2 group-hover:text-primary transition-colors">{country.name}</h3>
+                      <p className="text-xs text-muted-foreground">{country.cities.join(', ')}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -591,48 +888,118 @@ export default function HomePage() {
       </section>
 
       {/* Popular Destinations Section */}
-      <section className="py-20 bg-card/50">
-        <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+      <section className="py-20 bg-card/50 relative overflow-hidden">
+        {/* Animated gradient background */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{
+            background: [
+              "radial-gradient(ellipse at 0% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 100% 100%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 0% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)"
+            ]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4"
+          >
             <div>
-              <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">Popular <span className="text-gradient">Destinations</span></h2>
+              <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">
+                Popular <span className="text-gradient">Destinations</span>
+              </h2>
               <p className="text-muted-foreground">Explore East Africa's most traveled routes</p>
             </div>
-            <Button variant="outline" onClick={() => navigate('/search')} className="group">
-              View All Routes
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <motion.div whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline" onClick={() => navigate('/search')} className="group relative overflow-hidden">
+                <span className="relative z-10">View All Routes</span>
+                <motion.div 
+                  className="absolute inset-0 bg-primary/10"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform relative z-10" />
+              </Button>
+            </motion.div>
           </motion.div>
+          
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {destinations.slice(0, 12).map((city, index) => (
               <motion.div
                 key={city}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.05, type: "spring", stiffness: 100 }}
                 onClick={() => handleDestinationClick(city)}
-                className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all"
+                className="group relative overflow-hidden rounded-xl aspect-square cursor-pointer"
               >
-                <img 
-                  src={getDestinationImage(city)} 
-                  alt={`${city} - East Africa`}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                />
+                <motion.div
+                  className="absolute inset-0"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <img 
+                    src={getDestinationImage(city)} 
+                    alt={`${city} - East Africa`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </motion.div>
+                
+                {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
+                
+                {/* Hover overlay with animated border */}
+                <motion.div 
+                  className="absolute inset-0 rounded-xl"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ 
+                    opacity: 1,
+                    boxShadow: "inset 0 0 0 2px rgba(56, 189, 248, 0.5)"
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.div 
+                  className="absolute inset-0 bg-primary/20"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                />
+                
+                {/* City name */}
+                <motion.div 
+                  className="absolute bottom-0 left-0 right-0 p-4"
+                  initial={{ y: 0 }}
+                  whileHover={{ y: -5 }}
+                >
                   <div className="flex items-center gap-2 text-white">
-                    <MapPin className="h-4 w-4" />
+                    <motion.div
+                      animate={{ y: [0, -2, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <MapPin className="h-4 w-4" />
+                    </motion.div>
                     <span className="font-medium">{city}</span>
                   </div>
-                </div>
-                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                </motion.div>
+                
+                {/* Arrow icon */}
+                <motion.div 
+                  className="absolute top-3 right-3"
+                  initial={{ opacity: 0, scale: 0, rotate: -45 }}
+                  whileHover={{ opacity: 1, scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
                   <div className="bg-white/90 rounded-full p-2">
                     <ArrowRight className="h-4 w-4 text-primary" />
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             ))}
           </div>
@@ -640,80 +1007,235 @@ export default function HomePage() {
       </section>
 
       {/* Featured Trips Section - Multi-modal */}
-      <section className="py-20">
+      <section className="py-20 relative">
         <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
+          >
             <div>
-              <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">Featured <span className="text-gradient">Trips</span></h2>
-              <p className="text-muted-foreground">Buses, flights, trains & ferries - all in one place</p>
+              <motion.h2 
+                className="font-display text-3xl md:text-4xl font-bold mb-2"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                Featured <span className="text-gradient">Trips</span>
+              </motion.h2>
+              <motion.p 
+                className="text-muted-foreground"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                Buses, flights, trains & ferries - all in one place
+              </motion.p>
             </div>
-            <Button variant="outline" onClick={() => navigate('/search')} className="group">
-              View All Trips
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <motion.div whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline" onClick={() => navigate('/search')} className="group">
+                View All Trips
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </motion.div>
           </motion.div>
           
-          {/* Travel mode filter */}
-          <div className="flex flex-wrap items-center gap-2 mb-8">
-            <Badge 
-              variant={selectedMode === 'all' ? 'default' : 'outline'} 
-              className="cursor-pointer px-4 py-2 text-sm"
-              onClick={() => setSelectedMode('all')}
-            >
-              All
-            </Badge>
-            {travelModes.map((mode) => (
+          {/* Travel mode filter with animations */}
+          <motion.div 
+            className="flex flex-wrap items-center gap-2 mb-8"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Badge 
-                key={mode.mode}
-                variant={selectedMode === mode.mode ? 'default' : 'outline'} 
-                className="cursor-pointer px-4 py-2 text-sm"
-                onClick={() => setSelectedMode(mode.mode)}
+                variant={selectedMode === 'all' ? 'default' : 'outline'} 
+                className="cursor-pointer px-4 py-2 text-sm transition-all duration-300"
+                onClick={() => setSelectedMode('all')}
               >
-                <span className="mr-1">{mode.emoji}</span>
-                {mode.name}
+                All
               </Badge>
+            </motion.div>
+            {travelModes.map((mode, i) => (
+              <motion.div 
+                key={mode.mode}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                <Badge 
+                  variant={selectedMode === mode.mode ? 'default' : 'outline'} 
+                  className="cursor-pointer px-4 py-2 text-sm transition-all duration-300"
+                  onClick={() => setSelectedMode(mode.mode)}
+                >
+                  <motion.span 
+                    className="mr-1"
+                    animate={selectedMode === mode.mode ? { rotate: [0, 10, -10, 0] } : {}}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {mode.emoji}
+                  </motion.span>
+                  {mode.name}
+                </Badge>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          {isLoading ? (
-            <div className="grid gap-4 md:grid-cols-2">
-              {[1, 2, 3, 4].map((i) => (
-                <TripCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {filteredTrips.slice(0, 6).map((trip, index) => (
-                <TripCard key={trip.id} trip={trip} index={index} />
-              ))}
-            </div>
-          )}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div 
+                key="skeleton"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="grid gap-4 md:grid-cols-2"
+              >
+                {[1, 2, 3, 4].map((i) => (
+                  <TripCardSkeleton key={i} />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="trips"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="grid gap-4 md:grid-cols-2"
+              >
+                {filteredTrips.slice(0, 6).map((trip, index) => (
+                  <TripCard key={trip.id} trip={trip} index={index} />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-20 bg-card/50">
         <div className="container mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-sky-500 to-maroon-700 p-8 md:p-16 text-center">
-            <div className="absolute inset-0 pattern-dots opacity-20" />
+          <motion.div 
+            initial={{ opacity: 0, y: 40, scale: 0.95 }} 
+            whileInView={{ opacity: 1, y: 0, scale: 1 }} 
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, type: "spring" }}
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-sky-500 to-maroon-700 p-8 md:p-16 text-center"
+          >
+            {/* Animated background pattern */}
+            <motion.div 
+              className="absolute inset-0 pattern-dots opacity-20"
+              animate={{ 
+                backgroundPosition: ["0% 0%", "100% 100%"],
+              }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
+            
+            {/* Floating orbs */}
+            <motion.div 
+              className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"
+              animate={{ 
+                x: [0, 50, 0],
+                y: [0, 30, 0],
+                scale: [1, 1.2, 1]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div 
+              className="absolute bottom-10 right-10 w-40 h-40 bg-maroon-500/20 rounded-full blur-2xl"
+              animate={{ 
+                x: [0, -50, 0],
+                y: [0, -30, 0],
+                scale: [1.2, 1, 1.2]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+            
             <div className="relative z-10">
+              {/* Animated travel mode icons */}
               <div className="flex justify-center gap-4 mb-6">
-                {travelModes.map((mode) => (
-                  <div key={mode.mode} className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
-                    <span className="text-2xl">{mode.emoji}</span>
-                  </div>
+                {travelModes.map((mode, i) => (
+                  <motion.div 
+                    key={mode.mode} 
+                    className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.2, 
+                      rotate: [0, -10, 10, 0],
+                      transition: { duration: 0.3 }
+                    }}
+                  >
+                    <motion.span 
+                      className="text-2xl block"
+                      animate={{ y: [0, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                    >
+                      {mode.emoji}
+                    </motion.span>
+                  </motion.div>
                 ))}
               </div>
-              <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-4">Ready to Explore East Africa?</h2>
-              <p className="text-white/80 text-lg max-w-xl mx-auto mb-8">Book buses, flights, trains & ferries across Kenya, Uganda, Rwanda, Congo & Tanzania. Twende!</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="xl" className="bg-white text-sky-600 hover:bg-white/90" onClick={() => navigate('/register')}>
-                  <Sparkles className="mr-2 h-5 w-5" />Get Started Free
-                </Button>
-                <Button size="xl" variant="glass" onClick={() => navigate('/search')}>
-                  <Star className="mr-2 h-5 w-5" />Explore Trips
-                </Button>
-              </div>
+              
+              <motion.h2 
+                className="font-display text-3xl md:text-5xl font-bold text-white mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                Ready to Explore East Africa?
+              </motion.h2>
+              
+              <motion.p 
+                className="text-white/80 text-lg max-w-xl mx-auto mb-8"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+              >
+                Book buses, flights, trains & ferries across Kenya, Uganda, Rwanda, Congo & Tanzania. Twende!
+              </motion.p>
+              
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+              >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button 
+                    size="xl" 
+                    className="bg-white text-sky-600 hover:bg-white/90 relative overflow-hidden group" 
+                    onClick={() => navigate('/register')}
+                  >
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-r from-sky-100 to-transparent"
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <motion.span
+                      animate={{ rotate: [0, 15, -15, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Sparkles className="mr-2 h-5 w-5 relative z-10" />
+                    </motion.span>
+                    <span className="relative z-10">Get Started Free</span>
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="xl" variant="glass" onClick={() => navigate('/search')}>
+                    <Star className="mr-2 h-5 w-5" />Explore Trips
+                  </Button>
+                </motion.div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
