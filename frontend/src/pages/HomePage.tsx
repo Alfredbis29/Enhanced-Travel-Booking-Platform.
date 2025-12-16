@@ -503,8 +503,6 @@ export default function HomePage() {
         
         if (destinationsData && Array.isArray(destinationsData) && destinationsData.length > 0) {
           setDestinations(destinationsData)
-        } else if (destinationsData?.destinations?.length) {
-          setDestinations(destinationsData.destinations)
         }
       } catch (error) {
         console.error('Failed to load homepage data:', error)
@@ -1187,8 +1185,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-              >
+                transition={{ delay: 0.2 }}>
                 Ready to Explore East Africa?
               </motion.h2>
               
@@ -1213,14 +1210,12 @@ export default function HomePage() {
                   <Button 
                     size="xl" 
                     className="bg-white text-sky-600 hover:bg-white/90 relative overflow-hidden group" 
-                    onClick={() => navigate('/register')}
-                  >
+                    onClick={() => navigate('/register')}>
                     <motion.div 
                       className="absolute inset-0 bg-gradient-to-r from-sky-100 to-transparent"
                       initial={{ x: "-100%" }}
                       whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.5 }}
-                    />
+                      transition={{ duration: 0.5 }}/>
                     <motion.span
                       animate={{ rotate: [0, 15, -15, 0] }}
                       transition={{ duration: 2, repeat: Infinity }}

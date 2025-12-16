@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Phone, CreditCard, Loader2, Shield, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -368,6 +368,7 @@ function PaymentFailed({ onRetry }: { onRetry: () => void }) {
     </motion.div>
   )
 }
+
 
 
 

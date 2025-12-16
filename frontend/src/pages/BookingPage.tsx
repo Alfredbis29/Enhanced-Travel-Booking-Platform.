@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, MapPin, Clock, Calendar, User, Phone, Mail, CreditCard, 
-  CheckCircle, Loader2, Star, Users, Minus, Plus, Bus, Smartphone,
-  AlertCircle, ArrowRight, Shield, RefreshCw
+  CheckCircle, Loader2, Star, Minus, Plus, Bus, Smartphone,
+  ArrowRight, Shield, RefreshCw
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -55,18 +55,6 @@ const getCityCountry = (city: string): string => {
   return countryMap[city] || 'Kenya'
 }
 
-// Currency by country
-const getCurrencyByCountry = (country: string): PaymentCurrency => {
-  const currencyMap: Record<string, PaymentCurrency> = {
-    'Kenya': 'KES',
-    'Uganda': 'UGX',
-    'Rwanda': 'RWF',
-    'DRC': 'CDF',
-    'Tanzania': 'KES' // Tanzania uses KES for cross-border
-  }
-  return currencyMap[country] || 'KES'
-}
-
 // Fallback trips for when API fails
 const fallbackTrips: Record<string, Trip> = {
   'trip-001': { id: 'trip-001', provider: 'easy-coach', provider_name: 'Easy Coach', origin: 'Nairobi', destination: 'Mombasa', departure_time: new Date(Date.now() + 86400000).toISOString(), arrival_time: new Date(Date.now() + 86400000 + 28800000).toISOString(), duration_minutes: 480, price: 1500, currency: 'KES', available_seats: 24, total_seats: 45, bus_type: 'Executive', amenities: ['WiFi', 'AC', 'USB Charging', 'Reclining Seats'], rating: 4.5, image_url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop&q=80' },
@@ -101,7 +89,7 @@ export default function BookingPage() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null)
   const [paymentPhone, setPaymentPhone] = useState(passengerPhone)
   const [paymentId, setPaymentId] = useState<string>('')
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('pending')
+  const [, setPaymentStatus] = useState<PaymentStatus>('pending')
   const [paymentInstructions, setPaymentInstructions] = useState<string>('')
   const [isCheckingPayment, setIsCheckingPayment] = useState(false)
 
