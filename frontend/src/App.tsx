@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import HomePage from '@/pages/HomePage'
-import SearchPage from '@/pages/SearchPage'
+import SearchPage from '@/pages/SearchPage' 
 import BookingPage from '@/pages/BookingPage'
 import BookingsListPage from '@/pages/BookingsListPage'
 import LoginPage from '@/pages/LoginPage'
@@ -20,7 +20,7 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/search" element={<SearchPage />} />
+            <Route path="/seaTrch" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/booking/:tripId" element={<BookingPage />} />
@@ -30,8 +30,7 @@ function App() {
                 <ProtectedRoute>
                   <BookingsListPage />
                 </ProtectedRoute>
-              }
-            />
+              }/>
             <Route
               path="/profile"
               element={
