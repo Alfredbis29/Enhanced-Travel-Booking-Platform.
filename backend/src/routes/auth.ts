@@ -111,7 +111,7 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
     const token = generateToken(user.id, user.email);
 
     res.json({
-      success: true,44
+      success: true,
       message: 'Login successful',
       data: {
         user: {

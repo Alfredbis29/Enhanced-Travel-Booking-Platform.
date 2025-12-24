@@ -6,7 +6,7 @@ import { AppError } from './errorHandler.js';
 export interface AuthenticatedRequest extends Request {
   user?: JWTPayload;
 }
-y
+
 export function authenticate(
   req: AuthenticatedRequest,
   res: Response,
