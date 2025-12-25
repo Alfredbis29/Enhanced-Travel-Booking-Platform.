@@ -21,8 +21,17 @@ import { PAYMENT_METHOD_INFO, PAYMENT_METHODS_BY_COUNTRY } from '@/types'
 
 // Format helpers
 const formatCurrency = (amount: number, currency: string): string => {
-  const symbols: Record<string, string> = { KES: 'Ksh', UGX: 'USh', RWF: 'FRw', USD: '$', CDF: 'FC', TZS: 'TSh' }
+  const symbols: Record<string, string> = { 
+    KES: 'Ksh', UGX: 'USh', RWF: 'FRw', USD: '$', CDF: 'FC', TZS: 'TSh',
+    ETB: 'Br', BIF: 'FBu', SSP: '£', EUR: '€', GBP: '£'
+  }
   return `${symbols[currency] || currency} ${amount.toLocaleString()}`
+}
+
+// Email validation helper
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return email === '' || emailRegex.test(email)
 }
 
 const formatTime = (dateString: string): string => {
