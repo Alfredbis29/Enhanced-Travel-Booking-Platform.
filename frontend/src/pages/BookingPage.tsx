@@ -910,6 +910,19 @@ export default function BookingPage() {
                 <QrCode className="inline h-4 w-4 mr-1" />
                 Show your ticket to the driver or conductor when boarding
               </p>
+              
+              {/* Travel Tips */}
+              <Card className="mt-6 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">📝 Travel Tips</h4>
+                  <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
+                    <li>• Arrive at the departure point 30 minutes early</li>
+                    <li>• Carry a valid ID (National ID or Passport)</li>
+                    <li>• Keep your booking reference handy: <strong>{bookingRef}</strong></li>
+                    <li>• Contact support: +254 700 123 456</li>
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
           </motion.div>
         </div>
