@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, MapPin, Clock, Calendar, User, Phone, Mail, CreditCard, 
   CheckCircle, Loader2, Star, Minus, Plus, Bus, Smartphone,
-  ArrowRight, Shield, RefreshCw
+  ArrowRight, Shield, RefreshCw, Download, Ticket, QrCode
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -284,6 +284,324 @@ export default function BookingPage() {
     }
   }
 
+  // Generate and download ticket as PDF
+  const handleDownloadTicket = () => {
+    if (!trip) return
+
+    const ticketHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Ticket - ${bookingRef}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .ticket-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    }
+    .ticket-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    .ticket-header h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+      letter-spacing: 2px;
+    }
+    .ticket-header p {
+      opacity: 0.8;
+      font-size: 14px;
+    }
+    .ticket-body {
+      padding: 30px;
+    }
+    .booking-ref {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .booking-ref .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.9;
+    }
+    .booking-ref .ref-number {
+      font-size: 32px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      margin-top: 5px;
+      letter-spacing: 3px;
+    }
+    .route-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 2px dashed #e5e7eb;
+      margin-bottom: 20px;
+    }
+    .city {
+      text-align: center;
+      flex: 1;
+    }
+    .city .name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a1a2e;
+    }
+    .city .label {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+    .route-arrow {
+      font-size: 30px;
+      color: #667eea;
+      padding: 0 20px;
+    }
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+    .detail-item {
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 10px;
+    }
+    .detail-item .label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .detail-item .value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-top: 5px;
+    }
+    .qr-section {
+      text-align: center;
+      padding: 25px;
+      background: #f9fafb;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .qr-placeholder {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      margin: 0 auto 15px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 50px;
+    }
+    .qr-section p {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .passenger-section {
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .passenger-section h3 {
+      color: #15803d;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .passenger-section .name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1a1a2e;
+    }
+    .passenger-section .seats {
+      color: #6b7280;
+      margin-top: 5px;
+    }
+    .price-section {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .price-section .label {
+      font-size: 14px;
+      color: #92400e;
+    }
+    .price-section .amount {
+      font-size: 28px;
+      font-weight: bold;
+      color: #78350f;
+    }
+    .ticket-footer {
+      background: #f9fafb;
+      padding: 20px 30px;
+      text-align: center;
+      border-top: 2px dashed #e5e7eb;
+    }
+    .ticket-footer p {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+    .status-badge {
+      display: inline-block;
+      background: #22c55e;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+    @media print {
+      body { 
+        background: white; 
+        padding: 0;
+      }
+      .ticket-container {
+        box-shadow: none;
+        border: 2px solid #e5e7eb;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket-container">
+    <div class="ticket-header">
+      <h1>🌍 TRAVELWISE</h1>
+      <p>East Africa Travel Booking Platform</p>
+    </div>
+    
+    <div class="ticket-body">
+      <div class="booking-ref">
+        <div class="label">Booking Reference</div>
+        <div class="ref-number">${bookingRef}</div>
+        <div class="status-badge">✓ CONFIRMED & PAID</div>
+      </div>
+      
+      <div class="route-section">
+        <div class="city">
+          <div class="name">${trip.origin}</div>
+          <div class="label">Departure</div>
+        </div>
+        <div class="route-arrow">→</div>
+        <div class="city">
+          <div class="name">${trip.destination}</div>
+          <div class="label">Arrival</div>
+        </div>
+      </div>
+      
+      <div class="details-grid">
+        <div class="detail-item">
+          <div class="label">Date</div>
+          <div class="value">${formatDate(trip.departure_time)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Departure Time</div>
+          <div class="value">${formatTime(trip.departure_time)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Duration</div>
+          <div class="value">${trip.duration_minutes ? formatDuration(trip.duration_minutes) : 'N/A'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Transport Provider</div>
+          <div class="value">${trip.provider_name}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Vehicle Type</div>
+          <div class="value">${trip.bus_type || trip.vehicle_type || 'Standard'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">Payment Method</div>
+          <div class="value">${selectedPaymentMethod ? PAYMENT_METHOD_INFO[selectedPaymentMethod].name : 'N/A'}</div>
+        </div>
+      </div>
+      
+      <div class="qr-section">
+        <div class="qr-placeholder">📱</div>
+        <p>Show this ticket to the driver or conductor</p>
+        <p style="font-weight: bold; margin-top: 5px;">Ticket ID: ${bookingRef}</p>
+      </div>
+      
+      <div class="passenger-section">
+        <h3>Passenger Details</h3>
+        <div class="name">${passengerName}</div>
+        <div class="seats">${seats} seat(s) • ${passengerPhone}</div>
+      </div>
+      
+      <div class="price-section">
+        <div class="label">Total Amount Paid</div>
+        <div class="amount">${formatCurrency(totalPrice, trip.currency)}</div>
+      </div>
+    </div>
+    
+    <div class="ticket-footer">
+      <p>
+        <strong>Important:</strong> Please arrive at the departure point at least 30 minutes before departure time.
+        <br>Present this ticket (printed or on your phone) to board.
+        <br>For support, contact: support@travelwise.africa
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    window.onload = function() {
+      window.print();
+    }
+  </script>
+</body>
+</html>
+    `
+
+    // Create blob and download
+    const blob = new Blob([ticketHTML], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `TravelWise-Ticket-${bookingRef}.html`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    
+    toast({ title: 'Ticket Downloaded!', description: 'Open the file to print or save as PDF.' })
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen py-8">
@@ -426,13 +744,38 @@ export default function BookingPage() {
               </CardContent>
             </Card>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={() => navigate('/bookings')} variant="default">
-                View My Bookings
-              </Button>
-              <Button variant="outline" onClick={() => navigate('/')}>
-                Book Another Trip
-              </Button>
+            <div className="flex flex-col gap-4">
+              {/* Download Ticket Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Button 
+                  onClick={handleDownloadTicket} 
+                  variant="gradient" 
+                  size="lg" 
+                  className="w-full group"
+                >
+                  <Download className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+                  Download Your Ticket
+                </Button>
+              </motion.div>
+              
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button onClick={() => navigate('/bookings')} variant="default">
+                  <Ticket className="mr-2 h-4 w-4" />
+                  View My Bookings
+                </Button>
+                <Button variant="outline" onClick={() => navigate('/')}>
+                  Book Another Trip
+                </Button>
+              </div>
+              
+              <p className="text-sm text-muted-foreground text-center mt-2">
+                <QrCode className="inline h-4 w-4 mr-1" />
+                Show your ticket to the driver or conductor when boarding
+              </p>
             </div>
           </motion.div>
         </div>
