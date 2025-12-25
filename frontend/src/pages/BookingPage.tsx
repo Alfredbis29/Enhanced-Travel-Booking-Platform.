@@ -34,6 +34,18 @@ const isValidEmail = (email: string): boolean => {
   return email === '' || emailRegex.test(email)
 }
 
+// Phone number formatting helper
+const formatPhoneNumber = (phone: string): string => {
+  const cleaned = phone.replace(/\D/g, '')
+  if (cleaned.length >= 12) {
+    return `+${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6, 9)} ${cleaned.slice(9)}`
+  }
+  if (cleaned.length >= 10) {
+    return `+254 ${cleaned.slice(-9, -6)} ${cleaned.slice(-6, -3)} ${cleaned.slice(-3)}`
+  }
+  return phone
+}
+
 const formatTime = (dateString: string): string => {
   const date = new Date(dateString)
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
