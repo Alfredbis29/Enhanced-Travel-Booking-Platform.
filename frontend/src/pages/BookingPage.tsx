@@ -888,10 +888,29 @@ export default function BookingPage() {
         <div className="container mx-auto px-4 max-w-2xl">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
-              <CheckCircle className="h-10 w-10 text-green-500" />
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 0.5, repeat: 2 }}
+              >
+                <CheckCircle className="h-10 w-10 text-green-500" />
+              </motion.div>
             </div>
             <h1 className="font-display text-3xl font-bold mb-2">Booking Confirmed!</h1>
-            <p className="text-muted-foreground mb-8">Your trip has been booked and payment received</p>
+            <p className="text-muted-foreground mb-4">Your trip has been booked and payment received</p>
+            
+            {/* Email confirmation notice */}
+            {passengerEmail && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 px-4 py-2 rounded-full text-sm mb-8"
+              >
+                <Mail className="h-4 w-4" />
+                Confirmation sent to {passengerEmail}
+              </motion.div>
+            )}
+            {!passengerEmail && <div className="mb-8" />}
             
             <Card className="mb-8 text-left">
               <CardContent className="p-6">
