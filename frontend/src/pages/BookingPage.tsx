@@ -46,6 +46,23 @@ const formatPhoneNumber = (phone: string): string => {
   return phone
 }
 
+// Calculate time until departure
+const getTimeUntilDeparture = (departureTime: string): string => {
+  const now = new Date()
+  const departure = new Date(departureTime)
+  const diff = departure.getTime() - now.getTime()
+  
+  if (diff <= 0) return 'Departed'
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  
+  if (days > 0) return `${days}d ${hours}h until departure`
+  if (hours > 0) return `${hours}h ${minutes}m until departure`
+  return `${minutes}m until departure`
+}
+
 const formatTime = (dateString: string): string => {
   const date = new Date(dateString)
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
