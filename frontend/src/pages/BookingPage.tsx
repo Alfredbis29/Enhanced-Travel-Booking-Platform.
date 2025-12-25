@@ -1015,6 +1015,19 @@ export default function BookingPage() {
                   </ul>
                 </CardContent>
               </Card>
+              
+              {/* Cancellation Policy */}
+              <Card className="mt-4 bg-purple-50 dark:bg-purple-950/30 border-purple-200 dark:border-purple-800">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3">🔄 Cancellation Policy</h4>
+                  <ul className="text-sm text-purple-700 dark:text-purple-300 space-y-2">
+                    <li>• 24+ hours before: Full refund</li>
+                    <li>• 12-24 hours before: 50% refund</li>
+                    <li>• Less than 12 hours: No refund</li>
+                    <li>• Reschedule: Free up to 6 hours before departure</li>
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
           </motion.div>
         </div>
