@@ -1002,6 +1002,19 @@ export default function BookingPage() {
                   </ul>
                 </CardContent>
               </Card>
+              
+              {/* Luggage Policy */}
+              <Card className="mt-4 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-3">🧳 Luggage Policy</h4>
+                  <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-2">
+                    <li>• Free luggage: 1 bag (max 20kg) + 1 carry-on (max 7kg)</li>
+                    <li>• Extra luggage: Additional fee applies at boarding</li>
+                    <li>• Fragile items: Carry with you on board</li>
+                    <li>• Prohibited: Hazardous materials, live animals</li>
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
           </motion.div>
         </div>
