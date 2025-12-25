@@ -850,7 +850,7 @@ export default function BookingPage() {
 
   const totalPrice = trip.price * seats
 
-  // Step Indicator Component
+  // Step Indicator Component with animations
   const StepIndicator = () => (
     <div className="flex items-center justify-center gap-2 mb-8">
       {['details', 'payment', 'confirmed'].map((s, i) => {
@@ -864,18 +864,35 @@ export default function BookingPage() {
           (s === 'payment' && step === 'confirmed')
         
         return (
-          <div key={s} className="flex items-center">
-            <div className={`
-              w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors
-              ${isCompleted ? 'bg-green-500 text-white' : isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}
-            `}>
+          <motion.div 
+            key={s} 
+            className="flex items-center"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+          >
+            <motion.div 
+              className={`
+                w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors
+                ${isCompleted ? 'bg-green-500 text-white' : isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}
+              `}
+              animate={isActive ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ duration: 0.3 }}
+            >
               {isCompleted ? <CheckCircle className="h-4 w-4" /> : stepNum}
-            </div>
+            </motion.div>
             <span className={`ml-2 text-sm hidden sm:inline ${isActive ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
               {s === 'details' ? 'Details' : s === 'payment' ? 'Payment' : 'Confirmed'}
             </span>
-            {i < 2 && <ArrowRight className="mx-3 h-4 w-4 text-muted-foreground" />}
-          </div>
+            {i < 2 && (
+              <motion.div
+                animate={isCompleted ? { x: [0, 5, 0] } : {}}
+                transition={{ duration: 0.5, repeat: isCompleted ? 0 : 0 }}
+              >
+                <ArrowRight className={`mx-3 h-4 w-4 ${isCompleted ? 'text-green-500' : 'text-muted-foreground'}`} />
+              </motion.div>
+            )}
+          </motion.div>
         )
       })}
     </div>
