@@ -63,6 +63,25 @@ const getTimeUntilDeparture = (departureTime: string): string => {
   return `${minutes}m until departure`
 }
 
+// Amenity icons mapping
+const getAmenityIcon = (amenity: string): string => {
+  const icons: Record<string, string> = {
+    'WiFi': '📶',
+    'AC': '❄️',
+    'USB Charging': '🔌',
+    'Reclining Seats': '💺',
+    'Meals': '🍽️',
+    'Entertainment': '🎬',
+    'Snacks': '🍪',
+    'Refreshments': '🥤',
+    'Toilet': '🚻',
+    'Luggage': '🧳',
+    'Blanket': '🛏️',
+    'Reading Light': '💡'
+  }
+  return icons[amenity] || '✓'
+}
+
 const formatTime = (dateString: string): string => {
   const date = new Date(dateString)
   return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
