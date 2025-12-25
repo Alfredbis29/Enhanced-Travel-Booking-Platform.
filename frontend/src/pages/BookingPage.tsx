@@ -64,14 +64,30 @@ const formatDuration = (minutes: number): string => {
   return `${hours}h ${mins}m`
 }
 
-// Get country from city
+// Get country from city - comprehensive mapping
 const getCityCountry = (city: string): string => {
   const countryMap: Record<string, string> = {
-    'Nairobi': 'Kenya', 'Mombasa': 'Kenya', 'Kisumu': 'Kenya', 'Nakuru': 'Kenya', 'Eldoret': 'Kenya', 'Malindi': 'Kenya',
+    // Kenya
+    'Nairobi': 'Kenya', 'Mombasa': 'Kenya', 'Kisumu': 'Kenya', 'Nakuru': 'Kenya', 'Eldoret': 'Kenya', 
+    'Malindi': 'Kenya', 'Thika': 'Kenya', 'Kitale': 'Kenya', 'Garissa': 'Kenya', 'Nyeri': 'Kenya',
+    // Uganda
     'Kampala': 'Uganda', 'Jinja': 'Uganda', 'Mbarara': 'Uganda', 'Entebbe': 'Uganda', 'Gulu': 'Uganda',
-    'Kigali': 'Rwanda', 'Butare': 'Rwanda', 'Gisenyi': 'Rwanda', 'Ruhengeri': 'Rwanda',
+    'Mbale': 'Uganda', 'Masaka': 'Uganda', 'Fort Portal': 'Uganda', 'Kasese': 'Uganda', 'Lira': 'Uganda',
+    // Tanzania
+    'Dar es Salaam': 'Tanzania', 'Arusha': 'Tanzania', 'Mwanza': 'Tanzania', 'Dodoma': 'Tanzania',
+    'Zanzibar': 'Tanzania', 'Moshi': 'Tanzania', 'Tanga': 'Tanzania', 'Morogoro': 'Tanzania', 'Kigoma': 'Tanzania',
+    // Rwanda
+    'Kigali': 'Rwanda', 'Butare': 'Rwanda', 'Gisenyi': 'Rwanda', 'Ruhengeri': 'Rwanda', 
+    'Musanze': 'Rwanda', 'Rubavu': 'Rwanda', 'Huye': 'Rwanda', 'Muhanga': 'Rwanda',
+    // DRC
     'Goma': 'DRC', 'Bukavu': 'DRC', 'Kinshasa': 'DRC', 'Lubumbashi': 'DRC',
-    'Dar es Salaam': 'Tanzania', 'Arusha': 'Tanzania', 'Mwanza': 'Tanzania', 'Dodoma': 'Tanzania'
+    'Kisangani': 'DRC', 'Bunia': 'DRC', 'Beni': 'DRC', 'Butembo': 'DRC', 'Uvira': 'DRC',
+    // Burundi
+    'Bujumbura': 'Burundi', 'Gitega': 'Burundi', 'Ngozi': 'Burundi', 'Rumonge': 'Burundi', 'Muyinga': 'Burundi',
+    // South Sudan
+    'Juba': 'South Sudan', 'Malakal': 'South Sudan', 'Wau': 'South Sudan', 'Yei': 'South Sudan', 'Nimule': 'South Sudan',
+    // Ethiopia
+    'Addis Ababa': 'Ethiopia', 'Moyale': 'Ethiopia', 'Dire Dawa': 'Ethiopia', 'Harar': 'Ethiopia', 'Hawassa': 'Ethiopia'
   }
   return countryMap[city] || 'Kenya'
 }
