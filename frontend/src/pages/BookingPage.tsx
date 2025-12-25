@@ -1028,6 +1028,19 @@ export default function BookingPage() {
                   </ul>
                 </CardContent>
               </Card>
+              
+              {/* Terms and Support */}
+              <div className="mt-6 text-center text-sm text-muted-foreground">
+                <p>By completing this booking, you agree to our</p>
+                <p className="mt-1">
+                  <a href="/terms" className="text-primary hover:underline">Terms & Conditions</a>
+                  {' • '}
+                  <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>
+                  {' • '}
+                  <a href="/support" className="text-primary hover:underline">Support</a>
+                </p>
+                <p className="mt-2">© 2024 TravelWise Africa. All rights reserved.</p>
+              </div>
             </div>
           </motion.div>
         </div>
