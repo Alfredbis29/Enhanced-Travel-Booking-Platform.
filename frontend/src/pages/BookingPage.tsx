@@ -28,59 +28,6 @@ const formatCurrency = (amount: number, currency: string): string => {
   return `${symbols[currency] || currency} ${amount.toLocaleString()}`
 }
 
-// Email validation helper
-const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return email === '' || emailRegex.test(email)
-}
-
-// Phone number formatting helper
-const formatPhoneNumber = (phone: string): string => {
-  const cleaned = phone.replace(/\D/g, '')
-  if (cleaned.length >= 12) {
-    return `+${cleaned.slice(0, 3)} ${cleaned.slice(3, 6)} ${cleaned.slice(6, 9)} ${cleaned.slice(9)}`
-  }
-  if (cleaned.length >= 10) {
-    return `+254 ${cleaned.slice(-9, -6)} ${cleaned.slice(-6, -3)} ${cleaned.slice(-3)}`
-  }
-  return phone
-}
-
-// Calculate time until departure
-const getTimeUntilDeparture = (departureTime: string): string => {
-  const now = new Date()
-  const departure = new Date(departureTime)
-  const diff = departure.getTime() - now.getTime()
-  
-  if (diff <= 0) return 'Departed'
-  
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  
-  if (days > 0) return `${days}d ${hours}h until departure`
-  if (hours > 0) return `${hours}h ${minutes}m until departure`
-  return `${minutes}m until departure`
-}
-
-// Amenity icons mapping
-const getAmenityIcon = (amenity: string): string => {
-  const icons: Record<string, string> = {
-    'WiFi': '📶',
-    'AC': '❄️',
-    'USB Charging': '🔌',
-    'Reclining Seats': '💺',
-    'Meals': '🍽️',
-    'Entertainment': '🎬',
-    'Snacks': '🍪',
-    'Refreshments': '🥤',
-    'Toilet': '🚻',
-    'Luggage': '🧳',
-    'Blanket': '🛏️',
-    'Reading Light': '💡'
-  }
-  return icons[amenity] || '✓'
-}
 
 const formatTime = (dateString: string): string => {
   const date = new Date(dateString)
