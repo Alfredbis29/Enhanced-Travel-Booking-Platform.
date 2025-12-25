@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, MapPin, Clock, Calendar, User, Phone, Mail, CreditCard, 
   CheckCircle, Loader2, Star, Minus, Plus, Bus, Smartphone,
-  ArrowRight, Shield, RefreshCw, Download, Ticket, QrCode
+  ArrowRight, Shield, RefreshCw, Download, Ticket, QrCode, Share2, Copy
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -736,6 +736,39 @@ export default function BookingPage() {
     toast({ title: 'Ticket Downloaded!', description: 'Open the file to print or save as PDF.' })
   }
 
+  // Share booking details
+  const handleShareBooking = async () => {
+    if (!trip) return
+    
+    const shareText = `🎫 TravelWise Booking Confirmed!\n\n📍 ${trip.origin} → ${trip.destination}\n📅 ${formatDate(trip.departure_time)} at ${formatTime(trip.departure_time)}\n🚌 ${trip.provider_name}\n🎟️ Ref: ${bookingRef}\n💰 ${formatCurrency(totalPrice, trip.currency)}\n\nBook your trip at travelwise.africa`
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'TravelWise Booking',
+          text: shareText,
+        })
+        toast({ title: 'Shared!', description: 'Booking details shared successfully.' })
+      } catch (error) {
+        console.log('Share cancelled')
+      }
+    } else {
+      // Fallback: copy to clipboard
+      handleCopyBookingRef()
+    }
+  }
+
+  // Copy booking reference to clipboard
+  const handleCopyBookingRef = async () => {
+    try {
+      await navigator.clipboard.writeText(bookingRef)
+      toast({ title: 'Copied!', description: `Booking reference ${bookingRef} copied to clipboard.` })
+    } catch (error) {
+      console.error('Failed to copy:', error)
+      toast({ title: 'Copy Failed', description: 'Please manually copy the booking reference.', variant: 'destructive' })
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen py-8">
@@ -829,11 +862,21 @@ export default function BookingPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <p className="text-sm text-muted-foreground">Booking Reference</p>
-                    <p className="text-2xl font-bold font-mono text-primary">{bookingRef}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-2xl font-bold font-mono text-primary">{bookingRef}</p>
+                      <Button variant="ghost" size="icon" onClick={handleCopyBookingRef} className="h-8 w-8">
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <Badge variant="default" className="bg-green-500/20 text-green-500 border-green-500/30">
-                    Paid
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="icon" onClick={handleShareBooking} className="h-9 w-9">
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                    <Badge variant="default" className="bg-green-500/20 text-green-500 border-green-500/30">
+                      Paid
+                    </Badge>
+                  </div>
                 </div>
                 
                 <Separator className="mb-6" />
