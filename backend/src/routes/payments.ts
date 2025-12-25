@@ -311,7 +311,8 @@ router.post('/:paymentId/refund', authenticate, [
       message: error instanceof Error ? error.message : 'Failed to process refund' 
     });
   }
-});
+}
+);
 
 // ==================== WEBHOOK ENDPOINTS ====================
 

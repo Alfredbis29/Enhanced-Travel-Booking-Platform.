@@ -89,31 +89,42 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha'] },
 ]
 
-// Real city images from Unsplash
+// Real city images from Unsplash - high quality destination photos
 const destinationImages: Record<string, string> = {
+  // Kenya
   'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80',
   'Mombasa': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80',
   'Kisumu': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80',
   'Nakuru': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
   'Eldoret': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
-  'Kampala': 'https://images.unsplash.com/photo-1597476817120-7a87ec431a92?w=400&h=400&fit=crop&q=80',
+  'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80',
+  // Uganda - Kampala featured prominently
+  'Kampala': 'https://images.unsplash.com/photo-1619468129361-605ebea04b44?w=400&h=400&fit=crop&q=80',
   'Jinja': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop&q=80',
   'Entebbe': 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=400&h=400&fit=crop&q=80',
-  'Kigali': 'https://images.unsplash.com/photo-1580746738099-78d6833b3e86?w=400&h=400&fit=crop&q=80',
+  'Mbarara': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
+  // Rwanda - Kigali featured prominently
+  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80',
   'Butare': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
   'Gisenyi': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80',
-  'Goma': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
+  'Musanze': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
+  // DRC
+  'Goma': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
   'Bukavu': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80',
   'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80',
+  // Tanzania
   'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80',
   'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop&q=80',
-  'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80',
+  'Zanzibar': 'https://images.unsplash.com/photo-1586892477838-2b96e85e0f96?w=400&h=400&fit=crop&q=80',
   'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80',
+  // Burundi
+  'Bujumbura': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80',
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
 
-const fallbackDestinations = ['Nairobi', 'Mombasa', 'Kampala', 'Kigali', 'Goma', 'Dar es Salaam', 'Kisumu', 'Arusha', 'Jinja', 'Eldoret', 'Nakuru', 'Entebbe']
+// Featured destinations - Kampala and Kigali prominently displayed
+const fallbackDestinations = ['Nairobi', 'Kampala', 'Kigali', 'Mombasa', 'Dar es Salaam', 'Arusha', 'Goma', 'Kisumu', 'Jinja', 'Entebbe', 'Zanzibar', 'Bujumbura']
 
 // Multi-modal fallback trips - buses, flights, trains, ferries
 const fallbackTrips: Trip[] = [
