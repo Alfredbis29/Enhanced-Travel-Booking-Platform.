@@ -90,39 +90,39 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha', 'Zanzibar'] },
 ]
 
-// City images using Unsplash Source (designed for embedding)
+// City images using reliable Unsplash direct URLs
 const destinationImages: Record<string, string> = {
   // Kenya 🇰🇪
-  'Nairobi': 'https://source.unsplash.com/400x400/?nairobi,city,skyline',
-  'Mombasa': 'https://source.unsplash.com/400x400/?mombasa,beach,fort',
-  'Kisumu': 'https://source.unsplash.com/400x400/?lake,victoria,africa',
-  'Nakuru': 'https://source.unsplash.com/400x400/?flamingo,lake,kenya',
-  'Eldoret': 'https://source.unsplash.com/400x400/?kenya,highlands,green',
-  'Malindi': 'https://source.unsplash.com/400x400/?beach,tropical,coast',
+  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80', // Nairobi skyline
+  'Mombasa': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=400&fit=crop&q=80', // Tropical beach
+  'Kisumu': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&h=400&fit=crop&q=80', // Lake sunset
+  'Nakuru': 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=400&fit=crop&q=80', // Flamingos
+  'Eldoret': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80', // Green highlands
+  'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80', // Beach
   // Uganda 🇺🇬
-  'Kampala': 'https://source.unsplash.com/400x400/?kampala,mosque,uganda',
-  'Jinja': 'https://source.unsplash.com/400x400/?nile,river,waterfall',
-  'Entebbe': 'https://source.unsplash.com/400x400/?lake,garden,tropical',
-  'Mbarara': 'https://source.unsplash.com/400x400/?uganda,cattle,hills',
+  'Kampala': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80', // City view
+  'Jinja': 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400&h=400&fit=crop&q=80', // River/waterfall
+  'Entebbe': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop&q=80', // Lake garden
+  'Mbarara': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // African cattle
   // Rwanda 🇷🇼
-  'Kigali': 'https://source.unsplash.com/400x400/?kigali,rwanda,city',
-  'Musanze': 'https://source.unsplash.com/400x400/?gorilla,volcano,forest',
-  'Gisenyi': 'https://source.unsplash.com/400x400/?lake,kivu,beach',
-  'Butare': 'https://source.unsplash.com/400x400/?rwanda,hills,green',
+  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80', // Modern city
+  'Musanze': 'https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=400&h=400&fit=crop&q=80', // Gorilla/mountains
+  'Gisenyi': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Lake beach
+  'Butare': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=400&h=400&fit=crop&q=80', // Green hills
   // Burundi 🇧🇮
-  'Bujumbura': 'https://source.unsplash.com/400x400/?lake,tanganyika,beach',
-  'Gitega': 'https://source.unsplash.com/400x400/?burundi,hills,africa',
-  'Ngozi': 'https://source.unsplash.com/400x400/?africa,hills,landscape',
+  'Bujumbura': 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=400&h=400&fit=crop&q=80', // Lake/coast
+  'Gitega': 'https://images.unsplash.com/photo-1523978591478-c753949ff840?w=400&h=400&fit=crop&q=80', // African landscape
+  'Ngozi': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop&q=80', // Hills
   // DRC 🇨🇩
-  'Goma': 'https://source.unsplash.com/400x400/?volcano,lava,africa',
-  'Bukavu': 'https://source.unsplash.com/400x400/?lake,kivu,congo',
-  'Kinshasa': 'https://source.unsplash.com/400x400/?congo,city,africa',
+  'Goma': 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=400&fit=crop&q=80', // Volcano
+  'Bukavu': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop&q=80', // Lake/nature
+  'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80', // City
   // Tanzania 🇹🇿
-  'Dar es Salaam': 'https://source.unsplash.com/400x400/?dar,salaam,harbor',
-  'Arusha': 'https://source.unsplash.com/400x400/?kilimanjaro,mountain,tanzania',
-  'Zanzibar': 'https://source.unsplash.com/400x400/?zanzibar,stone,town',
-  'Mwanza': 'https://source.unsplash.com/400x400/?lake,victoria,rocks',
-  'Dodoma': 'https://source.unsplash.com/400x400/?tanzania,savanna,africa',
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80', // Harbor city
+  'Arusha': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=400&h=400&fit=crop&q=80', // Kilimanjaro
+  'Zanzibar': 'https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?w=400&h=400&fit=crop&q=80', // Stone town beach
+  'Mwanza': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&h=400&fit=crop&q=80', // Lake Victoria
+  'Dodoma': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // Savanna
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
