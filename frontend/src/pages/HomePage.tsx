@@ -84,41 +84,45 @@ const travelModes = [
 const countries = [
   { name: 'Kenya', flag: '🇰🇪', cities: ['Nairobi', 'Mombasa', 'Kisumu'] },
   { name: 'Uganda', flag: '🇺🇬', cities: ['Kampala', 'Jinja', 'Entebbe'] },
-  { name: 'Rwanda', flag: '🇷🇼', cities: ['Kigali', 'Butare', 'Gisenyi'] },
+  { name: 'Rwanda', flag: '🇷🇼', cities: ['Kigali', 'Musanze', 'Gisenyi'] },
+  { name: 'Burundi', flag: '🇧🇮', cities: ['Bujumbura', 'Gitega', 'Ngozi'] },
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Goma', 'Bukavu', 'Kinshasa'] },
-  { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha'] },
+  { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha', 'Zanzibar'] },
 ]
 
 // Real city images - authentic photos of East African cities
 const destinationImages: Record<string, string> = {
-  // Kenya
-  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80', // Nairobi skyline
-  'Mombasa': 'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&h=400&fit=crop&q=80', // Fort Jesus / Old Town
-  'Kisumu': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // Lake Victoria sunset
+  // Kenya 🇰🇪
+  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80', // Nairobi skyline KICC
+  'Mombasa': 'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&h=400&fit=crop&q=80', // Fort Jesus Mombasa
+  'Kisumu': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80', // Lake Victoria Kisumu
   'Nakuru': 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=400&fit=crop&q=80', // Lake Nakuru flamingos
-  'Eldoret': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80', // Kenya highlands
+  'Eldoret': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80', // Kenya highlands
   'Malindi': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=400&fit=crop&q=80', // Malindi beach
-  // Uganda
-  'Kampala': 'https://images.unsplash.com/photo-1602827114685-efbb2717aa03?w=400&h=400&fit=crop&q=80', // Kampala city mosque
+  // Uganda 🇺🇬
+  'Kampala': 'https://images.unsplash.com/photo-1602827114685-efbb2717aa03?w=400&h=400&fit=crop&q=80', // Kampala National Mosque
   'Jinja': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop&q=80', // Source of the Nile
   'Entebbe': 'https://images.unsplash.com/photo-1623745493473-8b3e2c4fb4ba?w=400&h=400&fit=crop&q=80', // Lake Victoria Entebbe
-  'Mbarara': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80', // Uganda countryside
-  // Rwanda
-  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80', // Kigali city
-  'Butare': 'https://images.unsplash.com/photo-1617201929133-8fbc0f7c3fd4?w=400&h=400&fit=crop&q=80', // Rwanda hills
-  'Gisenyi': 'https://images.unsplash.com/photo-1625457674917-f632747b4960?w=400&h=400&fit=crop&q=80', // Lake Kivu
-  'Musanze': 'https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=400&h=400&fit=crop&q=80', // Volcanoes National Park
-  // DRC
-  'Goma': 'https://images.unsplash.com/photo-1625457674917-f632747b4960?w=400&h=400&fit=crop&q=80', // Lake Kivu / Nyiragongo
-  'Bukavu': 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=400&h=400&fit=crop&q=80', // Lake Kivu Bukavu
+  'Mbarara': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80', // Western Uganda
+  // Rwanda 🇷🇼
+  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80', // Kigali Convention Centre
+  'Musanze': 'https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=400&h=400&fit=crop&q=80', // Volcanoes gorillas
+  'Gisenyi': 'https://images.unsplash.com/photo-1625457674917-f632747b4960?w=400&h=400&fit=crop&q=80', // Lake Kivu beach
+  'Butare': 'https://images.unsplash.com/photo-1617201929133-8fbc0f7c3fd4?w=400&h=400&fit=crop&q=80', // Huye hills
+  // Burundi 🇧🇮
+  'Bujumbura': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80', // Lake Tanganyika shore
+  'Gitega': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80', // Gitega hills
+  'Ngozi': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Northern Burundi
+  // DRC 🇨🇩
+  'Goma': 'https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=400&h=400&fit=crop&q=80', // Nyiragongo volcano
+  'Bukavu': 'https://images.unsplash.com/photo-1625457674917-f632747b4960?w=400&h=400&fit=crop&q=80', // Lake Kivu Bukavu
   'Kinshasa': 'https://images.unsplash.com/photo-1577212017308-145367895785?w=400&h=400&fit=crop&q=80', // Kinshasa cityscape
-  // Tanzania
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80', // Dar waterfront
-  'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop&q=80', // Mt Meru view
+  // Tanzania 🇹🇿
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80', // Dar es Salaam port
+  'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop&q=80', // Mount Meru Arusha
   'Zanzibar': 'https://images.unsplash.com/photo-1586892477838-2b96e85e0f96?w=400&h=400&fit=crop&q=80', // Zanzibar Stone Town
-  'Mwanza': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // Lake Victoria rocks
-  // Burundi
-  'Bujumbura': 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=400&h=400&fit=crop&q=80', // Lake Tanganyika
+  'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80', // Lake Victoria rocks
+  'Dodoma': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80', // Tanzania capital
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
@@ -839,7 +843,7 @@ export default function HomePage() {
             className="text-center mb-12"
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-              Travel Across <span className="text-gradient">5 Countries</span>
+              Travel Across <span className="text-gradient">6 Countries</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">Cross-border travel made simple</p>
           </motion.div>

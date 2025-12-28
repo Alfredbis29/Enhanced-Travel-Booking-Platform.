@@ -229,6 +229,48 @@ const cityData: Record<string, {
       { id: 'a2', name: 'Whitewater Rafting', type: 'Adventure', rating: 4.9, image: 'https://images.unsplash.com/photo-1530866495561-507c9faab2ed?w=400&h=300&fit=crop&q=80', description: 'World-class Grade 5 rapids on the Nile', entryFee: 'USD 125', hours: 'Full day trips' },
       { id: 'a3', name: 'Bungee Jumping', type: 'Adventure', rating: 4.8, image: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=400&h=300&fit=crop&q=80', description: '44-meter jump over the Nile River', entryFee: 'USD 115', hours: '9:00 AM - 5:00 PM' },
     ]
+  },
+  'Bujumbura': {
+    name: 'Bujumbura',
+    country: 'Burundi',
+    flag: '🇧🇮',
+    description: 'The former capital and largest city of Burundi, beautifully situated on the shores of Lake Tanganyika. Known for its beaches, vibrant nightlife, and as a gateway to Burundi\'s natural wonders.',
+    image: 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=800&h=600&fit=crop&q=80',
+    heroImage: 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=1920&h=800&fit=crop&q=80',
+    timezone: 'CAT (UTC+2)',
+    currency: 'BIF',
+    language: 'French, Kirundi',
+    population: '1.2 million',
+    hotels: [
+      { id: 'h1', name: 'Hotel Club du Lac Tanganyika', rating: 4.6, reviews: 320, price: 120, currency: 'USD', image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=300&fit=crop&q=80', amenities: ['Beach', 'Pool', 'Restaurant', 'WiFi'], location: 'Lake Shore', description: 'Beachfront resort on Lake Tanganyika' },
+      { id: 'h2', name: 'Kiriri Garden Hotel', rating: 4.4, reviews: 185, price: 85, currency: 'USD', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop&q=80', amenities: ['WiFi', 'Pool', 'Restaurant', 'Garden'], location: 'City Center', description: 'Peaceful garden hotel in the heart of Bujumbura' },
+      { id: 'h3', name: 'Hotel Safari Gate', rating: 4.3, reviews: 140, price: 70, currency: 'USD', image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=300&fit=crop&q=80', amenities: ['WiFi', 'Restaurant', 'Bar'], location: 'Downtown', description: 'Modern comfort with African hospitality' },
+    ],
+    attractions: [
+      { id: 'a1', name: 'Lake Tanganyika Beach', type: 'Beach', rating: 4.7, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop&q=80', description: 'Beautiful sandy beaches on the world\'s second deepest lake', entryFee: 'Free', hours: 'Open 24 hours' },
+      { id: 'a2', name: 'Rusizi National Park', type: 'Wildlife', rating: 4.5, image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=300&fit=crop&q=80', description: 'Hippos, crocodiles, and birdlife at the Rusizi River delta', entryFee: 'USD 20', hours: '6:00 AM - 6:00 PM' },
+      { id: 'a3', name: 'Living Museum of Bujumbura', type: 'Culture', rating: 4.3, image: 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=400&h=300&fit=crop&q=80', description: 'Traditional Burundian culture and crafts', entryFee: 'BIF 5000', hours: '9:00 AM - 5:00 PM' },
+      { id: 'a4', name: 'Saga Beach', type: 'Beach', rating: 4.6, image: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=300&fit=crop&q=80', description: 'Popular beach resort with restaurants and water activities', entryFee: 'BIF 2000', hours: '8:00 AM - 8:00 PM' },
+    ]
+  },
+  'Gitega': {
+    name: 'Gitega',
+    country: 'Burundi',
+    flag: '🇧🇮',
+    description: 'The political capital of Burundi since 2019, located in the heart of the country. Rich in history and home to the National Museum of Gitega.',
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop&q=80',
+    heroImage: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&h=800&fit=crop&q=80',
+    timezone: 'CAT (UTC+2)',
+    currency: 'BIF',
+    language: 'French, Kirundi',
+    population: '135,000',
+    hotels: [
+      { id: 'h1', name: 'Hotel Novy', rating: 4.2, reviews: 85, price: 60, currency: 'USD', image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=300&fit=crop&q=80', amenities: ['WiFi', 'Restaurant', 'Parking'], location: 'City Center', description: 'Comfortable hotel in the capital' },
+    ],
+    attractions: [
+      { id: 'a1', name: 'National Museum of Gitega', type: 'Culture', rating: 4.5, image: 'https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=400&h=300&fit=crop&q=80', description: 'Burundi\'s premier museum with royal artifacts and history', entryFee: 'BIF 5000', hours: '8:00 AM - 5:00 PM' },
+      { id: 'a2', name: 'Royal Drum Sanctuary', type: 'Heritage', rating: 4.6, image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop&q=80', description: 'Sacred site of traditional Burundian drumming', entryFee: 'BIF 3000', hours: '9:00 AM - 4:00 PM' },
+    ]
   }
 }
 
