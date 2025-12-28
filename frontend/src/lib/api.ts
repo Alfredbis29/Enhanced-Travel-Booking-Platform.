@@ -15,13 +15,21 @@ import type {
   PaymentVerifyResponse
 } from '@/types'
 
+// Get API URL from environment or use relative path
+// In production, set VITE_API_URL to your backend URL (e.g., https://your-backend.vercel.app/api)
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
+
+// Log API URL in development for debugging
+if (import.meta.env.DEV) {
+  console.log('API Base URL:', API_BASE_URL)
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 second timeout for slow connections
 })
 
 // Add auth token to requests

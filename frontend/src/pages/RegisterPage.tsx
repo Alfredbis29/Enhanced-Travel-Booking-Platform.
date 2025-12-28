@@ -30,8 +30,23 @@ export default function RegisterPage() {
       setAuth(response.data.user, response.data.token)
       toast({ title: 'Welcome to Twende!', description: 'Your account has been created. Let\'s Go!', variant: 'success' })
       navigate('/')
-    } catch (error: unknown) { console.error('Registration failed:', error); toast({ title: 'Registration failed', description: 'Registration failed. Please try again.', variant: 'destructive' }) } 
-    finally { setIsLoading(false) }
+    } catch (error: unknown) { 
+      console.error('Registration failed:', error)
+      // Extract error message from API response
+      let errorMessage = 'Registration failed. Please try again.'
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { message?: string; error?: string } } }
+        errorMessage = axiosError.response?.data?.message || axiosError.response?.data?.error || errorMessage
+      } else if (error instanceof Error) {
+        // Handle network errors
+        if (error.message.includes('Network Error')) {
+          errorMessage = 'Unable to connect to server. Please check your internet connection.'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      toast({ title: 'Registration failed', description: errorMessage, variant: 'destructive' })
+    } finally { setIsLoading(false) }
   }
 
   return (

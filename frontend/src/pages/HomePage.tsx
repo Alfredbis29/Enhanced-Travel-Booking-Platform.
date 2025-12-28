@@ -529,7 +529,7 @@ export default function HomePage() {
   }
 
   const handleDestinationClick = (city: string) => {
-    navigate(`/search?destination=${encodeURIComponent(city)}`)
+    navigate(`/city/${encodeURIComponent(city)}`)
   }
 
   const filteredTrips = selectedMode === 'all' 
