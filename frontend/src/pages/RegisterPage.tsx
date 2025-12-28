@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, User, Phone, Loader2, Bus, ArrowRight, Sparkles } from 'lucide-react'
+import { Mail, Lock, User, Phone, Loader2, Bus, ArrowRight, Sparkles, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,10 +12,15 @@ import { useToast } from '@/hooks/use-toast'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { setAuth } = useAuthStore()
   const { toast } = useToast()
   const [formData, setFormData] = useState({ first_name: '', last_name: '', email: '', phone: '', password: '', confirmPassword: '' })
   const [isLoading, setIsLoading] = useState(false)
+  
+  // Check if user was redirected from booking page
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/'
+  const isFromBooking = from.includes('/booking/')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { setFormData(prev => ({ ...prev, [e.target.name]: e.target.value })) }
 
@@ -29,7 +34,7 @@ export default function RegisterPage() {
       const response = await authApi.register({ first_name: formData.first_name, last_name: formData.last_name, email: formData.email, password: formData.password, phone: formData.phone || undefined })
       setAuth(response.data.user, response.data.token)
       toast({ title: 'Welcome to Twende!', description: 'Your account has been created. Let\'s Go!', variant: 'success' })
-      navigate('/')
+      navigate(from, { replace: true })
     } catch (error: unknown) { 
       console.error('Registration failed:', error)
       // Extract error message from API response
@@ -56,7 +61,17 @@ export default function RegisterPage() {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-maroon-700/10 rounded-full blur-3xl" />
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 w-full max-w-md">
         <div className="flex justify-center mb-8"><Link to="/" className="flex items-center gap-2"><div className="bg-gradient-to-br from-sky-500 to-maroon-700 p-2 rounded-lg"><Bus className="h-6 w-6 text-white" /></div><span className="font-display text-2xl font-bold"><span className="text-gradient">Twende</span></span></Link></div>
-        <Card className="glass border-white/10"><CardHeader className="text-center"><CardTitle className="font-display text-2xl flex items-center justify-center gap-2"><Sparkles className="h-5 w-5 text-primary" />Create Account</CardTitle><CardDescription>Join Twende and start your journey across East Africa</CardDescription></CardHeader><CardContent>
+        <Card className="glass border-white/10">
+          {isFromBooking && (
+            <div className="mx-6 mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-amber-600 dark:text-amber-400">Account Required</p>
+                <p className="text-sm text-muted-foreground">Create an account to complete your booking and manage your trips.</p>
+              </div>
+            </div>
+          )}
+          <CardHeader className="text-center"><CardTitle className="font-display text-2xl flex items-center justify-center gap-2"><Sparkles className="h-5 w-5 text-primary" />Create Account</CardTitle><CardDescription>Join Twende and start your journey across East Africa</CardDescription></CardHeader><CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-4"><div className="space-y-2"><Label htmlFor="first_name">First Name</Label><Input id="first_name" name="first_name" placeholder="John" value={formData.first_name} onChange={handleChange} icon={<User className="h-4 w-4" />} /></div><div className="space-y-2"><Label htmlFor="last_name">Last Name</Label><Input id="last_name" name="last_name" placeholder="Doe" value={formData.last_name} onChange={handleChange} /></div></div>
             <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} icon={<Mail className="h-4 w-4" />} autoComplete="email" /></div>
@@ -66,7 +81,7 @@ export default function RegisterPage() {
             <Button type="submit" variant="gradient" className="w-full" size="lg" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating account...</>) : (<>Create Account<ArrowRight className="ml-2 h-4 w-4" /></>)}</Button>
           </form>
           <p className="mt-4 text-xs text-muted-foreground text-center">By signing up, you agree to our <a href="#" className="text-primary hover:underline">Terms</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a></p>
-          <div className="mt-6 text-center text-sm"><span className="text-muted-foreground">Already have an account? </span><Link to="/login" className="text-primary hover:underline font-medium">Sign in</Link></div>
+          <div className="mt-6 text-center text-sm"><span className="text-muted-foreground">Already have an account? </span><Link to="/login" state={{ from: location.state?.from }} className="text-primary hover:underline font-medium">Sign in</Link></div>
         </CardContent></Card>
       </motion.div>
     </div>

@@ -25,7 +25,14 @@ function App() {
             <Route path="/city/:cityName" element={<CityPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/booking/:tripId" element={<BookingPage />} />
+            <Route
+              path="/booking/:tripId"
+              element={
+                <ProtectedRoute>
+                  <BookingPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/bookings"
               element={
