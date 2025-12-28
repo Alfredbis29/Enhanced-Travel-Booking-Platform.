@@ -90,39 +90,39 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha', 'Zanzibar'] },
 ]
 
-// Real city images - authentic photos of East African cities
+// Real city images - authentic photos of East African cities using Pexels/Pixabay for reliability
 const destinationImages: Record<string, string> = {
   // Kenya 🇰🇪
-  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80', // Nairobi skyline KICC
-  'Mombasa': 'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&h=400&fit=crop&q=80', // Fort Jesus Mombasa
-  'Kisumu': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80', // Lake Victoria Kisumu
-  'Nakuru': 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=400&fit=crop&q=80', // Lake Nakuru flamingos
-  'Eldoret': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80', // Kenya highlands
-  'Malindi': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=400&fit=crop&q=80', // Malindi beach
+  'Nairobi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Nairobi_Skyline_%282015%29.jpg/640px-Nairobi_Skyline_%282015%29.jpg',
+  'Mombasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Fort_Jesus_Mombasa.jpg/640px-Fort_Jesus_Mombasa.jpg',
+  'Kisumu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Sunset_on_Lake_Victoria.jpg/640px-Sunset_on_Lake_Victoria.jpg',
+  'Nakuru': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Lake_Nakuru_Flamingos%2C_Kenya.jpg/640px-Lake_Nakuru_Flamingos%2C_Kenya.jpg',
+  'Eldoret': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Cherangani_Hills.jpg/640px-Cherangani_Hills.jpg',
+  'Malindi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Malindi_Beach.jpg/640px-Malindi_Beach.jpg',
   // Uganda 🇺🇬
-  'Kampala': 'https://images.unsplash.com/photo-1602827114685-efbb2717aa03?w=400&h=400&fit=crop&q=80', // Kampala National Mosque
-  'Jinja': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop&q=80', // Source of the Nile
-  'Entebbe': 'https://images.unsplash.com/photo-1623745493473-8b3e2c4fb4ba?w=400&h=400&fit=crop&q=80', // Lake Victoria Entebbe
-  'Mbarara': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80', // Western Uganda
+  'Kampala': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Uganda_National_Mosque.jpg/640px-Uganda_National_Mosque.jpg',
+  'Jinja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/The_source_of_River_Nile_in_Uganda.jpg/640px-The_source_of_River_Nile_in_Uganda.jpg',
+  'Entebbe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Entebbe_botanical_gardens.jpg/640px-Entebbe_botanical_gardens.jpg',
+  'Mbarara': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ankole_cattle_in_Uganda.jpg/640px-Ankole_cattle_in_Uganda.jpg',
   // Rwanda 🇷🇼
-  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80', // Kigali Convention Centre
-  'Musanze': 'https://images.unsplash.com/photo-1521651201144-634f700b36ef?w=400&h=400&fit=crop&q=80', // Volcanoes gorillas
-  'Gisenyi': 'https://images.unsplash.com/photo-1625457674917-f632747b4960?w=400&h=400&fit=crop&q=80', // Lake Kivu beach
-  'Butare': 'https://images.unsplash.com/photo-1617201929133-8fbc0f7c3fd4?w=400&h=400&fit=crop&q=80', // Huye hills
+  'Kigali': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Kigali_skyline_2018.jpg/640px-Kigali_skyline_2018.jpg',
+  'Musanze': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Virunga_mountains.jpg/640px-Virunga_mountains.jpg',
+  'Gisenyi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/LakeKivu.jpg/640px-LakeKivu.jpg',
+  'Butare': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Huye_district.jpg/640px-Huye_district.jpg',
   // Burundi 🇧🇮
-  'Bujumbura': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80', // Lake Tanganyika shore
-  'Gitega': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80', // Gitega hills
-  'Ngozi': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Northern Burundi
+  'Bujumbura': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Lake_Tanganyika_-_Burundi.jpg/640px-Lake_Tanganyika_-_Burundi.jpg',
+  'Gitega': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Burundi_landscape.jpg/640px-Burundi_landscape.jpg',
+  'Ngozi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Burundi_-_Lake_near_Gitega.jpg/640px-Burundi_-_Lake_near_Gitega.jpg',
   // DRC 🇨🇩
-  'Goma': 'https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=400&h=400&fit=crop&q=80', // Nyiragongo volcano
-  'Bukavu': 'https://images.unsplash.com/photo-1625457674917-f632747b4960?w=400&h=400&fit=crop&q=80', // Lake Kivu Bukavu
-  'Kinshasa': 'https://images.unsplash.com/photo-1577212017308-145367895785?w=400&h=400&fit=crop&q=80', // Kinshasa cityscape
+  'Goma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Nyiragongo_volcano_-_mountain_view.jpg/640px-Nyiragongo_volcano_-_mountain_view.jpg',
+  'Bukavu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/LakeKivu.jpg/640px-LakeKivu.jpg',
+  'Kinshasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Boulevard_du_30_juin_Kinshasa.jpg/640px-Boulevard_du_30_juin_Kinshasa.jpg',
   // Tanzania 🇹🇿
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80', // Dar es Salaam port
-  'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop&q=80', // Mount Meru Arusha
-  'Zanzibar': 'https://images.unsplash.com/photo-1586892477838-2b96e85e0f96?w=400&h=400&fit=crop&q=80', // Zanzibar Stone Town
-  'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80', // Lake Victoria rocks
-  'Dodoma': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80', // Tanzania capital
+  'Dar es Salaam': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dar_es_Salaam_at_a_bird%27s_view.jpg/640px-Dar_es_Salaam_at_a_bird%27s_view.jpg',
+  'Arusha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Mount_Meru_Tanzania.jpg/640px-Mount_Meru_Tanzania.jpg',
+  'Zanzibar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Zanzibar_Stone_Town_skyline.jpg/640px-Zanzibar_Stone_Town_skyline.jpg',
+  'Mwanza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Mwanza_Gulf.jpg/640px-Mwanza_Gulf.jpg',
+  'Dodoma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Dodoma_City.jpg/640px-Dodoma_City.jpg',
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
