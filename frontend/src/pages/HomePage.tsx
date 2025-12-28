@@ -90,39 +90,39 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha', 'Zanzibar'] },
 ]
 
-// Real city images - actual photos of each East African city
+// City images using Unsplash Source (designed for embedding)
 const destinationImages: Record<string, string> = {
-  // Kenya 🇰🇪 - Real landmarks
-  'Nairobi': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/f0/nairobi.jpg?w=400&h=400&s=1', // KICC & Nairobi skyline
-  'Mombasa': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/a9/e6/f8/fort-jesus.jpg?w=400&h=400&s=1', // Fort Jesus
-  'Kisumu': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/6e/e4/cd/sunset-over-lake-victoria.jpg?w=400&h=400&s=1', // Lake Victoria
-  'Nakuru': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/31/b4/fb/flamingoes-at-lake-nakuru.jpg?w=400&h=400&s=1', // Flamingos
-  'Eldoret': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/60/b2/35/eldoret.jpg?w=400&h=400&s=1', // Eldoret
-  'Malindi': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/bb/a3/f5/malindi-beach.jpg?w=400&h=400&s=1', // Malindi Beach
-  // Uganda 🇺🇬 - Real landmarks
-  'Kampala': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/d4/98/44/uganda-national-mosque.jpg?w=400&h=400&s=1', // National Mosque
-  'Jinja': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/a7/c1/e4/source-of-the-nile.jpg?w=400&h=400&s=1', // Source of Nile
-  'Entebbe': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/e8/8f/84/entebbe-botanical-gardens.jpg?w=400&h=400&s=1', // Botanical Gardens
-  'Mbarara': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/53/dc/a8/lake-mburo.jpg?w=400&h=400&s=1', // Lake Mburo
-  // Rwanda 🇷🇼 - Real landmarks
-  'Kigali': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/e4/f8/d0/kigali-convention-centre.jpg?w=400&h=400&s=1', // KCC Dome
-  'Musanze': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/4a/4e/a8/volcanoes-national-park.jpg?w=400&h=400&s=1', // Volcanoes NP
-  'Gisenyi': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/58/2b/8e/lake-kivu.jpg?w=400&h=400&s=1', // Lake Kivu
-  'Butare': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/7b/24/60/national-museum-of-rwanda.jpg?w=400&h=400&s=1', // Huye Museum
-  // Burundi 🇧🇮 - Real landmarks
-  'Bujumbura': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/3d/2e/95/plage-du-lac-tanganyika.jpg?w=400&h=400&s=1', // Lake Tanganyika
-  'Gitega': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/7b/24/78/musee-national-du-burundi.jpg?w=400&h=400&s=1', // National Museum
-  'Ngozi': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/e5/f3/b8/burundi.jpg?w=400&h=400&s=1', // Ngozi hills
-  // DRC 🇨🇩 - Real landmarks
-  'Goma': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/4a/d0/da/nyiragongo-volcano.jpg?w=400&h=400&s=1', // Nyiragongo
-  'Bukavu': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/58/2b/8e/lake-kivu.jpg?w=400&h=400&s=1', // Lake Kivu
-  'Kinshasa': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/e9/3a/25/kinshasa.jpg?w=400&h=400&s=1', // Kinshasa city
-  // Tanzania 🇹🇿 - Real landmarks
-  'Dar es Salaam': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/59/dar-es-salaam.jpg?w=400&h=400&s=1', // Dar harbor
-  'Arusha': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/e8/91/73/mount-meru.jpg?w=400&h=400&s=1', // Mount Meru
-  'Zanzibar': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/b5/73/c7/stone-town.jpg?w=400&h=400&s=1', // Stone Town
-  'Mwanza': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/35/94/c8/bismarck-rock.jpg?w=400&h=400&s=1', // Bismarck Rock
-  'Dodoma': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/f8/e1/a5/dodoma.jpg?w=400&h=400&s=1', // Dodoma
+  // Kenya 🇰🇪
+  'Nairobi': 'https://source.unsplash.com/400x400/?nairobi,city,skyline',
+  'Mombasa': 'https://source.unsplash.com/400x400/?mombasa,beach,fort',
+  'Kisumu': 'https://source.unsplash.com/400x400/?lake,victoria,africa',
+  'Nakuru': 'https://source.unsplash.com/400x400/?flamingo,lake,kenya',
+  'Eldoret': 'https://source.unsplash.com/400x400/?kenya,highlands,green',
+  'Malindi': 'https://source.unsplash.com/400x400/?beach,tropical,coast',
+  // Uganda 🇺🇬
+  'Kampala': 'https://source.unsplash.com/400x400/?kampala,mosque,uganda',
+  'Jinja': 'https://source.unsplash.com/400x400/?nile,river,waterfall',
+  'Entebbe': 'https://source.unsplash.com/400x400/?lake,garden,tropical',
+  'Mbarara': 'https://source.unsplash.com/400x400/?uganda,cattle,hills',
+  // Rwanda 🇷🇼
+  'Kigali': 'https://source.unsplash.com/400x400/?kigali,rwanda,city',
+  'Musanze': 'https://source.unsplash.com/400x400/?gorilla,volcano,forest',
+  'Gisenyi': 'https://source.unsplash.com/400x400/?lake,kivu,beach',
+  'Butare': 'https://source.unsplash.com/400x400/?rwanda,hills,green',
+  // Burundi 🇧🇮
+  'Bujumbura': 'https://source.unsplash.com/400x400/?lake,tanganyika,beach',
+  'Gitega': 'https://source.unsplash.com/400x400/?burundi,hills,africa',
+  'Ngozi': 'https://source.unsplash.com/400x400/?africa,hills,landscape',
+  // DRC 🇨🇩
+  'Goma': 'https://source.unsplash.com/400x400/?volcano,lava,africa',
+  'Bukavu': 'https://source.unsplash.com/400x400/?lake,kivu,congo',
+  'Kinshasa': 'https://source.unsplash.com/400x400/?congo,city,africa',
+  // Tanzania 🇹🇿
+  'Dar es Salaam': 'https://source.unsplash.com/400x400/?dar,salaam,harbor',
+  'Arusha': 'https://source.unsplash.com/400x400/?kilimanjaro,mountain,tanzania',
+  'Zanzibar': 'https://source.unsplash.com/400x400/?zanzibar,stone,town',
+  'Mwanza': 'https://source.unsplash.com/400x400/?lake,victoria,rocks',
+  'Dodoma': 'https://source.unsplash.com/400x400/?tanzania,savanna,africa',
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
