@@ -5,7 +5,7 @@ import {
   MapPin, Star, Wifi, Coffee, Car, Utensils, 
   Camera, Mountain, Building, TreePine, Waves,
   ArrowLeft, Bus, Plane, Heart, Share2, Clock,
-  Phone, Globe, Navigation, Sparkles, Hotel, Landmark
+  Globe, Navigation, Sparkles, Hotel, Landmark
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
