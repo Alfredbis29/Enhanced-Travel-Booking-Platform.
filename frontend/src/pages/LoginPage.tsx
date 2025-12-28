@@ -29,8 +29,23 @@ export default function LoginPage() {
       setAuth(response.data.user, response.data.token)
       toast({ title: 'Welcome back!', description: `Logged in as ${response.data.user.first_name}`, variant: 'success' })
       navigate(from, { replace: true })
-    } catch (error: unknown) { console.error('Login failed:', error); toast({ title: 'Login failed', description: 'Invalid credentials. Please try again.', variant: 'destructive' }) } 
-    finally { setIsLoading(false) }
+    } catch (error: unknown) { 
+      console.error('Login failed:', error)
+      // Extract error message from API response
+      let errorMessage = 'Invalid credentials. Please try again.'
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { message?: string; error?: string } } }
+        errorMessage = axiosError.response?.data?.message || axiosError.response?.data?.error || errorMessage
+      } else if (error instanceof Error) {
+        // Handle network errors
+        if (error.message.includes('Network Error')) {
+          errorMessage = 'Unable to connect to server. Please check your internet connection.'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      toast({ title: 'Login failed', description: errorMessage, variant: 'destructive' })
+    } finally { setIsLoading(false) }
   }
 
   return (
