@@ -181,7 +181,11 @@ export const searchApi = {
       if (params.sort_by === 'price') {
         filtered.sort((a, b) => params.sort_order === 'desc' ? b.price - a.price : a.price - b.price)
       } else if (params.sort_by === 'duration') {
-        filtered.sort((a, b) => params.sort_order === 'desc' ? b.duration_minutes - a.duration_minutes : a.duration_minutes - b.duration_minutes)
+        filtered.sort((a, b) => {
+          const aDuration = a.duration_minutes || 0
+          const bDuration = b.duration_minutes || 0
+          return params.sort_order === 'desc' ? bDuration - aDuration : aDuration - bDuration
+        })
       }
       
       return {
