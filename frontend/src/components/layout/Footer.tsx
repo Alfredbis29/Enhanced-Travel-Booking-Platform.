@@ -55,7 +55,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">© {currentYear} Twende. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+            <p className="text-sm text-muted-foreground">© {currentYear} Twende. All rights reserved.</p>
+            <span className="hidden sm:inline text-muted-foreground">•</span>
+            <p className="text-sm text-muted-foreground">Built with ❤️ by <span className="text-primary font-semibold">AlfredoCAMP</span></p>
+          </div>
           <div className="flex gap-6">
             <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a>
             <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a>
