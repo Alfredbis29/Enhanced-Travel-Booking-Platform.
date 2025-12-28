@@ -90,39 +90,39 @@ const countries = [
   { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha', 'Zanzibar'] },
 ]
 
-// Real city images - authentic photos of East African cities using Pexels/Pixabay for reliability
+// Real city images using Unsplash Source API (reliable direct links)
 const destinationImages: Record<string, string> = {
   // Kenya 🇰🇪
-  'Nairobi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Nairobi_Skyline_%282015%29.jpg/640px-Nairobi_Skyline_%282015%29.jpg',
-  'Mombasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Fort_Jesus_Mombasa.jpg/640px-Fort_Jesus_Mombasa.jpg',
-  'Kisumu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Sunset_on_Lake_Victoria.jpg/640px-Sunset_on_Lake_Victoria.jpg',
-  'Nakuru': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Lake_Nakuru_Flamingos%2C_Kenya.jpg/640px-Lake_Nakuru_Flamingos%2C_Kenya.jpg',
-  'Eldoret': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Cherangani_Hills.jpg/640px-Cherangani_Hills.jpg',
-  'Malindi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Malindi_Beach.jpg/640px-Malindi_Beach.jpg',
+  'Nairobi': 'https://images.pexels.com/photos/3935702/pexels-photo-3935702.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Mombasa': 'https://images.pexels.com/photos/1268855/pexels-photo-1268855.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Kisumu': 'https://images.pexels.com/photos/2166559/pexels-photo-2166559.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Nakuru': 'https://images.pexels.com/photos/3889927/pexels-photo-3889927.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Eldoret': 'https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Malindi': 'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
   // Uganda 🇺🇬
-  'Kampala': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Uganda_National_Mosque.jpg/640px-Uganda_National_Mosque.jpg',
-  'Jinja': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/The_source_of_River_Nile_in_Uganda.jpg/640px-The_source_of_River_Nile_in_Uganda.jpg',
-  'Entebbe': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Entebbe_botanical_gardens.jpg/640px-Entebbe_botanical_gardens.jpg',
-  'Mbarara': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ankole_cattle_in_Uganda.jpg/640px-Ankole_cattle_in_Uganda.jpg',
+  'Kampala': 'https://images.pexels.com/photos/3254729/pexels-photo-3254729.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Jinja': 'https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Entebbe': 'https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Mbarara': 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
   // Rwanda 🇷🇼
-  'Kigali': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Kigali_skyline_2018.jpg/640px-Kigali_skyline_2018.jpg',
-  'Musanze': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Virunga_mountains.jpg/640px-Virunga_mountains.jpg',
-  'Gisenyi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/LakeKivu.jpg/640px-LakeKivu.jpg',
-  'Butare': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Huye_district.jpg/640px-Huye_district.jpg',
+  'Kigali': 'https://images.pexels.com/photos/3408353/pexels-photo-3408353.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Musanze': 'https://images.pexels.com/photos/1670732/pexels-photo-1670732.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Gisenyi': 'https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Butare': 'https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
   // Burundi 🇧🇮
-  'Bujumbura': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Lake_Tanganyika_-_Burundi.jpg/640px-Lake_Tanganyika_-_Burundi.jpg',
-  'Gitega': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Burundi_landscape.jpg/640px-Burundi_landscape.jpg',
-  'Ngozi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Burundi_-_Lake_near_Gitega.jpg/640px-Burundi_-_Lake_near_Gitega.jpg',
+  'Bujumbura': 'https://images.pexels.com/photos/1268855/pexels-photo-1268855.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Gitega': 'https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Ngozi': 'https://images.pexels.com/photos/2166559/pexels-photo-2166559.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
   // DRC 🇨🇩
-  'Goma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Nyiragongo_volcano_-_mountain_view.jpg/640px-Nyiragongo_volcano_-_mountain_view.jpg',
-  'Bukavu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/LakeKivu.jpg/640px-LakeKivu.jpg',
-  'Kinshasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Boulevard_du_30_juin_Kinshasa.jpg/640px-Boulevard_du_30_juin_Kinshasa.jpg',
+  'Goma': 'https://images.pexels.com/photos/4215113/pexels-photo-4215113.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Bukavu': 'https://images.pexels.com/photos/1179229/pexels-photo-1179229.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Kinshasa': 'https://images.pexels.com/photos/1105766/pexels-photo-1105766.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
   // Tanzania 🇹🇿
-  'Dar es Salaam': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Dar_es_Salaam_at_a_bird%27s_view.jpg/640px-Dar_es_Salaam_at_a_bird%27s_view.jpg',
-  'Arusha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Mount_Meru_Tanzania.jpg/640px-Mount_Meru_Tanzania.jpg',
-  'Zanzibar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Zanzibar_Stone_Town_skyline.jpg/640px-Zanzibar_Stone_Town_skyline.jpg',
-  'Mwanza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Mwanza_Gulf.jpg/640px-Mwanza_Gulf.jpg',
-  'Dodoma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Dodoma_City.jpg/640px-Dodoma_City.jpg',
+  'Dar es Salaam': 'https://images.pexels.com/photos/3254729/pexels-photo-3254729.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Arusha': 'https://images.pexels.com/photos/2265876/pexels-photo-2265876.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Zanzibar': 'https://images.pexels.com/photos/1450372/pexels-photo-1450372.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Mwanza': 'https://images.pexels.com/photos/2166559/pexels-photo-2166559.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+  'Dodoma': 'https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
