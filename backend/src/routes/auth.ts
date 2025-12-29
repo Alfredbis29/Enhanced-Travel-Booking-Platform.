@@ -9,7 +9,8 @@ import {
   generateVerificationToken, 
   generateTokenExpiry, 
   sendVerificationEmail,
-  sendWelcomeEmail 
+  sendWelcomeEmail,
+  IS_SMTP_CONFIGURED 
 } from '../services/email.js';
 
 const router = Router();
@@ -69,43 +70,77 @@ router.post('/register', registerValidation, async (req: Request, res: Response,
       throw new AppError('Email already registered', 409);
     }
 
-    // Generate verification token
-    const verificationToken = generateVerificationToken();
-    const tokenExpiry = generateTokenExpiry();
-
     // Hash password
     const password_hash = await bcrypt.hash(password, 12);
 
-    // Create user with verification token
-    const result = await query(
-      `INSERT INTO users (email, password_hash, first_name, last_name, phone, verification_token, token_expiry) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) 
-       RETURNING id, email, first_name, last_name, phone, is_verified, created_at`,
-      [email, password_hash, first_name, last_name, phone || null, verificationToken, tokenExpiry.toISOString()]
-    );
+    // Check if email verification should be required
+    if (IS_SMTP_CONFIGURED) {
+      // SMTP configured - require email verification
+      const verificationToken = generateVerificationToken();
+      const tokenExpiry = generateTokenExpiry();
 
-    const user = result.rows[0] as { id: string; email: string; first_name: string; last_name: string; phone?: string; is_verified: boolean };
+      // Create user with verification token
+      const result = await query(
+        `INSERT INTO users (email, password_hash, first_name, last_name, phone, verification_token, token_expiry) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7) 
+         RETURNING id, email, first_name, last_name, phone, is_verified, created_at`,
+        [email, password_hash, first_name, last_name, phone || null, verificationToken, tokenExpiry.toISOString()]
+      );
 
-    // Send verification email
-    const emailSent = await sendVerificationEmail(email, first_name, verificationToken);
+      const user = result.rows[0] as { id: string; email: string; first_name: string; last_name: string; phone?: string; is_verified: boolean };
 
-    res.status(201).json({
-      success: true,
-      message: emailSent 
-        ? 'Registration successful! Please check your email to verify your account.' 
-        : 'Registration successful! Email verification pending.',
-      data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          phone: user.phone,
-          is_verified: user.is_verified
-        },
-        requiresVerification: true
-      }
-    });
+      // Send verification email
+      await sendVerificationEmail(email, first_name, verificationToken);
+
+      res.status(201).json({
+        success: true,
+        message: 'Registration successful! Please check your email to verify your account.',
+        data: {
+          user: {
+            id: user.id,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            phone: user.phone,
+            is_verified: false
+          },
+          requiresVerification: true
+        }
+      });
+    } else {
+      // No SMTP - auto-verify user and provide token for immediate login
+      const result = await query(
+        `INSERT INTO users (email, password_hash, first_name, last_name, phone, verification_token, token_expiry) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7) 
+         RETURNING id, email, first_name, last_name, phone, is_verified, created_at`,
+        [email, password_hash, first_name, last_name, phone || null, null, null]
+      );
+
+      const user = result.rows[0] as { id: string; email: string; first_name: string; last_name: string; phone?: string };
+
+      // Auto-verify the user since we can't send emails
+      await query('UPDATE users SET is_verified = true WHERE email = $1', [email]);
+
+      // Generate token for immediate login
+      const token = generateToken(user.id, user.email);
+
+      res.status(201).json({
+        success: true,
+        message: 'Registration successful! Welcome to Twende!',
+        data: {
+          user: {
+            id: user.id,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            phone: user.phone,
+            is_verified: true
+          },
+          token,
+          requiresVerification: false
+        }
+      });
+    }
   } catch (error) {
     next(error);
   }
@@ -144,15 +179,21 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
 
     // Check if email is verified
     if (!user.is_verified) {
-      // Resend verification email
-      const verificationToken = generateVerificationToken();
-      await query(
-        'UPDATE users SET verification_token = $1, token_expiry = $2 WHERE id = $3',
-        [verificationToken, generateTokenExpiry().toISOString(), user.id]
-      );
-      await sendVerificationEmail(email, user.first_name, verificationToken);
-      
-      throw new AppError('Please verify your email before logging in. We sent a new verification link to your inbox.', 403);
+      if (IS_SMTP_CONFIGURED) {
+        // Resend verification email
+        const verificationToken = generateVerificationToken();
+        await query(
+          'UPDATE users SET verification_token = $1, token_expiry = $2 WHERE id = $3',
+          [verificationToken, generateTokenExpiry().toISOString(), user.id]
+        );
+        await sendVerificationEmail(email, user.first_name, verificationToken);
+        
+        throw new AppError('Please verify your email before logging in. We sent a new verification link to your inbox.', 403);
+      } else {
+        // Auto-verify user when SMTP is not configured
+        await query('UPDATE users SET is_verified = true WHERE id = $1', [user.id]);
+        user.is_verified = true;
+      }
     }
 
     const token = generateToken(user.id, user.email);

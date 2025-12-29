@@ -12,6 +12,9 @@ const EMAIL_CONFIG = {
   }
 };
 
+// Check if SMTP is configured
+export const IS_SMTP_CONFIGURED = !!(EMAIL_CONFIG.auth.user && EMAIL_CONFIG.auth.pass);
+
 // Create transporter
 const transporter = nodemailer.createTransport(EMAIL_CONFIG);
 
@@ -214,6 +217,7 @@ export default {
   generateTokenExpiry,
   verifyEmailConfig,
   sendVerificationEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  IS_SMTP_CONFIGURED
 };
 
