@@ -22,12 +22,57 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 // Check if we should use mock mode (when no backend is available)
 const USE_MOCK_AUTH = !import.meta.env.VITE_API_URL && import.meta.env.PROD
 
+// Check if localStorage is available (not available in some private browsing modes)
+const isLocalStorageAvailable = (): boolean => {
+  try {
+    const testKey = '__test__'
+    localStorage.setItem(testKey, testKey)
+    localStorage.removeItem(testKey)
+    return true
+  } catch {
+    return false
+  }
+}
+
+const STORAGE_AVAILABLE = isLocalStorageAvailable()
+
+// Safe localStorage wrapper for mobile compatibility
+const safeStorage = {
+  getItem: (key: string): string | null => {
+    if (!STORAGE_AVAILABLE) return null
+    try {
+      return localStorage.getItem(key)
+    } catch {
+      return null
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    if (!STORAGE_AVAILABLE) return
+    try {
+      localStorage.setItem(key, value)
+    } catch {
+      console.warn('Failed to save to localStorage')
+    }
+  },
+  removeItem: (key: string): void => {
+    if (!STORAGE_AVAILABLE) return
+    try {
+      localStorage.removeItem(key)
+    } catch {
+      // Ignore
+    }
+  }
+}
+
 // Log API URL in development for debugging
 if (import.meta.env.DEV) {
   console.log('API Base URL:', API_BASE_URL)
 }
 if (USE_MOCK_AUTH) {
   console.log('Running in demo mode - using mock authentication')
+  if (!STORAGE_AVAILABLE) {
+    console.warn('⚠️ localStorage not available - demo mode will not work properly')
+  }
 }
 
 const api = axios.create({
@@ -40,7 +85,7 @@ const api = axios.create({
 
 // Add auth token to requests
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = safeStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -52,8 +97,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      safeStorage.removeItem('token')
+      safeStorage.removeItem('user')
       window.location.href = '/login'
     }
     return Promise.reject(error)
@@ -76,14 +121,14 @@ export const authApi = {
     // Demo mode - simulate login
     if (USE_MOCK_AUTH) {
       // Check localStorage for registered users
-      const users = JSON.parse(localStorage.getItem('demo_users') || '[]')
+      const users = JSON.parse(safeStorage.getItem('demo_users') || '[]')
       const user = users.find((u: { email: string; password: string }) => u.email === email && u.password === password)
       if (user) {
         // Check if email is verified (in demo mode, auto-verify for convenience)
         if (!user.is_verified) {
           // Auto-verify in demo mode for better UX
           user.is_verified = true
-          localStorage.setItem('demo_users', JSON.stringify(users))
+          safeStorage.setItem('demo_users', JSON.stringify(users))
         }
         return {
           success: true,
@@ -109,21 +154,22 @@ export const authApi = {
   }): Promise<AuthResponse> => {
     // Demo mode - simulate registration
     if (USE_MOCK_AUTH) {
-      const users = JSON.parse(localStorage.getItem('demo_users') || '[]')
+      const users = JSON.parse(safeStorage.getItem('demo_users') || '[]')
       if (users.find((u: { email: string }) => u.email === userData.email)) {
         throw { response: { data: { message: 'Email already registered' } } }
       }
       const newUser = {
         ...createMockUser(userData.email, userData.first_name, userData.last_name, userData.phone),
-        password: userData.password
+        password: userData.password,
+        is_verified: true // Auto-verify in demo mode for mobile compatibility
       }
       users.push(newUser)
-      localStorage.setItem('demo_users', JSON.stringify(users))
+      safeStorage.setItem('demo_users', JSON.stringify(users))
       return {
         success: true,
         message: 'Registration successful',
         data: {
-          user: { id: newUser.id, email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, phone: newUser.phone },
+          user: { id: newUser.id, email: newUser.email, first_name: newUser.first_name, last_name: newUser.last_name, phone: newUser.phone, is_verified: true },
           token: 'demo-token-' + Date.now()
         }
       }
@@ -134,7 +180,7 @@ export const authApi = {
 
   getProfile: async () => {
     if (USE_MOCK_AUTH) {
-      const storedUser = localStorage.getItem('user')
+      const storedUser = safeStorage.getItem('user')
       if (storedUser) return JSON.parse(storedUser)
       throw { response: { data: { message: 'Not authenticated' } } }
     }
@@ -144,9 +190,9 @@ export const authApi = {
 
   updateProfile: async (updates: Partial<AuthResponse['data']['user']>) => {
     if (USE_MOCK_AUTH) {
-      const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
+      const storedUser = JSON.parse(safeStorage.getItem('user') || '{}')
       const updatedUser = { ...storedUser, ...updates }
-      localStorage.setItem('user', JSON.stringify(updatedUser))
+      safeStorage.setItem('user', JSON.stringify(updatedUser))
       return updatedUser
     }
     const { data } = await api.put<ApiResponse<{ user: AuthResponse['data']['user'] }>>('/auth/me', updates)
@@ -167,11 +213,11 @@ export const authApi = {
   verifyEmail: async (token: string, email: string): Promise<AuthResponse> => {
     if (USE_MOCK_AUTH) {
       // Demo mode - auto verify
-      const users = JSON.parse(localStorage.getItem('demo_users') || '[]')
+      const users = JSON.parse(safeStorage.getItem('demo_users') || '[]')
       const userIndex = users.findIndex((u: { email: string }) => u.email === email)
       if (userIndex !== -1) {
         users[userIndex].is_verified = true
-        localStorage.setItem('demo_users', JSON.stringify(users))
+        safeStorage.setItem('demo_users', JSON.stringify(users))
         return {
           success: true,
           message: 'Email verified successfully!',
@@ -502,7 +548,7 @@ export const bookingApi = {
     passenger_email?: string
   }): Promise<Booking> => {
     if (USE_MOCK_AUTH) {
-      const bookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]')
+      const bookings = JSON.parse(safeStorage.getItem('demo_bookings') || '[]')
       const newBooking: Booking = {
         id: 'booking-' + Date.now(),
         user_id: 'demo-user',
@@ -523,7 +569,7 @@ export const bookingApi = {
         updated_at: new Date().toISOString()
       }
       bookings.push(newBooking)
-      localStorage.setItem('demo_bookings', JSON.stringify(bookings))
+      safeStorage.setItem('demo_bookings', JSON.stringify(bookings))
       return newBooking
     }
     const { data } = await api.post<ApiResponse<{ booking: Booking }>>('/bookings', bookingData)
@@ -532,7 +578,7 @@ export const bookingApi = {
 
   getBookings: async (params?: { page?: number; limit?: number; status?: string }) => {
     if (USE_MOCK_AUTH) {
-      const bookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]')
+      const bookings = JSON.parse(safeStorage.getItem('demo_bookings') || '[]')
       return {
         bookings,
         pagination: { total: bookings.length, page: 1, limit: 10, pages: 1, has_more: false }
@@ -553,7 +599,7 @@ export const bookingApi = {
 
   getBookingById: async (bookingId: string): Promise<Booking> => {
     if (USE_MOCK_AUTH) {
-      const bookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]')
+      const bookings = JSON.parse(safeStorage.getItem('demo_bookings') || '[]')
       const booking = bookings.find((b: Booking) => b.id === bookingId)
       if (booking) return booking
       throw { response: { data: { message: 'Booking not found' } } }
@@ -564,11 +610,11 @@ export const bookingApi = {
 
   confirmBooking: async (bookingId: string): Promise<Booking> => {
     if (USE_MOCK_AUTH) {
-      const bookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]')
+      const bookings = JSON.parse(safeStorage.getItem('demo_bookings') || '[]')
       const index = bookings.findIndex((b: Booking) => b.id === bookingId)
       if (index !== -1) {
         bookings[index].status = 'confirmed'
-        localStorage.setItem('demo_bookings', JSON.stringify(bookings))
+        safeStorage.setItem('demo_bookings', JSON.stringify(bookings))
         return bookings[index]
       }
       throw { response: { data: { message: 'Booking not found' } } }
@@ -579,11 +625,11 @@ export const bookingApi = {
 
   cancelBooking: async (bookingId: string): Promise<Booking> => {
     if (USE_MOCK_AUTH) {
-      const bookings = JSON.parse(localStorage.getItem('demo_bookings') || '[]')
+      const bookings = JSON.parse(safeStorage.getItem('demo_bookings') || '[]')
       const index = bookings.findIndex((b: Booking) => b.id === bookingId)
       if (index !== -1) {
         bookings[index].status = 'cancelled'
-        localStorage.setItem('demo_bookings', JSON.stringify(bookings))
+        safeStorage.setItem('demo_bookings', JSON.stringify(bookings))
         return bookings[index]
       }
       throw { response: { data: { message: 'Booking not found' } } }
