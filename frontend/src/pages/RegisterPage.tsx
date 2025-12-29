@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Lock, User, Phone, Loader2, Bus, ArrowRight, Sparkles, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, Phone, Loader2, Bus, ArrowRight, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,6 +17,8 @@ export default function RegisterPage() {
   const { toast } = useToast()
   const [formData, setFormData] = useState({ first_name: '', last_name: '', email: '', phone: '', password: '', confirmPassword: '' })
   const [isLoading, setIsLoading] = useState(false)
+  const [verificationSent, setVerificationSent] = useState(false)
+  const [isResending, setIsResending] = useState(false)
   
   // Check if user was redirected from booking page
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/'
@@ -32,9 +34,20 @@ export default function RegisterPage() {
     setIsLoading(true)
     try {
       const response = await authApi.register({ first_name: formData.first_name, last_name: formData.last_name, email: formData.email, password: formData.password, phone: formData.phone || undefined })
-      setAuth(response.data.user, response.data.token)
-      toast({ title: 'Welcome to Twende!', description: 'Your account has been created. Let\'s Go!', variant: 'success' })
-      navigate(from, { replace: true })
+      
+      // Check if email verification is required
+      const requiresVerification = (response as { data?: { requiresVerification?: boolean } }).data?.requiresVerification
+      
+      if (requiresVerification) {
+        // Show verification pending state
+        setVerificationSent(true)
+        toast({ title: '📧 Check Your Email!', description: 'We sent a verification link to your inbox.', variant: 'success' })
+      } else if (response.data?.token) {
+        // Demo mode or email already verified - auto login
+        setAuth(response.data.user, response.data.token)
+        toast({ title: 'Welcome to Twende!', description: 'Your account has been created. Let\'s Go!', variant: 'success' })
+        navigate(from, { replace: true })
+      }
     } catch (error: unknown) { 
       console.error('Registration failed:', error)
       // Extract error message from API response
@@ -52,6 +65,88 @@ export default function RegisterPage() {
       }
       toast({ title: 'Registration failed', description: errorMessage, variant: 'destructive' })
     } finally { setIsLoading(false) }
+  }
+
+  const handleResendVerification = async () => {
+    if (!formData.email) return
+    setIsResending(true)
+    try {
+      await authApi.resendVerification(formData.email)
+      toast({ title: '📧 Email Sent!', description: 'Check your inbox for the verification link.', variant: 'success' })
+    } catch (error) {
+      toast({ title: 'Failed to send', description: 'Please try again later.', variant: 'destructive' })
+    } finally {
+      setIsResending(false)
+    }
+  }
+
+  // Show verification pending state
+  if (verificationSent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center py-12 px-4">
+        <div className="absolute inset-0 bg-hero-pattern" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="relative z-10 w-full max-w-md">
+          <div className="flex justify-center mb-8">
+            <Link to="/" className="flex items-center gap-2">
+              <div className="bg-gradient-to-br from-sky-500 to-maroon-700 p-2 rounded-lg">
+                <Bus className="h-6 w-6 text-white" />
+              </div>
+              <span className="font-display text-2xl font-bold"><span className="text-gradient">Twende</span></span>
+            </Link>
+          </div>
+          <Card className="glass border-white/10">
+            <CardHeader className="text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                className="mx-auto mb-4"
+              >
+                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <Mail className="h-10 w-10 text-green-500" />
+                </div>
+              </motion.div>
+              <CardTitle className="font-display text-2xl">Check Your Email! 📧</CardTitle>
+              <CardDescription>
+                We sent a verification link to<br />
+                <span className="font-semibold text-foreground">{formData.email}</span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="font-medium text-green-600 dark:text-green-400">Almost there!</p>
+                    <p className="text-muted-foreground mt-1">
+                      Click the link in your email to verify your account and start booking trips.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center text-sm text-muted-foreground">
+                <p>Didn't receive the email? Check your spam folder or</p>
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto text-primary"
+                  onClick={handleResendVerification}
+                  disabled={isResending}
+                >
+                  {isResending ? 'Sending...' : 'click here to resend'}
+                </Button>
+              </div>
+              
+              <Button variant="outline" className="w-full" onClick={() => navigate('/login')}>
+                Go to Login
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    )
   }
 
   return (

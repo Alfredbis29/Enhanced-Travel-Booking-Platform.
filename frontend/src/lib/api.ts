@@ -79,11 +79,17 @@ export const authApi = {
       const users = JSON.parse(localStorage.getItem('demo_users') || '[]')
       const user = users.find((u: { email: string; password: string }) => u.email === email && u.password === password)
       if (user) {
+        // Check if email is verified (in demo mode, auto-verify for convenience)
+        if (!user.is_verified) {
+          // Auto-verify in demo mode for better UX
+          user.is_verified = true
+          localStorage.setItem('demo_users', JSON.stringify(users))
+        }
         return {
           success: true,
           message: 'Login successful',
           data: {
-            user: { id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name, phone: user.phone },
+            user: { id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name, phone: user.phone, is_verified: true },
             token: 'demo-token-' + Date.now()
           }
         }
@@ -155,6 +161,37 @@ export const authApi = {
       current_password: currentPassword,
       new_password: newPassword,
     })
+    return data
+  },
+
+  verifyEmail: async (token: string, email: string): Promise<AuthResponse> => {
+    if (USE_MOCK_AUTH) {
+      // Demo mode - auto verify
+      const users = JSON.parse(localStorage.getItem('demo_users') || '[]')
+      const userIndex = users.findIndex((u: { email: string }) => u.email === email)
+      if (userIndex !== -1) {
+        users[userIndex].is_verified = true
+        localStorage.setItem('demo_users', JSON.stringify(users))
+        return {
+          success: true,
+          message: 'Email verified successfully!',
+          data: {
+            user: users[userIndex],
+            token: 'demo-token-' + Date.now()
+          }
+        }
+      }
+      throw { response: { data: { message: 'Invalid verification link' } } }
+    }
+    const { data } = await api.post<AuthResponse>('/auth/verify-email', { token, email })
+    return data
+  },
+
+  resendVerification: async (email: string) => {
+    if (USE_MOCK_AUTH) {
+      return { success: true, message: 'Verification email sent (demo mode)' }
+    }
+    const { data } = await api.post('/auth/resend-verification', { email })
     return data
   },
 }
