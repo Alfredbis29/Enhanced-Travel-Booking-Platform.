@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { searchApi, bookingApi, paymentApi } from '@/lib/api'
 import { useAuthStore } from '@/store'
 import { useToast } from '@/hooks/use-toast'
+import { sendBookingConfirmationEmail } from '@/lib/emailService'
 import type { Trip, PaymentMethod, PaymentCurrency, PaymentStatus } from '@/types'
 import { PAYMENT_METHOD_INFO, PAYMENT_METHODS_BY_COUNTRY } from '@/types'
 
@@ -390,6 +391,28 @@ export default function BookingPage() {
       setPaymentStatus('completed')
       setStep('confirmed')
       toast({ title: 'Payment Successful!', description: 'Your booking has been confirmed.' })
+      
+      // Send confirmation email if email is provided
+      if (passengerEmail && trip) {
+        sendBookingConfirmationEmail(
+          passengerEmail,
+          passengerName.split(' ')[0] || 'Traveler',
+          {
+            bookingRef,
+            origin: trip.origin,
+            destination: trip.destination,
+            departureDate: formatDate(trip.departure_time),
+            departureTime: formatTime(trip.departure_time),
+            provider: trip.provider_name,
+            seats,
+            totalPrice: formatCurrency(totalPrice, trip.currency)
+          }
+        ).then(sent => {
+          if (sent) {
+            toast({ title: '📧 Email Sent!', description: 'Confirmation sent to your inbox.' })
+          }
+        })
+      }
     } catch (error) {
       console.error('Payment simulation failed:', error)
       // Still confirm for demo
