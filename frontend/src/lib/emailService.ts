@@ -7,12 +7,22 @@ const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
 
 // Check if EmailJS is configured
 export const isEmailConfigured = () => {
-  return !!(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY);
+  const configured = !!(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY);
+  console.log('📧 EmailJS Config Check:', {
+    hasServiceId: !!EMAILJS_SERVICE_ID,
+    hasTemplateId: !!EMAILJS_TEMPLATE_ID,
+    hasPublicKey: !!EMAILJS_PUBLIC_KEY,
+    isConfigured: configured
+  });
+  return configured;
 };
 
 // Initialize EmailJS
 if (EMAILJS_PUBLIC_KEY) {
   emailjs.init(EMAILJS_PUBLIC_KEY);
+  console.log('📧 EmailJS initialized with public key');
+} else {
+  console.log('⚠️ EmailJS not initialized - no public key found');
 }
 
 // Send verification email
@@ -173,10 +183,43 @@ Built with ❤️ by AlfredoCAMP
   }
 };
 
+// Test email function - call this from browser console: testEmail('your@email.com')
+export const testEmail = async (toEmail: string): Promise<boolean> => {
+  console.log('🧪 Testing email to:', toEmail);
+  console.log('📧 Service ID:', EMAILJS_SERVICE_ID);
+  console.log('📧 Template ID:', EMAILJS_TEMPLATE_ID);
+  console.log('📧 Public Key:', EMAILJS_PUBLIC_KEY ? 'Set (' + EMAILJS_PUBLIC_KEY.substring(0, 5) + '...)' : 'NOT SET');
+  
+  if (!isEmailConfigured()) {
+    console.error('❌ EmailJS is not configured! Add environment variables to Vercel.');
+    return false;
+  }
+
+  try {
+    const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: toEmail,
+      to_name: 'Test User',
+      subject: '🧪 Test Email from Twende',
+      message: 'This is a test email from Twende Travel Platform. If you received this, email is working! 🎉'
+    });
+    console.log('✅ Email sent successfully!', result);
+    return true;
+  } catch (error) {
+    console.error('❌ Email failed:', error);
+    return false;
+  }
+};
+
+// Make testEmail available globally for debugging
+if (typeof window !== 'undefined') {
+  (window as unknown as { testEmail: typeof testEmail }).testEmail = testEmail;
+}
+
 export default {
   isEmailConfigured,
   sendVerificationEmail,
   sendBookingConfirmationEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  testEmail
 };
 
