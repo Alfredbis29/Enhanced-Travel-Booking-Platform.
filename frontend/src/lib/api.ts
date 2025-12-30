@@ -240,6 +240,58 @@ export const authApi = {
     const { data } = await api.post('/auth/resend-verification', { email })
     return data
   },
+
+  forgotPassword: async (email: string) => {
+    if (USE_MOCK_AUTH) {
+      // Demo mode - check if user exists and send reset email
+      const users = JSON.parse(safeStorage.getItem('demo_users') || '[]')
+      const user = users.find((u: { email: string }) => u.email === email)
+      if (!user) {
+        throw { response: { data: { message: 'No account found with this email' } } }
+      }
+      // Generate reset token and store it
+      const resetToken = 'reset-' + Date.now().toString(36) + Math.random().toString(36).substring(2)
+      user.reset_token = resetToken
+      user.reset_token_expiry = Date.now() + 3600000 // 1 hour
+      safeStorage.setItem('demo_users', JSON.stringify(users))
+      
+      // Send reset email via EmailJS
+      try {
+        const { sendPasswordResetEmail } = await import('@/lib/emailService')
+        await sendPasswordResetEmail(email, user.first_name || 'User', resetToken)
+      } catch (e) {
+        console.log('Demo mode - Reset token:', resetToken)
+      }
+      
+      return { success: true, message: 'Password reset email sent' }
+    }
+    const { data } = await api.post('/auth/forgot-password', { email })
+    return data
+  },
+
+  resetPassword: async (token: string, email: string, newPassword: string) => {
+    if (USE_MOCK_AUTH) {
+      // Demo mode - verify token and reset password
+      const users = JSON.parse(safeStorage.getItem('demo_users') || '[]')
+      const userIndex = users.findIndex((u: { email: string; reset_token?: string; reset_token_expiry?: number }) => 
+        u.email === email && u.reset_token === token && u.reset_token_expiry && u.reset_token_expiry > Date.now()
+      )
+      
+      if (userIndex === -1) {
+        throw { response: { data: { message: 'Invalid or expired reset link' } } }
+      }
+      
+      // Update password and clear reset token
+      users[userIndex].password = newPassword
+      delete users[userIndex].reset_token
+      delete users[userIndex].reset_token_expiry
+      safeStorage.setItem('demo_users', JSON.stringify(users))
+      
+      return { success: true, message: 'Password reset successfully' }
+    }
+    const { data } = await api.post('/auth/reset-password', { token, email, new_password: newPassword })
+    return data
+  },
 }
 
 // Search endpoints

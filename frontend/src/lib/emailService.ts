@@ -140,6 +140,54 @@ Built with ❤️ by AlfredoCAMP
   }
 };
 
+// Send password reset email
+export const sendPasswordResetEmail = async (
+  toEmail: string,
+  firstName: string,
+  resetToken: string
+): Promise<boolean> => {
+  if (!isEmailConfigured()) {
+    console.log('📧 [Demo Mode] Password reset email would be sent to:', toEmail);
+    console.log('   Reset token:', resetToken);
+    return false;
+  }
+
+  const resetLink = `${window.location.origin}/reset-password?token=${resetToken}&email=${encodeURIComponent(toEmail)}`;
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: toEmail,
+      to_name: firstName,
+      subject: '🔐 Reset Your Twende Password',
+      message: `
+Hello ${firstName}! 👋
+
+We received a request to reset your Twende account password.
+
+Click the link below to create a new password:
+
+${resetLink}
+
+This link will expire in 1 hour.
+
+If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+
+Need help? Contact us at support@twende.travel
+
+- The Twende Team
+
+Built with ❤️ by AlfredoCAMP
+      `.trim()
+    });
+
+    console.log('📧 Password reset email sent to:', toEmail);
+    return true;
+  } catch (error) {
+    console.error('Failed to send password reset email:', error);
+    return false;
+  }
+};
+
 // Send welcome email after verification
 export const sendWelcomeEmail = async (
   toEmail: string,
@@ -218,6 +266,7 @@ if (typeof window !== 'undefined') {
 export default {
   isEmailConfigured,
   sendVerificationEmail,
+  sendPasswordResetEmail,
   sendBookingConfirmationEmail,
   sendWelcomeEmail,
   testEmail
