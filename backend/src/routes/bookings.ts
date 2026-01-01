@@ -71,7 +71,7 @@ router.post('/', [
       ]
     );
 
-    const booking = result.rows[0];
+    const booking = result.rows[0] as Record<string, unknown>;
 
     res.status(201).json({
       success: true,
@@ -114,7 +114,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response, next: NextFunct
       `SELECT COUNT(*) FROM bookings ${whereClause}`,
       params
     );
-    const total = parseInt(countResult.rows[0].count);
+    const total = parseInt((countResult.rows[0] as { count: string }).count);
 
     // Get bookings
     params.push(limit, offset);
@@ -155,10 +155,10 @@ router.get('/:id', async (req: AuthenticatedRequest, res: Response, next: NextFu
       throw new AppError('Booking not found', 404);
     }
 
-    const booking = result.rows[0];
+    const booking = result.rows[0] as Record<string, unknown>;
 
     // Get trip details
-    const trip = await safirioService.getTripById(booking.trip_id);
+    const trip = await safirioService.getTripById(booking.trip_id as string);
 
     res.json({
       success: true,
