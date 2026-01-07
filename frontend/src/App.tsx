@@ -11,8 +11,12 @@ import LoginPage from '@/pages/LoginPage'
 import RegisterPage from '@/pages/RegisterPage'
 import ProfilePage from '@/pages/ProfilePage'
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
+import { useActivityTracker } from '@/hooks/useActivityTracker'
 
 function App() {
+  // Track user activity and auto-logout after 12 hours of inactivity
+  useActivityTracker()
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
