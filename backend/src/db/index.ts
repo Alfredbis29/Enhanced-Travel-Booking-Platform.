@@ -11,9 +11,6 @@ interface User {
   first_name: string;
   last_name: string;
   phone?: string;
-  is_verified: boolean;
-  verification_token?: string;
-  token_expiry?: Date;
   created_at: Date;
   updated_at: Date;
 }
@@ -71,7 +68,7 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
   
   // INSERT INTO users
   if (normalizedText.includes('insert into users')) {
-    const [email, password_hash, first_name, last_name, phone, verification_token, token_expiry] = params as string[];
+    const [email, password_hash, first_name, last_name, phone] = params as string[];
     const id = uuidv4();
     const user: User = {
       id,
@@ -80,14 +77,11 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
       first_name,
       last_name,
       phone: phone || undefined,
-      is_verified: false,
-      verification_token: verification_token || undefined,
-      token_expiry: token_expiry ? new Date(token_expiry) : undefined,
       created_at: new Date(),
       updated_at: new Date()
     };
     users.set(id, user);
-    return { rows: [{ id, email, first_name, last_name, phone, is_verified: user.is_verified, created_at: user.created_at }], rowCount: 1 };
+    return { rows: [{ id, email, first_name, last_name, phone, created_at: user.created_at }], rowCount: 1 };
   }
   
   // SELECT from users by email
@@ -104,21 +98,7 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
     return { rows: user ? [user] : [], rowCount: user ? 1 : 0 };
   }
   
-  // UPDATE users - verify email
-  if (normalizedText.includes('update users') && normalizedText.includes('is_verified')) {
-    const email = params?.[0] as string;
-    const user = Array.from(users.values()).find(u => u.email === email);
-    if (user) {
-      user.is_verified = true;
-      user.verification_token = undefined;
-      user.token_expiry = undefined;
-      user.updated_at = new Date();
-      return { rows: [user], rowCount: 1 };
-    }
-    return { rows: [], rowCount: 0 };
-  }
-  
-  // UPDATE users - general
+  // UPDATE users
   if (normalizedText.includes('update users')) {
     const userId = params?.[params.length - 1] as string;
     const user = users.get(userId);
@@ -127,16 +107,6 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
       return { rows: [user], rowCount: 1 };
     }
     return { rows: [], rowCount: 0 };
-  }
-  
-  // SELECT user by verification token
-  if (normalizedText.includes('select') && normalizedText.includes('verification_token')) {
-    const token = params?.[0] as string;
-    const email = params?.[1] as string;
-    const user = Array.from(users.values()).find(
-      u => u.verification_token === token && u.email === email
-    );
-    return { rows: user ? [user] : [], rowCount: user ? 1 : 0 };
   }
   
   // INSERT INTO bookings

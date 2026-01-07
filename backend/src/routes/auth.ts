@@ -5,13 +5,6 @@ import { body, validationResult } from 'express-validator';
 import { query } from '../db/index.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
-import { 
-  generateVerificationToken, 
-  generateTokenExpiry, 
-  sendVerificationEmail,
-  sendWelcomeEmail,
-  IS_SMTP_CONFIGURED 
-} from '../services/email.js';
 
 const router = Router();
 
@@ -31,11 +24,10 @@ const loginValidation = [
 
 // Helper to generate JWT
 function generateToken(userId: string, email: string): string {
-  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
   return jwt.sign(
     { userId, email },
     process.env.JWT_SECRET || 'fallback-secret',
-    { expiresIn: expiresIn as jwt.SignOptions['expiresIn'] }
+    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 }
 
@@ -50,97 +42,39 @@ router.post('/register', registerValidation, async (req: Request, res: Response,
     const { email, password, first_name, last_name, phone } = req.body;
 
     // Check if user exists
-    const existingUser = await query('SELECT id, is_verified FROM users WHERE email = $1', [email]);
+    const existingUser = await query('SELECT id FROM users WHERE email = $1', [email]);
     if (existingUser.rows.length > 0) {
-      const existing = existingUser.rows[0] as { id: string; is_verified: boolean };
-      if (!existing.is_verified) {
-        // User exists but not verified - resend verification email
-        const verificationToken = generateVerificationToken();
-        const tokenExpiry = generateTokenExpiry();
-        
-        await query(
-          'UPDATE users SET verification_token = $1, token_expiry = $2 WHERE id = $3',
-          [verificationToken, tokenExpiry.toISOString(), existing.id]
-        );
-        
-        await sendVerificationEmail(email, first_name, verificationToken);
-        
-        throw new AppError('Email already registered but not verified. We sent a new verification email.', 409);
-      }
       throw new AppError('Email already registered', 409);
     }
 
     // Hash password
     const password_hash = await bcrypt.hash(password, 12);
 
-    // Check if email verification should be required
-    if (IS_SMTP_CONFIGURED) {
-      // SMTP configured - require email verification
-      const verificationToken = generateVerificationToken();
-      const tokenExpiry = generateTokenExpiry();
+    // Create user
+    const result = await query(
+      `INSERT INTO users (email, password_hash, first_name, last_name, phone) 
+       VALUES ($1, $2, $3, $4, $5) 
+       RETURNING id, email, first_name, last_name, phone, created_at`,
+      [email, password_hash, first_name, last_name, phone || null]
+    );
 
-      // Create user with verification token
-      const result = await query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, phone, verification_token, token_expiry) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7) 
-         RETURNING id, email, first_name, last_name, phone, is_verified, created_at`,
-        [email, password_hash, first_name, last_name, phone || null, verificationToken, tokenExpiry.toISOString()]
-      );
+    const user = result.rows[0];
+    const token = generateToken(user.id, user.email);
 
-      const user = result.rows[0] as { id: string; email: string; first_name: string; last_name: string; phone?: string; is_verified: boolean };
-
-      // Send verification email
-      await sendVerificationEmail(email, first_name, verificationToken);
-
-      res.status(201).json({
-        success: true,
-        message: 'Registration successful! Please check your email to verify your account.',
-        data: {
-          user: {
-            id: user.id,
-            email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            phone: user.phone,
-            is_verified: false
-          },
-          requiresVerification: true
-        }
-      });
-    } else {
-      // No SMTP - auto-verify user and provide token for immediate login
-      const result = await query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, phone, verification_token, token_expiry) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7) 
-         RETURNING id, email, first_name, last_name, phone, is_verified, created_at`,
-        [email, password_hash, first_name, last_name, phone || null, null, null]
-      );
-
-      const user = result.rows[0] as { id: string; email: string; first_name: string; last_name: string; phone?: string };
-
-      // Auto-verify the user since we can't send emails
-      await query('UPDATE users SET is_verified = true WHERE email = $1', [email]);
-
-      // Generate token for immediate login
-      const token = generateToken(user.id, user.email);
-
-      res.status(201).json({
-        success: true,
-        message: 'Registration successful! Welcome to Twende!',
-        data: {
-          user: {
-            id: user.id,
-            email: user.email,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            phone: user.phone,
-            is_verified: true
-          },
-          token,
-          requiresVerification: false
-        }
-      });
-    }
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          phone: user.phone
+        },
+        token
+      }
+    });
   } catch (error) {
     next(error);
   }
@@ -158,42 +92,20 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
 
     // Find user
     const result = await query(
-      'SELECT id, email, password_hash, first_name, last_name, phone, is_verified FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, first_name, last_name, phone FROM users WHERE email = $1',
       [email]
     );
 
     if (result.rows.length === 0) {
-      throw new AppError('Invalid credentials. Please check your email and password.', 401);
+      throw new AppError('Invalid credentials', 401);
     }
 
-    const user = result.rows[0] as { 
-      id: string; email: string; password_hash: string; 
-      first_name: string; last_name: string; phone?: string; is_verified: boolean 
-    };
+    const user = result.rows[0];
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
     if (!isValidPassword) {
-      throw new AppError('Invalid credentials. Please check your email and password.', 401);
-    }
-
-    // Check if email is verified
-    if (!user.is_verified) {
-      if (IS_SMTP_CONFIGURED) {
-        // Resend verification email
-        const verificationToken = generateVerificationToken();
-        await query(
-          'UPDATE users SET verification_token = $1, token_expiry = $2 WHERE id = $3',
-          [verificationToken, generateTokenExpiry().toISOString(), user.id]
-        );
-        await sendVerificationEmail(email, user.first_name, verificationToken);
-        
-        throw new AppError('Please verify your email before logging in. We sent a new verification link to your inbox.', 403);
-      } else {
-        // Auto-verify user when SMTP is not configured
-        await query('UPDATE users SET is_verified = true WHERE id = $1', [user.id]);
-        user.is_verified = true;
-      }
+      throw new AppError('Invalid credentials', 401);
     }
 
     const token = generateToken(user.id, user.email);
@@ -207,135 +119,10 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
           email: user.email,
           first_name: user.first_name,
           last_name: user.last_name,
-          phone: user.phone,
-          is_verified: user.is_verified
+          phone: user.phone
         },
         token
       }
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Verify email
-router.post('/verify-email', [
-  body('token').notEmpty().withMessage('Verification token required'),
-  body('email').isEmail().normalizeEmail().withMessage('Valid email required')
-], async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new AppError(errors.array()[0].msg, 400);
-    }
-
-    const { token, email } = req.body;
-
-    // Find user with this token
-    const result = await query(
-      'SELECT id, email, first_name, last_name, phone, verification_token, token_expiry, is_verified FROM users WHERE verification_token = $1 AND email = $2',
-      [token, email]
-    );
-
-    if (result.rows.length === 0) {
-      throw new AppError('Invalid or expired verification link. Please request a new one.', 400);
-    }
-
-    const user = result.rows[0] as { 
-      id: string; email: string; first_name: string; last_name: string; 
-      phone?: string; token_expiry?: Date; is_verified: boolean 
-    };
-
-    // Check if already verified
-    if (user.is_verified) {
-      throw new AppError('Email already verified. You can log in.', 400);
-    }
-
-    // Check if token expired
-    if (user.token_expiry && new Date() > new Date(user.token_expiry)) {
-      throw new AppError('Verification link has expired. Please request a new one.', 400);
-    }
-
-    // Verify the user
-    await query(
-      'UPDATE users SET is_verified = true, verification_token = NULL, token_expiry = NULL WHERE email = $1',
-      [email]
-    );
-
-    // Send welcome email
-    await sendWelcomeEmail(email, user.first_name);
-
-    // Generate token for auto-login
-    const authToken = generateToken(user.id, user.email);
-
-    res.json({
-      success: true,
-      message: 'Email verified successfully! Welcome to Twende!',
-      data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          phone: user.phone,
-          is_verified: true
-        },
-        token: authToken
-      }
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Resend verification email
-router.post('/resend-verification', [
-  body('email').isEmail().normalizeEmail().withMessage('Valid email required')
-], async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new AppError(errors.array()[0].msg, 400);
-    }
-
-    const { email } = req.body;
-
-    // Find user
-    const result = await query(
-      'SELECT id, email, first_name, is_verified FROM users WHERE email = $1',
-      [email]
-    );
-
-    if (result.rows.length === 0) {
-      // Don't reveal if email exists or not
-      res.json({
-        success: true,
-        message: 'If this email is registered, you will receive a verification link.'
-      });
-      return;
-    }
-
-    const user = result.rows[0] as { id: string; email: string; first_name: string; is_verified: boolean };
-
-    if (user.is_verified) {
-      throw new AppError('Email already verified. You can log in.', 400);
-    }
-
-    // Generate new verification token
-    const verificationToken = generateVerificationToken();
-    const tokenExpiry = generateTokenExpiry();
-
-    await query(
-      'UPDATE users SET verification_token = $1, token_expiry = $2 WHERE id = $3',
-      [verificationToken, tokenExpiry.toISOString(), user.id]
-    );
-
-    // Send verification email
-    await sendVerificationEmail(email, user.first_name, verificationToken);
-
-    res.json({
-      success: true,
-      message: 'Verification email sent! Please check your inbox.'
     });
   } catch (error) {
     next(error);
@@ -346,7 +133,7 @@ router.post('/resend-verification', [
 router.get('/me', authenticate, async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const result = await query(
-      'SELECT id, email, first_name, last_name, phone, is_verified, created_at FROM users WHERE id = $1',
+      'SELECT id, email, first_name, last_name, phone, created_at FROM users WHERE id = $1',
       [req.user!.userId]
     );
 
@@ -436,8 +223,7 @@ router.put('/password', authenticate, [
     }
 
     // Verify current password
-    const userData = result.rows[0] as { password_hash: string };
-    const isValid = await bcrypt.compare(current_password, userData.password_hash);
+    const isValid = await bcrypt.compare(current_password, result.rows[0].password_hash);
     if (!isValid) {
       throw new AppError('Current password is incorrect', 401);
     }

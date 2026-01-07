@@ -9,11 +9,7 @@ import BookingPage from '@/pages/BookingPage'
 import BookingsListPage from '@/pages/BookingsListPage'
 import LoginPage from '@/pages/LoginPage'
 import RegisterPage from '@/pages/RegisterPage'
-import VerifyEmailPage from '@/pages/VerifyEmailPage'
-import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
-import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import ProfilePage from '@/pages/ProfilePage'
-import CityPage from '@/pages/CityPage'
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
 
 function App() {
@@ -24,21 +20,10 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/city/:cityName" element={<CityPage />} />
+            <Route path="/seaTrch" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route
-              path="/booking/:tripId"
-              element={
-                <ProtectedRoute>
-                  <BookingPage />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/booking/:tripId" element={<BookingPage />} />
             <Route
               path="/bookings"
               element={

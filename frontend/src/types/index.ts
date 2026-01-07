@@ -4,7 +4,6 @@ export interface User {
   first_name: string
   last_name: string
   phone?: string
-  is_verified?: boolean
   created_at?: string
 }
 
@@ -84,7 +83,6 @@ export interface SearchParams {
   limit?: number
   sort_by?: 'price' | 'departure_time' | 'duration' | 'rating'
   sort_order?: 'asc' | 'desc'
-  bus_type?: string
 }
 
 export interface SearchResponse {
@@ -101,7 +99,6 @@ export interface AIRecommendationResponse {
     parsed_params: SearchParams
     explanation: string
     suggestions?: string[]
-    confidence?: number
   }
   search_results: SearchResponse
 }
