@@ -80,6 +80,23 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
         lastActivity: state.lastActivity 
       }),
+      onRehydrateStorage: () => (state) => {
+        // Immediately check for inactivity when the app loads
+        // If user was inactive for 12+ hours, log them out right away
+        if (state && state.isAuthenticated && state.lastActivity) {
+          const now = Date.now()
+          const timeSinceActivity = now - state.lastActivity
+          
+          if (timeSinceActivity >= INACTIVITY_TIMEOUT) {
+            // Clear auth state immediately - don't let them appear logged in
+            localStorage.removeItem('token')
+            state.user = null
+            state.token = null
+            state.isAuthenticated = false
+            state.lastActivity = null
+          }
+        }
+      },
     }
   )
 )
