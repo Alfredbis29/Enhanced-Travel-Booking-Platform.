@@ -10,6 +10,9 @@ import BookingsListPage from '@/pages/BookingsListPage'
 import LoginPage from '@/pages/LoginPage'
 import RegisterPage from '@/pages/RegisterPage'
 import ProfilePage from '@/pages/ProfilePage'
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
+import ResetPasswordPage from '@/pages/ResetPasswordPage'
+import VerifyEmailPage from '@/pages/VerifyEmailPage'
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
 import { useActivityTracker } from '@/hooks/useActivityTracker'
 
@@ -27,6 +30,9 @@ function App() {
             <Route path="/seaTrch" element={<SearchPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/booking/:tripId" element={<BookingPage />} />
             <Route
               path="/bookings"
