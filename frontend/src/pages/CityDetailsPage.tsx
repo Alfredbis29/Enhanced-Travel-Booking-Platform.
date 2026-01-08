@@ -20,10 +20,10 @@ const cityData: Record<string, CityInfo> = {
     description: 'The vibrant capital of Kenya, known as the "Green City in the Sun". A bustling metropolis that serves as East Africa\'s commercial hub.',
     image: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=1200&h=600&fit=crop&q=80',
     attractions: [
-      { name: 'Nairobi National Park', type: 'Wildlife', rating: 4.8, image: 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=300&fit=crop', description: 'The only national park within a capital city' },
-      { name: 'Giraffe Centre', type: 'Wildlife', rating: 4.7, image: 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=300&fit=crop', description: 'Get up close with endangered Rothschild giraffes' },
-      { name: 'Karen Blixen Museum', type: 'Museum', rating: 4.5, image: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=400&h=300&fit=crop', description: 'Historic home of the "Out of Africa" author' },
-      { name: 'Nairobi National Museum', type: 'Museum', rating: 4.4, image: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=400&h=300&fit=crop', description: 'Kenya\'s cultural heritage and natural history' },
+      { name: 'Nairobi National Park', type: 'Wildlife', rating: 4.8, image: 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=300&fit=crop&q=80', description: 'The only national park within a capital city' },
+      { name: 'Giraffe Centre', type: 'Wildlife', rating: 4.7, image: 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=300&fit=crop&q=80', description: 'Get up close with endangered Rothschild giraffes' },
+      { name: 'Karen Blixen Museum', type: 'Museum', rating: 4.5, image: 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=300&fit=crop&q=80', description: 'Historic home of the "Out of Africa" author' },
+      { name: 'Nairobi National Museum', type: 'Museum', rating: 4.4, image: 'https://images.unsplash.com/photo-1594608661623-aa0bd3a69d98?w=400&h=300&fit=crop&q=80', description: 'Kenya\'s cultural heritage and natural history' },
     ],
     hotels: [
       { name: 'Villa Rosa Kempinski', rating: 5, price: 'KES 35,000/night', phone: '+254 703 049 000', website: 'kempinski.com' },
@@ -62,10 +62,10 @@ const cityData: Record<string, CityInfo> = {
     description: 'Kenya\'s coastal paradise, known for beautiful beaches, rich Swahili culture, and historic Old Town.',
     image: 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=1200&h=600&fit=crop&q=80',
     attractions: [
-      { name: 'Fort Jesus', type: 'Historic', rating: 4.6, image: 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=300&fit=crop', description: 'UNESCO World Heritage Site, 16th-century Portuguese fort' },
-      { name: 'Diani Beach', type: 'Beach', rating: 4.9, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop', description: 'Award-winning white sand beach' },
-      { name: 'Old Town', type: 'Cultural', rating: 4.5, image: 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=300&fit=crop', description: 'Historic Swahili architecture and markets' },
-      { name: 'Haller Park', type: 'Nature', rating: 4.4, image: 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=300&fit=crop', description: 'Wildlife sanctuary with giraffes and hippos' },
+      { name: 'Fort Jesus', type: 'Historic', rating: 4.6, image: 'https://images.unsplash.com/photo-1590062111236-a74b06e8e6e3?w=400&h=300&fit=crop&q=80', description: 'UNESCO World Heritage Site, 16th-century Portuguese fort' },
+      { name: 'Diani Beach', type: 'Beach', rating: 4.9, image: 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=400&h=300&fit=crop&q=80', description: 'Award-winning white sand beach' },
+      { name: 'Old Town Mombasa', type: 'Cultural', rating: 4.5, image: 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=400&h=300&fit=crop&q=80', description: 'Historic Swahili architecture and markets' },
+      { name: 'Haller Park', type: 'Nature', rating: 4.4, image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=300&fit=crop&q=80', description: 'Wildlife sanctuary with giraffes and hippos' },
     ],
     hotels: [
       { name: 'Serena Beach Resort', rating: 5, price: 'KES 28,000/night', phone: '+254 41 548 5721', website: 'serenahotels.com' },
@@ -102,10 +102,10 @@ const cityData: Record<string, CityInfo> = {
     description: 'The bustling capital of Uganda, built on seven hills and known for its vibrant nightlife and rich history.',
     image: 'https://images.unsplash.com/photo-1619468129361-605ebea04b44?w=1200&h=600&fit=crop&q=80',
     attractions: [
-      { name: 'Kasubi Tombs', type: 'Historic', rating: 4.5, image: 'https://images.unsplash.com/photo-1619468129361-605ebea04b44?w=400&h=300&fit=crop', description: 'UNESCO World Heritage burial grounds of Buganda kings' },
-      { name: 'Uganda National Museum', type: 'Museum', rating: 4.3, image: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=400&h=300&fit=crop', description: 'Uganda\'s cultural and natural heritage' },
-      { name: 'Namugongo Martyrs Shrine', type: 'Religious', rating: 4.6, image: 'https://images.unsplash.com/photo-1619468129361-605ebea04b44?w=400&h=300&fit=crop', description: 'Important pilgrimage site' },
-      { name: 'Owino Market', type: 'Market', rating: 4.2, image: 'https://images.unsplash.com/photo-1619468129361-605ebea04b44?w=400&h=300&fit=crop', description: 'East Africa\'s largest open-air market' },
+      { name: 'Kasubi Tombs', type: 'Historic', rating: 4.5, image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=300&fit=crop&q=80', description: 'UNESCO World Heritage burial grounds of Buganda kings' },
+      { name: 'Uganda National Museum', type: 'Museum', rating: 4.3, image: 'https://images.unsplash.com/photo-1575223970966-76ae61ee7838?w=400&h=300&fit=crop&q=80', description: 'Uganda\'s cultural and natural heritage' },
+      { name: 'Namugongo Martyrs Shrine', type: 'Religious', rating: 4.6, image: 'https://images.unsplash.com/photo-1545296664-39db56ad95bd?w=400&h=300&fit=crop&q=80', description: 'Important pilgrimage site' },
+      { name: 'Owino Market', type: 'Market', rating: 4.2, image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&h=300&fit=crop&q=80', description: 'East Africa\'s largest open-air market' },
     ],
     hotels: [
       { name: 'Sheraton Kampala Hotel', rating: 5, price: 'UGX 600,000/night', phone: '+256 417 420 000', website: 'marriott.com' },
@@ -143,10 +143,10 @@ const cityData: Record<string, CityInfo> = {
     description: 'Africa\'s cleanest city, known for its stunning hills, memorial sites, and remarkable transformation.',
     image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1200&h=600&fit=crop&q=80',
     attractions: [
-      { name: 'Kigali Genocide Memorial', type: 'Memorial', rating: 4.9, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=300&fit=crop', description: 'Moving tribute to the 1994 genocide victims' },
-      { name: 'Inema Arts Center', type: 'Art', rating: 4.6, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=300&fit=crop', description: 'Contemporary Rwandan art gallery' },
-      { name: 'Kimironko Market', type: 'Market', rating: 4.4, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=300&fit=crop', description: 'Largest local market for crafts and produce' },
-      { name: 'Nyamirambo', type: 'Cultural', rating: 4.3, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=300&fit=crop', description: 'Vibrant Muslim quarter with great nightlife' },
+      { name: 'Kigali Genocide Memorial', type: 'Memorial', rating: 4.9, image: 'https://images.unsplash.com/photo-1580745294605-1265987cf598?w=400&h=300&fit=crop&q=80', description: 'Moving tribute to the 1994 genocide victims' },
+      { name: 'Inema Arts Center', type: 'Art', rating: 4.6, image: 'https://images.unsplash.com/photo-1561839561-b13bcfe95249?w=400&h=300&fit=crop&q=80', description: 'Contemporary Rwandan art gallery' },
+      { name: 'Kimironko Market', type: 'Market', rating: 4.4, image: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&h=300&fit=crop&q=80', description: 'Largest local market for crafts and produce' },
+      { name: 'Nyamirambo', type: 'Cultural', rating: 4.3, image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop&q=80', description: 'Vibrant Muslim quarter with great nightlife' },
     ],
     hotels: [
       { name: 'Kigali Marriott Hotel', rating: 5, price: 'RWF 350,000/night', phone: '+250 252 252 252', website: 'marriott.com' },
@@ -183,10 +183,10 @@ const cityData: Record<string, CityInfo> = {
     description: 'Tanzania\'s largest city and commercial hub, a vibrant port city with beautiful beaches and rich culture.',
     image: 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=1200&h=600&fit=crop&q=80',
     attractions: [
-      { name: 'National Museum', type: 'Museum', rating: 4.4, image: 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=300&fit=crop', description: 'Tanzania\'s history and archaeology' },
-      { name: 'Coco Beach', type: 'Beach', rating: 4.3, image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop', description: 'Popular beach for locals and tourists' },
-      { name: 'Village Museum', type: 'Cultural', rating: 4.2, image: 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=300&fit=crop', description: 'Traditional Tanzanian village life' },
-      { name: 'Kariakoo Market', type: 'Market', rating: 4.1, image: 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=300&fit=crop', description: 'Bustling local market' },
+      { name: 'National Museum', type: 'Museum', rating: 4.4, image: 'https://images.unsplash.com/photo-1594608661623-aa0bd3a69d98?w=400&h=300&fit=crop&q=80', description: 'Tanzania\'s history and archaeology' },
+      { name: 'Coco Beach', type: 'Beach', rating: 4.3, image: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=400&h=300&fit=crop&q=80', description: 'Popular beach for locals and tourists' },
+      { name: 'Village Museum', type: 'Cultural', rating: 4.2, image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=300&fit=crop&q=80', description: 'Traditional Tanzanian village life' },
+      { name: 'Kariakoo Market', type: 'Market', rating: 4.1, image: 'https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400&h=300&fit=crop&q=80', description: 'Bustling local market' },
     ],
     hotels: [
       { name: 'Hyatt Regency', rating: 5, price: 'TZS 450,000/night', phone: '+255 22 211 1234', website: 'hyatt.com' },
