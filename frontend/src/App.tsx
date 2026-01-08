@@ -13,6 +13,7 @@ import ProfilePage from '@/pages/ProfilePage'
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import VerifyEmailPage from '@/pages/VerifyEmailPage'
+import CityDetailsPage from '@/pages/CityDetailsPage'
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
 import { useActivityTracker } from '@/hooks/useActivityTracker'
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/city/:cityName" element={<CityDetailsPage />} />
             <Route path="/booking/:tripId" element={<BookingPage />} />
             <Route
               path="/bookings"
