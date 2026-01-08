@@ -277,5 +277,40 @@ router.get('/reference/:ref', async (req: AuthenticatedRequest, res: Response, n
   }
 });
 
+// Delete booking permanently
+router.delete('/:id', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    // First check if the booking exists and belongs to the user
+    const checkResult = await query(
+      'SELECT id, status FROM bookings WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.user!.userId]
+    );
+
+    if (checkResult.rows.length === 0) {
+      throw new AppError('Booking not found', 404);
+    }
+
+    const booking = checkResult.rows[0] as { id: string; status: string };
+
+    // Only allow deletion of cancelled or completed bookings
+    if (booking.status === 'pending' || booking.status === 'confirmed') {
+      throw new AppError('Cannot delete active bookings. Please cancel the booking first.', 400);
+    }
+
+    // Delete the booking
+    await query(
+      'DELETE FROM bookings WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.user!.userId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Booking deleted successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
 

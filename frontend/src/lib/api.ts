@@ -188,6 +188,10 @@ export const bookingApi = {
     const { data } = await api.post<ApiResponse<{ booking: Booking }>>(`/bookings/${bookingId}/cancel`)
     return data.data.booking
   },
+
+  deleteBooking: async (bookingId: string): Promise<void> => {
+    await api.delete(`/bookings/${bookingId}`)
+  },
 }
 
 // Payment endpoints
