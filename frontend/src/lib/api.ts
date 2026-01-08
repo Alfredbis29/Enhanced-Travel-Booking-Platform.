@@ -81,6 +81,30 @@ export const authApi = {
     })
     return data
   },
+
+  forgotPassword: async (email: string) => {
+    const { data } = await api.post<ApiResponse<{ message: string }>>('/auth/forgot-password', { email })
+    return data
+  },
+
+  resetPassword: async (token: string, email: string, password: string) => {
+    const { data } = await api.post<ApiResponse<{ message: string }>>('/auth/reset-password', { 
+      token, 
+      email, 
+      password 
+    })
+    return data
+  },
+
+  verifyEmail: async (token: string, email: string): Promise<AuthResponse> => {
+    const { data } = await api.post<AuthResponse>('/auth/verify-email', { token, email })
+    return data
+  },
+
+  resendVerification: async (email: string) => {
+    const { data } = await api.post<ApiResponse<{ message: string }>>('/auth/resend-verification', { email })
+    return data
+  },
 }
 
 // Search endpoints
