@@ -134,6 +134,7 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
       updated_at: new Date()
     };
     bookings.set(id, booking);
+    console.log(`[DB] Created booking: id=${id}, ref=${booking_reference}, status=${status}`);
     return { rows: [booking], rowCount: 1 };
   }
   
@@ -150,10 +151,14 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
     if (normalizedText.includes('where id = $1') && normalizedText.includes('user_id = $2')) {
       const bookingId = params?.[0] as string;
       const userId = params?.[1] as string;
+      console.log(`[DB] SELECT single booking: id=${bookingId}, userId=${userId}`);
+      console.log(`[DB] Current bookings:`, Array.from(bookings.keys()));
       const booking = bookings.get(bookingId);
       if (booking && booking.user_id === userId) {
+        console.log(`[DB] Found booking with status: ${booking.status}`);
         return { rows: [booking], rowCount: 1 };
       }
+      console.log(`[DB] Booking not found`);
       return { rows: [], rowCount: 0 };
     }
     
@@ -187,16 +192,20 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
   if (normalizedText.includes('update bookings')) {
     const bookingId = params?.[0] as string;
     const userId = params?.[1] as string;
+    console.log(`[DB] UPDATE booking: id=${bookingId}, userId=${userId}`);
     const booking = bookings.get(bookingId);
     if (booking && booking.user_id === userId) {
       if (normalizedText.includes("status = 'confirmed'")) {
         booking.status = 'confirmed';
+        console.log(`[DB] Booking confirmed`);
       } else if (normalizedText.includes("status = 'cancelled'")) {
         booking.status = 'cancelled';
+        console.log(`[DB] Booking cancelled`);
       }
       booking.updated_at = new Date();
       return { rows: [booking], rowCount: 1 };
     }
+    console.log(`[DB] Booking not found for update`);
     return { rows: [], rowCount: 0 };
   }
   
@@ -204,11 +213,15 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
   if (normalizedText.includes('delete from bookings')) {
     const bookingId = params?.[0] as string;
     const userId = params?.[1] as string;
+    console.log(`[DB] DELETE booking: id=${bookingId}, userId=${userId}`);
+    console.log(`[DB] Current bookings count: ${bookings.size}`);
     const booking = bookings.get(bookingId);
     if (booking && booking.user_id === userId) {
       bookings.delete(bookingId);
+      console.log(`[DB] Booking deleted successfully`);
       return { rows: [booking], rowCount: 1 };
     }
+    console.log(`[DB] Booking not found or user mismatch`);
     return { rows: [], rowCount: 0 };
   }
   
