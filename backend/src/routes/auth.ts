@@ -8,6 +8,17 @@ import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 
 const router = Router();
 
+// User type for database queries
+interface DbUser {
+  id: string;
+  email: string;
+  password_hash: string;
+  first_name: string;
+  last_name: string;
+  phone: string | null;
+  created_at?: string;
+}
+
 // Validation middleware
 const registerValidation = [
   body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
@@ -24,10 +35,11 @@ const loginValidation = [
 
 // Helper to generate JWT
 function generateToken(userId: string, email: string): string {
+  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
   return jwt.sign(
     { userId, email },
     process.env.JWT_SECRET || 'fallback-secret',
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    { expiresIn: expiresIn as jwt.SignOptions['expiresIn'] }
   );
 }
 
@@ -58,7 +70,7 @@ router.post('/register', registerValidation, async (req: Request, res: Response,
       [email, password_hash, first_name, last_name, phone || null]
     );
 
-    const user = result.rows[0];
+    const user = result.rows[0] as DbUser;
     const token = generateToken(user.id, user.email);
 
     res.status(201).json({
@@ -100,7 +112,7 @@ router.post('/login', loginValidation, async (req: Request, res: Response, next:
       throw new AppError('Invalid credentials', 401);
     }
 
-    const user = result.rows[0];
+    const user = result.rows[0] as DbUser;
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
@@ -223,7 +235,8 @@ router.put('/password', authenticate, [
     }
 
     // Verify current password
-    const isValid = await bcrypt.compare(current_password, result.rows[0].password_hash);
+    const passwordRow = result.rows[0] as { password_hash: string };
+    const isValid = await bcrypt.compare(current_password, passwordRow.password_hash);
     if (!isValid) {
       throw new AppError('Current password is incorrect', 401);
     }

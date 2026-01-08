@@ -8,6 +8,28 @@ import { safirioService } from '../services/safirio.js';
 
 const router = Router();
 
+// Booking type for database queries
+interface DbBooking {
+  id: string;
+  user_id: string;
+  trip_id: string;
+  trip_provider: string;
+  origin: string;
+  destination: string;
+  departure_time: string;
+  arrival_time: string | null;
+  price: number;
+  currency: string;
+  seats: number;
+  status: string;
+  passenger_name: string;
+  passenger_phone: string;
+  passenger_email: string | null;
+  booking_reference: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // All booking routes require authentication
 router.use(authenticate);
 
@@ -71,7 +93,7 @@ router.post('/', [
       ]
     );
 
-    const booking = result.rows[0];
+    const booking = result.rows[0] as DbBooking;
 
     res.status(201).json({
       success: true,
@@ -114,7 +136,8 @@ router.get('/', async (req: AuthenticatedRequest, res: Response, next: NextFunct
       `SELECT COUNT(*) FROM bookings ${whereClause}`,
       params
     );
-    const total = parseInt(countResult.rows[0].count);
+    const countRow = countResult.rows[0] as { count: string };
+    const total = parseInt(countRow.count);
 
     // Get bookings
     params.push(limit, offset);
@@ -155,7 +178,7 @@ router.get('/:id', async (req: AuthenticatedRequest, res: Response, next: NextFu
       throw new AppError('Booking not found', 404);
     }
 
-    const booking = result.rows[0];
+    const booking = result.rows[0] as DbBooking;
 
     // Get trip details
     const trip = await safirioService.getTripById(booking.trip_id);

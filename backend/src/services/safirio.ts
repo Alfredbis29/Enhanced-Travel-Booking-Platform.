@@ -151,6 +151,10 @@ class SafirioService {
     );
     return featured;
   }
+
+  async getTravelModes(): Promise<TravelMode[]> {
+    return ['bus', 'flight', 'train', 'ferry', 'shuttle'];
+  }
 }
 
 export const safirioService = new SafirioService();

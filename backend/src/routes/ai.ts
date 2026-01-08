@@ -72,8 +72,13 @@ router.get('/suggestions', optionalAuth, async (req: AuthenticatedRequest, res: 
         const destinations: Record<string, number> = {};
         const origins: Record<string, number> = {};
 
-        historyResult.rows.forEach(row => {
-          const params = row.parsed_params;
+        interface SearchHistoryRow {
+          parsed_params: { destination?: string; origin?: string };
+        }
+
+        historyResult.rows.forEach((row) => {
+          const historyRow = row as SearchHistoryRow;
+          const params = historyRow.parsed_params;
           if (params.destination) {
             destinations[params.destination] = (destinations[params.destination] || 0) + 1;
           }
