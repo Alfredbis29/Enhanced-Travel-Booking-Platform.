@@ -93,32 +93,32 @@ const countries = [
 const destinationImages: Record<string, string> = {
   // Kenya
   'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80',
-  'Mombasa': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80',
-  'Kisumu': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80',
-  'Nakuru': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
-  'Eldoret': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
+  'Mombasa': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=400&fit=crop&q=80',
+  'Kisumu': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
+  'Nakuru': 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=400&fit=crop&q=80',
+  'Eldoret': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop&q=80',
   'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80',
   // Uganda - Kampala featured prominently
-  'Kampala': 'https://images.unsplash.com/photo-1619468129361-605ebea04b44?w=400&h=400&fit=crop&q=80',
-  'Jinja': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop&q=80',
-  'Entebbe': 'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=400&h=400&fit=crop&q=80',
-  'Mbarara': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
+  'Kampala': 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&h=400&fit=crop&q=80',
+  'Jinja': 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400&h=400&fit=crop&q=80',
+  'Entebbe': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&h=400&fit=crop&q=80',
+  'Mbarara': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
   // Rwanda - Kigali featured prominently
   'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80',
-  'Butare': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
-  'Gisenyi': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80',
-  'Musanze': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
+  'Butare': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80',
+  'Gisenyi': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop&q=80',
+  'Musanze': 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=400&fit=crop&q=80',
   // DRC
-  'Goma': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
-  'Bukavu': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80',
+  'Goma': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400&h=400&fit=crop&q=80',
+  'Bukavu': 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=400&fit=crop&q=80',
   'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80',
   // Tanzania
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80',
-  'Arusha': 'https://images.unsplash.com/photo-1621414050345-53db43f7e7ab?w=400&h=400&fit=crop&q=80',
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80',
+  'Arusha': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
   'Zanzibar': 'https://images.unsplash.com/photo-1586892477838-2b96e85e0f96?w=400&h=400&fit=crop&q=80',
   'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80',
   // Burundi
-  'Bujumbura': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=400&fit=crop&q=80',
+  'Bujumbura': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400&h=400&fit=crop&q=80',
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
@@ -959,6 +959,10 @@ export default function HomePage() {
                     alt={`${city} - East Africa`}
                     className="w-full h-full object-cover"
                     loading="lazy"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = defaultCityImage;
+                    }}
                   />
                 </motion.div>
                 
