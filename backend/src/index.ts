@@ -27,38 +27,60 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
+// Allowed deployment platforms
+const ALLOWED_PLATFORMS = [
+  '.vercel.app',
+  '.netlify.app', 
+  '.railway.app',
+  '.onrender.com',
+  '.render.com',
+  '.herokuapp.com',
+  '.fly.dev',
+  '.up.railway.app',
+  '.pages.dev', // Cloudflare Pages
+];
+
 // Middleware
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Allow requests with no origin (mobile apps, curl, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'http://localhost:3000',
-      'http://127.0.0.1:5173',
-      process.env.FRONTEND_URL,
-    ].filter(Boolean);
-    
-    // Allow any origin in production if FRONTEND_URL contains the origin
-    // or if it matches the pattern
-    if (allowedOrigins.includes(origin) || 
-        origin.includes('vercel.app') || 
-        origin.includes('netlify.app') ||
-        origin.includes('railway.app') ||
-        origin.includes('render.com') ||
-        origin.includes('herokuapp.com')) {
-      return callback(null, true);
-    }
-    
-    // In development, allow all origins
+    // In development, allow ALL origins
     if (process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
     
+    // Localhost origins for development
+    const localhostOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:4173',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:3000',
+    ];
+    
+    if (localhostOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Check if origin matches FRONTEND_URL
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+      return callback(null, true);
+    }
+    
+    // Check if origin is from an allowed deployment platform
+    const isAllowedPlatform = ALLOWED_PLATFORMS.some(platform => origin.includes(platform));
+    if (isAllowedPlatform) {
+      return callback(null, true);
+    }
+    
+    console.warn(`⚠️ CORS blocked origin: ${origin}`);
     callback(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 app.use(express.json());
 

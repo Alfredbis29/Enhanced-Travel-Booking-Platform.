@@ -232,52 +232,180 @@ Secure multi-provider payment integration:
 
 ## 🚀 Deployment
 
-### Environment Variables for Production
+### Quick Deploy Guide
 
-#### Frontend (Vercel/Netlify/etc.)
-Set these environment variables in your deployment platform:
+| Service | Platform | Recommended |
+|---------|----------|-------------|
+| Frontend | Vercel | ⭐ Best choice |
+| Backend | Render | ⭐ Free tier available |
+
+---
+
+### Step 1: Deploy Backend on Render
+
+1. Go to [render.com](https://render.com) → Sign up with GitHub
+2. Click **"New +"** → **"Web Service"**
+3. Connect your GitHub repo
+4. Configure:
+
+| Setting | Value |
+|---------|-------|
+| **Name** | `twende-backend` |
+| **Root Directory** | `backend` |
+| **Build Command** | `npm install && npm run build` |
+| **Start Command** | `npm start` |
+| **Instance Type** | `Free` |
+
+5. Add **Environment Variables**:
+
+| Key | Value |
+|-----|-------|
+| `NODE_ENV` | `production` |
+| `JWT_SECRET` | `your-secure-secret-key-at-least-32-characters` |
+| `FRONTEND_URL` | `https://your-app.vercel.app` (add after deploying frontend) |
+| `OPENAI_API_KEY` | `sk-your-key` (optional, for AI features) |
+
+6. Click **"Create Web Service"**
+7. Copy your Render URL (e.g., `https://twende-backend.onrender.com`)
+
+---
+
+### Step 2: Deploy Frontend on Vercel
+
+1. Go to [vercel.com](https://vercel.com) → Sign up with GitHub
+2. Click **"Add New Project"**
+3. Import your GitHub repo
+4. Configure:
+
+| Setting | Value |
+|---------|-------|
+| **Framework** | Vite |
+| **Root Directory** | `frontend` |
+| **Build Command** | `npm run build` |
+| **Output Directory** | `dist` |
+
+5. Add **Environment Variable**:
+
+| Key | Value |
+|-----|-------|
+| `VITE_API_URL` | `https://your-render-url.onrender.com/api` |
+
+6. Click **"Deploy"**
+
+---
+
+### Step 3: Update Backend CORS
+
+After getting your Vercel URL, go back to Render and update:
+
+| Key | Value |
+|-----|-------|
+| `FRONTEND_URL` | `https://your-app.vercel.app` |
+
+---
+
+### Environment Variables Reference
+
+#### Frontend (Vercel/Netlify)
 
 ```env
-VITE_API_URL=https://your-backend-url.com/api
+# Required - Your deployed backend API URL
+VITE_API_URL=https://your-backend.onrender.com/api
+
+# Optional - EmailJS for sending emails
+VITE_EMAILJS_SERVICE_ID=service_xxx
+VITE_EMAILJS_TEMPLATE_ID=template_xxx
+VITE_EMAILJS_PUBLIC_KEY=xxx
 ```
 
-#### Backend (Railway/Render/Heroku/etc.)
-Set these environment variables in your deployment platform:
+#### Backend (Render/Railway/Heroku)
 
 ```env
 # Required
 NODE_ENV=production
 PORT=5000
 JWT_SECRET=your-secure-random-secret-key-min-32-chars
-FRONTEND_URL=https://your-frontend-url.com
+FRONTEND_URL=https://your-frontend-url.vercel.app
 
 # Optional - AI Features (without this, AI uses fallback parsing)
 OPENAI_API_KEY=sk-your-openai-api-key
 
 # Optional - Database (uses in-memory if not set)
 DATABASE_URL=postgresql://user:password@host:5432/dbname
+
+# Optional - Payment Providers
+MPESA_CONSUMER_KEY=xxx
+MPESA_CONSUMER_SECRET=xxx
+STRIPE_SECRET_KEY=sk_xxx
 ```
 
-### Deployment Platforms
+---
 
-#### Frontend
-- **Vercel**: Connect repo, set `VITE_API_URL` env var, deploy
-- **Netlify**: Connect repo, set `VITE_API_URL` env var, deploy
-- **Build command**: `npm run build --workspace=frontend`
-- **Output directory**: `frontend/dist`
+### Platform-Specific Instructions
 
-#### Backend
-- **Railway**: Connect repo, set env vars, deploy
-- **Render**: Connect repo, set env vars, deploy
-- **Build command**: `npm run build --workspace=backend`
-- **Start command**: `npm run start --workspace=backend`
+#### Vercel (Frontend)
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+cd frontend
+vercel --prod
+```
+
+#### Render (Backend)
+- Automatic deploys on push to `main`
+- Free tier spins down after 15 min of inactivity
+- First request after spin-down takes ~30 seconds
+
+#### Railway (Backend Alternative)
+```bash
+# Install Railway CLI
+npm i -g @railway/cli
+
+# Login and deploy
+railway login
+railway init
+railway up
+```
+
+#### Netlify (Frontend Alternative)
+```bash
+# Install Netlify CLI
+npm i -g netlify-cli
+
+# Deploy
+cd frontend
+npm run build
+netlify deploy --prod --dir=dist
+```
+
+---
 
 ### Common Deployment Issues
 
-1. **CORS Errors**: Make sure `FRONTEND_URL` is set correctly on backend
-2. **Auth not working**: Set a strong `JWT_SECRET` (at least 32 characters)
-3. **AI not working**: Set `OPENAI_API_KEY` or it will use fallback parsing
-4. **API calls failing**: Set `VITE_API_URL` to your deployed backend URL
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| **CORS Errors** | `FRONTEND_URL` not set | Set `FRONTEND_URL` on backend to your Vercel URL |
+| **401 Unauthorized** | Invalid JWT | Set a strong `JWT_SECRET` (32+ characters) |
+| **Network Error** | Wrong API URL | Verify `VITE_API_URL` includes `/api` at the end |
+| **AI Not Working** | No OpenAI key | Set `OPENAI_API_KEY` or use fallback parsing |
+| **Slow First Load** | Free tier cold start | Wait ~30 seconds for backend to wake up |
+| **Build Failed** | Missing dependencies | Check build logs, ensure all packages are in `package.json` |
+
+---
+
+### Testing Your Deployment
+
+1. **Health Check**: Visit `https://your-backend.onrender.com/api/health`
+   - Should return: `{"status":"ok","timestamp":"..."}`
+
+2. **Frontend Check**: Visit your Vercel URL
+   - Should load the homepage with no console errors
+
+3. **API Connection**: Open browser DevTools → Network tab
+   - Login/Register should hit your backend URL
+   - No CORS errors in console
 
 ---
 
