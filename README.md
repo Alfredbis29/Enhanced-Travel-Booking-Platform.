@@ -230,6 +230,55 @@ Secure multi-provider payment integration:
 - Kigali → Butare (Rwanda)
 - Goma → Bukavu (DRC)
 
+## 🚀 Deployment
+
+### Environment Variables for Production
+
+#### Frontend (Vercel/Netlify/etc.)
+Set these environment variables in your deployment platform:
+
+```env
+VITE_API_URL=https://your-backend-url.com/api
+```
+
+#### Backend (Railway/Render/Heroku/etc.)
+Set these environment variables in your deployment platform:
+
+```env
+# Required
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=your-secure-random-secret-key-min-32-chars
+FRONTEND_URL=https://your-frontend-url.com
+
+# Optional - AI Features (without this, AI uses fallback parsing)
+OPENAI_API_KEY=sk-your-openai-api-key
+
+# Optional - Database (uses in-memory if not set)
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+```
+
+### Deployment Platforms
+
+#### Frontend
+- **Vercel**: Connect repo, set `VITE_API_URL` env var, deploy
+- **Netlify**: Connect repo, set `VITE_API_URL` env var, deploy
+- **Build command**: `npm run build --workspace=frontend`
+- **Output directory**: `frontend/dist`
+
+#### Backend
+- **Railway**: Connect repo, set env vars, deploy
+- **Render**: Connect repo, set env vars, deploy
+- **Build command**: `npm run build --workspace=backend`
+- **Start command**: `npm run start --workspace=backend`
+
+### Common Deployment Issues
+
+1. **CORS Errors**: Make sure `FRONTEND_URL` is set correctly on backend
+2. **Auth not working**: Set a strong `JWT_SECRET` (at least 32 characters)
+3. **AI not working**: Set `OPENAI_API_KEY` or it will use fallback parsing
+4. **API calls failing**: Set `VITE_API_URL` to your deployed backend URL
+
 ---
 
 Built with ❤️ for East Africa's travelers
