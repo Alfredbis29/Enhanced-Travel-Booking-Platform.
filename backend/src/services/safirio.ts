@@ -98,6 +98,13 @@ class SafirioService {
 
   async searchTrips(params: SearchParams): Promise<SearchResponse> {
     let filteredTrips = [...this.mockTrips];
+    
+    // Filter by travel mode (bus, flight, train, ferry, shuttle)
+    if (params.travel_mode) {
+      const mode = params.travel_mode.toLowerCase();
+      filteredTrips = filteredTrips.filter(trip => trip.travel_mode === mode);
+    }
+    
     if (params.origin) {
       const origin = params.origin.toLowerCase();
       filteredTrips = filteredTrips.filter(trip => trip.origin.toLowerCase().includes(origin));

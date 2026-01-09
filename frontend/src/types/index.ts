@@ -77,6 +77,7 @@ export interface SearchParams {
   origin?: string
   destination?: string
   date?: string
+  mode?: TravelMode  // bus, flight, train, ferry, shuttle
   min_price?: number
   max_price?: number
   page?: number
