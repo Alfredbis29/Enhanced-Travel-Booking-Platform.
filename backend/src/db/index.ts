@@ -134,17 +134,56 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
       updated_at: new Date()
     };
     bookings.set(id, booking);
+    console.log(`[DB] Created booking: id=${id}, ref=${booking_reference}, status=${status}`);
     return { rows: [booking], rowCount: 1 };
   }
   
   // SELECT from bookings
   if (normalizedText.includes('select') && normalizedText.includes('from bookings')) {
-    const userId = params?.[0] as string;
-    const userBookings = Array.from(bookings.values()).filter(b => b.user_id === userId);
-    
+    // Handle COUNT query
     if (normalizedText.includes('count(*)')) {
+      const userId = params?.[0] as string;
+      const userBookings = Array.from(bookings.values()).filter(b => b.user_id === userId);
       return { rows: [{ count: userBookings.length.toString() }], rowCount: 1 };
     }
+    
+    // Handle single booking lookup by id and user_id (e.g., WHERE id = $1 AND user_id = $2)
+    if (normalizedText.includes('where id = $1') && normalizedText.includes('user_id = $2')) {
+      const bookingId = params?.[0] as string;
+      const userId = params?.[1] as string;
+      console.log(`[DB] SELECT single booking: id=${bookingId}, userId=${userId}`);
+      console.log(`[DB] Current bookings:`, Array.from(bookings.keys()));
+      const booking = bookings.get(bookingId);
+      if (booking && booking.user_id === userId) {
+        console.log(`[DB] Found booking with status: ${booking.status}`);
+        return { rows: [booking], rowCount: 1 };
+      }
+      console.log(`[DB] Booking not found`);
+      return { rows: [], rowCount: 0 };
+    }
+    
+    // Handle booking lookup by reference
+    if (normalizedText.includes('booking_reference')) {
+      const reference = params?.[0] as string;
+      const userId = params?.[1] as string;
+      const booking = Array.from(bookings.values()).find(
+        b => b.booking_reference?.toUpperCase() === reference.toUpperCase() && b.user_id === userId
+      );
+      return { rows: booking ? [booking] : [], rowCount: booking ? 1 : 0 };
+    }
+    
+    // Handle all bookings for a user (WHERE user_id = $1)
+    const userId = params?.[0] as string;
+    let userBookings = Array.from(bookings.values()).filter(b => b.user_id === userId);
+    
+    // Handle status filter if present
+    if (normalizedText.includes('and status =')) {
+      const status = params?.[1] as string;
+      userBookings = userBookings.filter(b => b.status === status);
+    }
+    
+    // Sort by created_at DESC
+    userBookings.sort((a, b) => b.created_at.getTime() - a.created_at.getTime());
     
     return { rows: userBookings, rowCount: userBookings.length };
   }
@@ -153,16 +192,36 @@ export async function query(text: string, params?: unknown[]): Promise<QueryResu
   if (normalizedText.includes('update bookings')) {
     const bookingId = params?.[0] as string;
     const userId = params?.[1] as string;
+    console.log(`[DB] UPDATE booking: id=${bookingId}, userId=${userId}`);
     const booking = bookings.get(bookingId);
     if (booking && booking.user_id === userId) {
       if (normalizedText.includes("status = 'confirmed'")) {
         booking.status = 'confirmed';
+        console.log(`[DB] Booking confirmed`);
       } else if (normalizedText.includes("status = 'cancelled'")) {
         booking.status = 'cancelled';
+        console.log(`[DB] Booking cancelled`);
       }
       booking.updated_at = new Date();
       return { rows: [booking], rowCount: 1 };
     }
+    console.log(`[DB] Booking not found for update`);
+    return { rows: [], rowCount: 0 };
+  }
+  
+  // DELETE FROM bookings
+  if (normalizedText.includes('delete from bookings')) {
+    const bookingId = params?.[0] as string;
+    const userId = params?.[1] as string;
+    console.log(`[DB] DELETE booking: id=${bookingId}, userId=${userId}`);
+    console.log(`[DB] Current bookings count: ${bookings.size}`);
+    const booking = bookings.get(bookingId);
+    if (booking && booking.user_id === userId) {
+      bookings.delete(bookingId);
+      console.log(`[DB] Booking deleted successfully`);
+      return { rows: [booking], rowCount: 1 };
+    }
+    console.log(`[DB] Booking not found or user mismatch`);
     return { rows: [], rowCount: 0 };
   }
   
