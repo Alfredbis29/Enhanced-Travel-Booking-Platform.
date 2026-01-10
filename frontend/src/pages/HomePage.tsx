@@ -90,34 +90,34 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// UNIQUE city images - each city has its own distinct photo
+// City images using Pexels (free, reliable, no CORS)
 const destinationImages: Record<string, string> = {
   // 🇰🇪 KENYA
-  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=500&h=500&fit=crop', // Nairobi KICC skyline
-  'Mombasa': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500&h=500&fit=crop', // Mombasa coastal beach
+  'Nairobi': 'https://images.pexels.com/photos/3935702/pexels-photo-3935702.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Nairobi city
+  'Mombasa': 'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Beach coast
   
   // 🇺🇬 UGANDA  
-  'Kampala': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=500&h=500&fit=crop', // Kampala mosque & hills
+  'Kampala': 'https://images.pexels.com/photos/3254729/pexels-photo-3254729.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // African city
   
   // 🇷🇼 RWANDA
-  'Kigali': 'https://images.unsplash.com/photo-1580060405669-fcb0a1c27c0c?w=500&h=500&fit=crop', // Kigali clean modern streets
+  'Kigali': 'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Modern city buildings
   
   // 🇹🇿 TANZANIA
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=500&h=500&fit=crop', // Dar harbor & boats
-  'Dodoma': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=500&h=500&fit=crop', // Dodoma savanna capital
-  'Zanzibar': 'https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=500&h=500&fit=crop', // Zanzibar turquoise beach
-  'Arusha': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=500&h=500&fit=crop', // Arusha - Kilimanjaro view
+  'Dar es Salaam': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Harbor city
+  'Dodoma': 'https://images.pexels.com/photos/4215113/pexels-photo-4215113.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // African landscape
+  'Zanzibar': 'https://images.pexels.com/photos/1450354/pexels-photo-1450354.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Island beach
+  'Arusha': 'https://images.pexels.com/photos/3408354/pexels-photo-3408354.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Safari mountain
   
   // 🇨🇩 DRC CONGO
-  'Kinshasa': 'https://images.unsplash.com/photo-1493707553966-283afac8c358?w=500&h=500&fit=crop', // Kinshasa Congo river city
-  'Goma': 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=500&h=500&fit=crop', // Goma volcanic mountains
+  'Kinshasa': 'https://images.pexels.com/photos/1769370/pexels-photo-1769370.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // City skyline
+  'Goma': 'https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Volcano lake
   
   // 🇧🇮 BURUNDI
-  'Bujumbura': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500&h=500&fit=crop', // Bujumbura Lake Tanganyika
-  'Gitega': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&h=500&fit=crop', // Gitega green hills
+  'Bujumbura': 'https://images.pexels.com/photos/1271619/pexels-photo-1271619.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Lake view
+  'Gitega': 'https://images.pexels.com/photos/1666012/pexels-photo-1666012.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Green hills
 }
 
-const defaultCityImage = 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=500&h=500&fit=crop'
+const defaultCityImage = 'https://images.pexels.com/photos/1434580/pexels-photo-1434580.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop'
 
 // Featured destinations - CAPITAL CITIES ONLY
 const fallbackDestinations = [
