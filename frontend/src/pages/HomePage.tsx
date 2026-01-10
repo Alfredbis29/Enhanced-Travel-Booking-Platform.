@@ -90,34 +90,34 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// REAL East African city images from Wikimedia Commons (actual photos of these cities)
+// REAL East African city images from Wikipedia/Wikimedia Commons
 const destinationImages: Record<string, string> = {
   // 🇰🇪 KENYA
-  'Nairobi': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/f0/nairobi.jpg?w=500&h=500&s=1', // Real Nairobi skyline
-  'Mombasa': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/95/mombasa.jpg?w=500&h=500&s=1', // Real Mombasa
+  'Nairobi': 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Nairobi_skyline_from_Uhuru_Park.jpg',
+  'Mombasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Mombasa_Town.jpg/1280px-Mombasa_Town.jpg',
   
   // 🇺🇬 UGANDA  
-  'Kampala': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/b7/kampala.jpg?w=500&h=500&s=1', // Real Kampala
+  'Kampala': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kampala_Panorama_2.jpg/1280px-Kampala_Panorama_2.jpg',
   
   // 🇷🇼 RWANDA
-  'Kigali': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/c9/kigali.jpg?w=500&h=500&s=1', // Real Kigali
+  'Kigali': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Kigali_skyline_2018.jpg',
   
   // 🇹🇿 TANZANIA
-  'Dar es Salaam': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/db/dar-es-salaam.jpg?w=500&h=500&s=1', // Real Dar es Salaam
-  'Dodoma': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/85/9c/7f/bunge-la-tanzania.jpg?w=500&h=500&s=1', // Real Dodoma parliament
-  'Zanzibar': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/44/zanzibar-island.jpg?w=500&h=500&s=1', // Real Zanzibar
-  'Arusha': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/e8/arusha.jpg?w=500&h=500&s=1', // Real Arusha
+  'Dar es Salaam': 'https://upload.wikimedia.org/wikipedia/commons/7/74/Dar_es_Salaam_City_Skyline.jpg',
+  'Dodoma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Mtumba_Dodoma.jpg/1280px-Mtumba_Dodoma.jpg',
+  'Zanzibar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Stone_Town_Zanzibar.jpg/1280px-Stone_Town_Zanzibar.jpg',
+  'Arusha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Arusha_Aerial.jpg/1280px-Arusha_Aerial.jpg',
   
   // 🇨🇩 DRC CONGO
-  'Kinshasa': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/a1/kinshasa.jpg?w=500&h=500&s=1', // Real Kinshasa
-  'Goma': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/d8/5a/63/lake-kivu-serena-hotel.jpg?w=500&h=500&s=1', // Real Goma Lake Kivu
+  'Kinshasa': 'https://upload.wikimedia.org/wikipedia/commons/4/42/Kinshasa_skyline%2C_DRC_%28cropped%29.jpg',
+  'Goma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Goma_and_Nyiragongo.jpg/1280px-Goma_and_Nyiragongo.jpg',
   
   // 🇧🇮 BURUNDI
-  'Bujumbura': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/b1/bujumbura.jpg?w=500&h=500&s=1', // Real Bujumbura
-  'Gitega': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/d3/c7/66/photo0jpg.jpg?w=500&h=500&s=1', // Real Gitega
+  'Bujumbura': 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Bujumbura_Boulevard_de_l%27Uprona.jpg',
+  'Gitega': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Gitega_-_Flickr_-_Dave_Proffer_%282%29.jpg/1280px-Gitega_-_Flickr_-_Dave_Proffer_%282%29.jpg',
 }
 
-const defaultCityImage = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/f0/nairobi.jpg?w=500&h=500&s=1'
+const defaultCityImage = 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Nairobi_skyline_from_Uhuru_Park.jpg'
 
 // Featured destinations - CAPITAL CITIES ONLY
 const fallbackDestinations = [
