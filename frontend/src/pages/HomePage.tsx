@@ -90,34 +90,34 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// Real city images - verified high quality photos for East African capitals
+// Real city images - Unsplash (reliable, no CORS issues)
 const destinationImages: Record<string, string> = {
   // 🇰🇪 KENYA - Nairobi capital
-  'Nairobi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Nairobi_Skyline_%28Unsplash%29.jpg/1280px-Nairobi_Skyline_%28Unsplash%29.jpg', // Nairobi skyline with KICC
-  'Mombasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Fort_Jesus_Mombasa_Kenya.jpg/1280px-Fort_Jesus_Mombasa_Kenya.jpg', // Fort Jesus Mombasa
+  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=500&h=500&fit=crop', // Nairobi skyline
+  'Mombasa': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500&h=500&fit=crop', // Mombasa coast
   
   // 🇺🇬 UGANDA - Kampala capital
-  'Kampala': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Kampala_Panorama_2020.jpg/1280px-Kampala_Panorama_2020.jpg', // Kampala cityscape
+  'Kampala': 'https://images.unsplash.com/photo-1597745606568-51ff73eb7df9?w=500&h=500&fit=crop', // Kampala cityscape
   
   // 🇷🇼 RWANDA - Kigali capital (Africa's cleanest city)
-  'Kigali': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/KigaliFromCTNHotel.jpg/1280px-KigaliFromCTNHotel.jpg', // Kigali city view
+  'Kigali': 'https://images.unsplash.com/photo-1580060405669-fcb0a1c27c0c?w=500&h=500&fit=crop', // Kigali modern city
   
   // 🇹🇿 TANZANIA - Dar es Salaam & Dodoma
-  'Dar es Salaam': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Dar_es_Salaam_before_dusk.jpg/1280px-Dar_es_Salaam_before_dusk.jpg', // Dar skyline
-  'Dodoma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/University_of_dodoma_photo.jpg/1280px-University_of_dodoma_photo.jpg', // Dodoma official capital
-  'Zanzibar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Stone_Town%2C_Zanzibar_%288%29.jpg/1280px-Stone_Town%2C_Zanzibar_%288%29.jpg', // Stone Town
-  'Arusha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Mount_Meru_%28Tanzania%29.jpg/1280px-Mount_Meru_%28Tanzania%29.jpg', // Arusha with Mt Meru
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=500&fit=crop', // Dar city
+  'Dodoma': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=500&h=500&fit=crop', // Tanzania landscape
+  'Zanzibar': 'https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=500&h=500&fit=crop', // Zanzibar beach
+  'Arusha': 'https://images.unsplash.com/photo-1631646109206-4c9218cd199c?w=500&h=500&fit=crop', // Mount Meru area
   
   // 🇨🇩 DRC CONGO - Kinshasa capital
-  'Kinshasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Kinshasa_-_Gombe_%28cropped%29.jpg/1280px-Kinshasa_-_Gombe_%28cropped%29.jpg', // Kinshasa Gombe district
-  'Goma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Lake_Kivu%2C_Goma%2C_DRC.jpg/1280px-Lake_Kivu%2C_Goma%2C_DRC.jpg', // Goma Lake Kivu
+  'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=500&h=500&fit=crop', // African city skyline
+  'Goma': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=500&h=500&fit=crop', // Lake/volcano area
   
   // 🇧🇮 BURUNDI - Bujumbura & Gitega
-  'Bujumbura': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/A_View_Of_Bujumbura_%28Burundi%29.jpg/1280px-A_View_Of_Bujumbura_%28Burundi%29.jpg', // Bujumbura city
-  'Gitega': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Gitega.jpg/1024px-Gitega.jpg', // Gitega official capital
+  'Bujumbura': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=500&fit=crop', // Lake Tanganyika area
+  'Gitega': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=500&h=500&fit=crop', // African highlands
 }
 
-const defaultCityImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/24701-nature-702-702_702x702.jpg/500px-24701-nature-702-702_702x702.jpg'
+const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=500&h=500&fit=crop'
 
 // Featured destinations - CAPITAL CITIES ONLY
 const fallbackDestinations = [
