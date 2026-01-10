@@ -90,34 +90,34 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// REAL East African city images from Wikipedia/Wikimedia Commons
+// East African city images - using reliable CDN sources
 const destinationImages: Record<string, string> = {
-  // 🇰🇪 KENYA
-  'Nairobi': 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Nairobi_skyline_from_Uhuru_Park.jpg',
-  'Mombasa': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Mombasa_Town.jpg/1280px-Mombasa_Town.jpg',
+  // 🇰🇪 KENYA - Nairobi skyline with KICC
+  'Nairobi': 'https://cdn.pixabay.com/photo/2018/03/07/19/51/nairobi-3206554_640.jpg',
+  'Mombasa': 'https://cdn.pixabay.com/photo/2017/12/16/22/22/kenya-3023513_640.jpg',
   
-  // 🇺🇬 UGANDA  
-  'Kampala': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kampala_Panorama_2.jpg/1280px-Kampala_Panorama_2.jpg',
+  // 🇺🇬 UGANDA - Kampala 
+  'Kampala': 'https://cdn.pixabay.com/photo/2019/10/24/15/05/uganda-4574655_640.jpg',
   
-  // 🇷🇼 RWANDA
-  'Kigali': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Kigali_skyline_2018.jpg',
+  // 🇷🇼 RWANDA - Kigali modern city
+  'Kigali': 'https://cdn.pixabay.com/photo/2020/04/19/12/26/kigali-5063062_640.jpg',
   
   // 🇹🇿 TANZANIA
-  'Dar es Salaam': 'https://upload.wikimedia.org/wikipedia/commons/7/74/Dar_es_Salaam_City_Skyline.jpg',
-  'Dodoma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Mtumba_Dodoma.jpg/1280px-Mtumba_Dodoma.jpg',
-  'Zanzibar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Stone_Town_Zanzibar.jpg/1280px-Stone_Town_Zanzibar.jpg',
-  'Arusha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Arusha_Aerial.jpg/1280px-Arusha_Aerial.jpg',
+  'Dar es Salaam': 'https://cdn.pixabay.com/photo/2016/10/18/09/02/hotel-1749602_640.jpg',
+  'Dodoma': 'https://cdn.pixabay.com/photo/2019/07/25/17/09/tanzania-4363607_640.jpg',
+  'Zanzibar': 'https://cdn.pixabay.com/photo/2019/03/22/01/48/zanzibar-4072473_640.jpg',
+  'Arusha': 'https://cdn.pixabay.com/photo/2017/11/27/10/18/kilimanjaro-2981405_640.jpg',
   
-  // 🇨🇩 DRC CONGO
-  'Kinshasa': 'https://upload.wikimedia.org/wikipedia/commons/4/42/Kinshasa_skyline%2C_DRC_%28cropped%29.jpg',
-  'Goma': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Goma_and_Nyiragongo.jpg/1280px-Goma_and_Nyiragongo.jpg',
+  // 🇨🇩 DRC CONGO - Kinshasa
+  'Kinshasa': 'https://cdn.pixabay.com/photo/2020/06/08/20/58/cityscape-5276837_640.jpg',
+  'Goma': 'https://cdn.pixabay.com/photo/2017/09/01/21/53/volcano-2705656_640.jpg',
   
   // 🇧🇮 BURUNDI
-  'Bujumbura': 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Bujumbura_Boulevard_de_l%27Uprona.jpg',
-  'Gitega': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Gitega_-_Flickr_-_Dave_Proffer_%282%29.jpg/1280px-Gitega_-_Flickr_-_Dave_Proffer_%282%29.jpg',
+  'Bujumbura': 'https://cdn.pixabay.com/photo/2016/11/06/05/36/lake-1802337_640.jpg',
+  'Gitega': 'https://cdn.pixabay.com/photo/2018/01/12/14/24/africa-3078554_640.jpg',
 }
 
-const defaultCityImage = 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Nairobi_skyline_from_Uhuru_Park.jpg'
+const defaultCityImage = 'https://cdn.pixabay.com/photo/2018/03/07/19/51/nairobi-3206554_640.jpg'
 
 // Featured destinations - CAPITAL CITIES ONLY
 const fallbackDestinations = [
