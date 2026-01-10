@@ -85,9 +85,9 @@ const countries = [
   { name: 'Kenya', flag: '🇰🇪', cities: ['Nairobi', 'Mombasa', 'Kisumu'] },
   { name: 'Uganda', flag: '🇺🇬', cities: ['Kampala', 'Jinja', 'Entebbe'] },
   { name: 'Rwanda', flag: '🇷🇼', cities: ['Kigali', 'Butare', 'Musanze'] },
-  { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Zanzibar', 'Arusha'] },
+  { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Dodoma', 'Zanzibar'] },
   { name: 'Burundi', flag: '🇧🇮', cities: ['Bujumbura', 'Gitega'] },
-  { name: 'Congo DRC', flag: '🇨🇩', cities: ['Goma', 'Bukavu'] },
+  { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
 // Real city images from Unsplash - high quality destination photos
@@ -112,13 +112,15 @@ const destinationImages: Record<string, string> = {
   'Gisenyi': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop&q=80', // Lake Kivu
   'Musanze': 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=400&fit=crop&q=80', // Volcanoes
   
-  // 🇨🇩 DRC CONGO
+  // 🇨🇩 DRC CONGO - Kinshasa capital featured
+  'Kinshasa': 'https://images.unsplash.com/photo-1577212017184-80cc0da11082?w=400&h=400&fit=crop&q=80', // Kinshasa city skyline
   'Goma': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400&h=400&fit=crop&q=80', // Volcanic lake
   'Bukavu': 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=400&fit=crop&q=80', // Lake view
-  'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80', // City skyline
+  'Lubumbashi': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80', // City view
   
-  // 🇹🇿 TANZANIA - Dar es Salaam & Zanzibar featured
+  // 🇹🇿 TANZANIA - Dar es Salaam & Dodoma capitals
   'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80', // Dar city skyline
+  'Dodoma': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80', // Dodoma - official capital
   'Arusha': 'https://images.unsplash.com/photo-1621532679970-79ec9f0e0f24?w=400&h=400&fit=crop&q=80', // Mount Meru view
   'Zanzibar': 'https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=400&h=400&fit=crop&q=80', // Stone Town beach
   'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80', // Lake Victoria rocks
@@ -126,27 +128,27 @@ const destinationImages: Record<string, string> = {
   'Serengeti': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // Safari wildlife
   'Kilimanjaro': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=400&h=400&fit=crop&q=80', // Snow peak
   
-  // 🇧🇮 BURUNDI - Bujumbura featured
+  // 🇧🇮 BURUNDI - Bujumbura & Gitega capitals
   'Bujumbura': 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=400&h=400&fit=crop&q=80', // Lake Tanganyika shore
-  'Gitega': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Hills
+  'Gitega': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Gitega - official capital
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
 
-// Featured destinations - Major capitals and tourist destinations prominently displayed
+// Featured destinations - CAPITAL CITIES ONLY
 const fallbackDestinations = [
-  'Nairobi',      // 🇰🇪 Kenya capital
-  'Kigali',       // 🇷🇼 Rwanda capital - clean city
-  'Dar es Salaam',// 🇹🇿 Tanzania largest city
-  'Zanzibar',     // 🇹🇿 Tanzania - beach paradise
-  'Kampala',      // 🇺🇬 Uganda capital
-  'Bujumbura',    // 🇧🇮 Burundi - Lake Tanganyika
-  'Mombasa',      // 🇰🇪 Kenya coast
-  'Arusha',       // 🇹🇿 Safari gateway
-  'Goma',         // 🇨🇩 DRC - Virunga
-  'Jinja',        // 🇺🇬 Source of Nile
-  'Entebbe',      // 🇺🇬 Airport city
-  'Kisumu'        // 🇰🇪 Lake Victoria
+  'Nairobi',       // 🇰🇪 Kenya capital
+  'Kigali',        // 🇷🇼 Rwanda capital
+  'Dar es Salaam', // 🇹🇿 Tanzania commercial capital
+  'Kinshasa',      // 🇨🇩 DRC Congo capital
+  'Kampala',       // 🇺🇬 Uganda capital
+  'Bujumbura',     // 🇧🇮 Burundi largest city
+  'Dodoma',        // 🇹🇿 Tanzania official capital
+  'Gitega',        // 🇧🇮 Burundi official capital
+  'Zanzibar',      // 🇹🇿 Zanzibar capital (Stone Town)
+  'Mombasa',       // 🇰🇪 Kenya coast capital
+  'Goma',          // 🇨🇩 North Kivu capital
+  'Arusha'         // 🇹🇿 EAC headquarters
 ]
 
 // Multi-modal fallback trips - buses, flights, trains, ferries
