@@ -245,38 +245,24 @@ class SafirioService {
   }
 
   async getPopularDestinations(): Promise<string[]> {
-    // CAPITAL CITIES ONLY - major cities of East/Central Africa
+    // 5 MAIN CAPITAL CITIES ONLY
     return [
       'Nairobi',        // 🇰🇪 Kenya capital
       'Kigali',         // 🇷🇼 Rwanda capital
-      'Dar es Salaam',  // 🇹🇿 Tanzania commercial capital
+      'Dar es Salaam',  // 🇹🇿 Tanzania capital
+      'Bujumbura',      // 🇧🇮 Burundi capital
       'Kinshasa',       // 🇨🇩 DRC Congo capital
-      'Kampala',        // 🇺🇬 Uganda capital
-      'Bujumbura',      // 🇧🇮 Burundi largest city
-      'Dodoma',         // 🇹🇿 Tanzania official capital
-      'Gitega',         // 🇧🇮 Burundi official capital
-      'Mombasa',        // 🇰🇪 Kenya coast capital
-      'Zanzibar',       // 🇹🇿 Zanzibar capital
-      'Goma',           // 🇨🇩 North Kivu capital
-      'Arusha'          // 🇹🇿 EAC headquarters
     ];
   }
 
   async getPopularOrigins(): Promise<string[]> {
-    // CAPITAL CITIES ONLY - major departure cities
+    // 5 MAIN CAPITAL CITIES ONLY
     return [
       'Nairobi',        // 🇰🇪 Kenya capital
       'Kigali',         // 🇷🇼 Rwanda capital
-      'Dar es Salaam',  // 🇹🇿 Tanzania commercial capital
+      'Dar es Salaam',  // 🇹🇿 Tanzania capital
+      'Bujumbura',      // 🇧🇮 Burundi capital
       'Kinshasa',       // 🇨🇩 DRC Congo capital
-      'Kampala',        // 🇺🇬 Uganda capital
-      'Bujumbura',      // 🇧🇮 Burundi largest city
-      'Dodoma',         // 🇹🇿 Tanzania official capital
-      'Gitega',         // 🇧🇮 Burundi official capital
-      'Mombasa',        // 🇰🇪 Kenya coast capital
-      'Zanzibar',       // 🇹🇿 Zanzibar capital
-      'Goma',           // 🇨🇩 North Kivu capital
-      'Arusha'          // 🇹🇿 EAC headquarters
     ];
   }
 
