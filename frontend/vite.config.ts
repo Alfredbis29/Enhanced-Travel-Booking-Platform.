@@ -7,12 +7,12 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   
   return {
-    plugins: [react()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
+  },
     // Build configuration for production
     build: {
       outDir: 'dist',
@@ -27,20 +27,20 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    server: {
-      port: 5173,
+  server: {
+    port: 5173,
       // Proxy only works in development - for production, set VITE_API_URL env variable
       proxy: mode === 'development' ? {
-        '/api': {
+      '/api': {
           target: env.VITE_API_URL || 'http://localhost:5000',
-          changeOrigin: true,
-        },
+        changeOrigin: true,
+      },
       } : undefined,
     },
     // Preview server (for testing production build locally)
     preview: {
       port: 4173,
-    },
+  },
   }
 })
 

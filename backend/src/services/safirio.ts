@@ -245,36 +245,38 @@ class SafirioService {
   }
 
   async getPopularDestinations(): Promise<string[]> {
+    // CAPITAL CITIES ONLY - major cities of East/Central Africa
     return [
-      // Kenya
-      'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Malindi', 'Lamu', 'Naivasha', 'Masai Mara',
-      // Uganda
-      'Kampala', 'Entebbe', 'Jinja', 'Mbarara', 'Fort Portal', 'Gulu',
-      // Rwanda
-      'Kigali', 'Butare (Huye)', 'Gisenyi (Rubavu)', 'Musanze', 'Cyangugu',
-      // Tanzania
-      'Dar es Salaam', 'Arusha', 'Mwanza', 'Dodoma', 'Moshi', 'Zanzibar', 'Kilimanjaro', 'Serengeti', 'Mbeya', 'Tabora', 'Bukoba',
-      // DRC Congo
-      'Goma', 'Bukavu', 'Uvira', 'Butembo', 'Kinshasa',
-      // Burundi
-      'Bujumbura', 'Gitega'
+      'Nairobi',        // 🇰🇪 Kenya capital
+      'Kigali',         // 🇷🇼 Rwanda capital
+      'Dar es Salaam',  // 🇹🇿 Tanzania commercial capital
+      'Kinshasa',       // 🇨🇩 DRC Congo capital
+      'Kampala',        // 🇺🇬 Uganda capital
+      'Bujumbura',      // 🇧🇮 Burundi largest city
+      'Dodoma',         // 🇹🇿 Tanzania official capital
+      'Gitega',         // 🇧🇮 Burundi official capital
+      'Mombasa',        // 🇰🇪 Kenya coast capital
+      'Zanzibar',       // 🇹🇿 Zanzibar capital
+      'Goma',           // 🇨🇩 North Kivu capital
+      'Arusha'          // 🇹🇿 EAC headquarters
     ];
   }
 
   async getPopularOrigins(): Promise<string[]> {
+    // CAPITAL CITIES ONLY - major departure cities
     return [
-      // Kenya
-      'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Nairobi CBD',
-      // Uganda
-      'Kampala', 'Entebbe', 'Jinja',
-      // Rwanda
-      'Kigali', 'Gisenyi', 'Cyangugu',
-      // Tanzania
-      'Dar es Salaam', 'Arusha', 'Mwanza', 'Zanzibar', 'Kigoma',
-      // DRC Congo
-      'Goma', 'Bukavu',
-      // Burundi
-      'Bujumbura'
+      'Nairobi',        // 🇰🇪 Kenya capital
+      'Kigali',         // 🇷🇼 Rwanda capital
+      'Dar es Salaam',  // 🇹🇿 Tanzania commercial capital
+      'Kinshasa',       // 🇨🇩 DRC Congo capital
+      'Kampala',        // 🇺🇬 Uganda capital
+      'Bujumbura',      // 🇧🇮 Burundi largest city
+      'Dodoma',         // 🇹🇿 Tanzania official capital
+      'Gitega',         // 🇧🇮 Burundi official capital
+      'Mombasa',        // 🇰🇪 Kenya coast capital
+      'Zanzibar',       // 🇹🇿 Zanzibar capital
+      'Goma',           // 🇨🇩 North Kivu capital
+      'Arusha'          // 🇹🇿 EAC headquarters
     ];
   }
 
