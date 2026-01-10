@@ -84,47 +84,70 @@ const travelModes = [
 const countries = [
   { name: 'Kenya', flag: '🇰🇪', cities: ['Nairobi', 'Mombasa', 'Kisumu'] },
   { name: 'Uganda', flag: '🇺🇬', cities: ['Kampala', 'Jinja', 'Entebbe'] },
-  { name: 'Rwanda', flag: '🇷🇼', cities: ['Kigali', 'Butare', 'Gisenyi'] },
-  { name: 'Congo DRC', flag: '🇨🇩', cities: ['Goma', 'Bukavu', 'Kinshasa'] },
-  { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Arusha'] },
+  { name: 'Rwanda', flag: '🇷🇼', cities: ['Kigali', 'Butare', 'Musanze'] },
+  { name: 'Tanzania', flag: '🇹🇿', cities: ['Dar es Salaam', 'Zanzibar', 'Arusha'] },
+  { name: 'Burundi', flag: '🇧🇮', cities: ['Bujumbura', 'Gitega'] },
+  { name: 'Congo DRC', flag: '🇨🇩', cities: ['Goma', 'Bukavu'] },
 ]
 
 // Real city images from Unsplash - high quality destination photos
 const destinationImages: Record<string, string> = {
-  // Kenya
-  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80',
-  'Mombasa': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=400&fit=crop&q=80',
-  'Kisumu': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
-  'Nakuru': 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=400&fit=crop&q=80',
-  'Eldoret': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop&q=80',
-  'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80',
-  // Uganda - Kampala featured prominently
-  'Kampala': 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&h=400&fit=crop&q=80',
-  'Jinja': 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400&h=400&fit=crop&q=80',
-  'Entebbe': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&h=400&fit=crop&q=80',
-  'Mbarara': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80',
-  // Rwanda - Kigali featured prominently
-  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80',
-  'Butare': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80',
-  'Gisenyi': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop&q=80',
-  'Musanze': 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=400&fit=crop&q=80',
-  // DRC
-  'Goma': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400&h=400&fit=crop&q=80',
-  'Bukavu': 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=400&fit=crop&q=80',
-  'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80',
-  // Tanzania
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=400&fit=crop&q=80',
-  'Arusha': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
-  'Zanzibar': 'https://images.unsplash.com/photo-1586892477838-2b96e85e0f96?w=400&h=400&fit=crop&q=80',
-  'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80',
-  // Burundi
-  'Bujumbura': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400&h=400&fit=crop&q=80',
+  // 🇰🇪 KENYA
+  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80', // Nairobi skyline
+  'Mombasa': 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&h=400&fit=crop&q=80', // Mombasa coast
+  'Kisumu': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // Lake Victoria
+  'Nakuru': 'https://images.unsplash.com/photo-1535941339077-2dd1c7963098?w=400&h=400&fit=crop&q=80', // Flamingos
+  'Eldoret': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop&q=80', // Highlands
+  'Malindi': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop&q=80', // Beach
+  
+  // 🇺🇬 UGANDA
+  'Kampala': 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&h=400&fit=crop&q=80', // Kampala cityscape
+  'Jinja': 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=400&h=400&fit=crop&q=80', // Nile source
+  'Entebbe': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&h=400&fit=crop&q=80', // Lake Victoria
+  'Mbarara': 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80', // Green hills
+  
+  // 🇷🇼 RWANDA - Kigali featured prominently
+  'Kigali': 'https://images.unsplash.com/photo-1621532679970-79ec9f0e0f24?w=400&h=400&fit=crop&q=80', // Kigali Convention Centre
+  'Butare': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Rwanda hills
+  'Gisenyi': 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop&q=80', // Lake Kivu
+  'Musanze': 'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&h=400&fit=crop&q=80', // Volcanoes
+  
+  // 🇨🇩 DRC CONGO
+  'Goma': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400&h=400&fit=crop&q=80', // Volcanic lake
+  'Bukavu': 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=400&h=400&fit=crop&q=80', // Lake view
+  'Kinshasa': 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80', // City skyline
+  
+  // 🇹🇿 TANZANIA - Dar es Salaam & Zanzibar featured
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1568625502763-2a5ec6a94c47?w=400&h=400&fit=crop&q=80', // Dar city skyline
+  'Arusha': 'https://images.unsplash.com/photo-1621532679970-79ec9f0e0f24?w=400&h=400&fit=crop&q=80', // Mount Meru view
+  'Zanzibar': 'https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=400&h=400&fit=crop&q=80', // Stone Town beach
+  'Mwanza': 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&h=400&fit=crop&q=80', // Lake Victoria rocks
+  'Stone Town': 'https://images.unsplash.com/photo-1590846083693-f23fdede48e1?w=400&h=400&fit=crop&q=80', // Historic streets
+  'Serengeti': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80', // Safari wildlife
+  'Kilimanjaro': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=400&h=400&fit=crop&q=80', // Snow peak
+  
+  // 🇧🇮 BURUNDI - Bujumbura featured
+  'Bujumbura': 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=400&h=400&fit=crop&q=80', // Lake Tanganyika shore
+  'Gitega': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&q=80', // Hills
 }
 
 const defaultCityImage = 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=400&fit=crop&q=80'
 
-// Featured destinations - Kampala and Kigali prominently displayed
-const fallbackDestinations = ['Nairobi', 'Kampala', 'Kigali', 'Mombasa', 'Dar es Salaam', 'Arusha', 'Goma', 'Kisumu', 'Jinja', 'Entebbe', 'Zanzibar', 'Bujumbura']
+// Featured destinations - Major capitals and tourist destinations prominently displayed
+const fallbackDestinations = [
+  'Nairobi',      // 🇰🇪 Kenya capital
+  'Kigali',       // 🇷🇼 Rwanda capital - clean city
+  'Dar es Salaam',// 🇹🇿 Tanzania largest city
+  'Zanzibar',     // 🇹🇿 Tanzania - beach paradise
+  'Kampala',      // 🇺🇬 Uganda capital
+  'Bujumbura',    // 🇧🇮 Burundi - Lake Tanganyika
+  'Mombasa',      // 🇰🇪 Kenya coast
+  'Arusha',       // 🇹🇿 Safari gateway
+  'Goma',         // 🇨🇩 DRC - Virunga
+  'Jinja',        // 🇺🇬 Source of Nile
+  'Entebbe',      // 🇺🇬 Airport city
+  'Kisumu'        // 🇰🇪 Lake Victoria
+]
 
 // Multi-modal fallback trips - buses, flights, trains, ferries
 const fallbackTrips: Trip[] = [
