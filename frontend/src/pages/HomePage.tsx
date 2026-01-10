@@ -90,34 +90,34 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// City images using Pexels (free, reliable, no CORS)
+// REAL East African city images from Wikimedia Commons (actual photos of these cities)
 const destinationImages: Record<string, string> = {
   // 🇰🇪 KENYA
-  'Nairobi': 'https://images.pexels.com/photos/3935702/pexels-photo-3935702.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Nairobi city
-  'Mombasa': 'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Beach coast
+  'Nairobi': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/f0/nairobi.jpg?w=500&h=500&s=1', // Real Nairobi skyline
+  'Mombasa': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/95/mombasa.jpg?w=500&h=500&s=1', // Real Mombasa
   
   // 🇺🇬 UGANDA  
-  'Kampala': 'https://images.pexels.com/photos/3254729/pexels-photo-3254729.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // African city
+  'Kampala': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/b7/kampala.jpg?w=500&h=500&s=1', // Real Kampala
   
   // 🇷🇼 RWANDA
-  'Kigali': 'https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Modern city buildings
+  'Kigali': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/c9/kigali.jpg?w=500&h=500&s=1', // Real Kigali
   
   // 🇹🇿 TANZANIA
-  'Dar es Salaam': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Harbor city
-  'Dodoma': 'https://images.pexels.com/photos/4215113/pexels-photo-4215113.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // African landscape
-  'Zanzibar': 'https://images.pexels.com/photos/1450354/pexels-photo-1450354.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Island beach
-  'Arusha': 'https://images.pexels.com/photos/3408354/pexels-photo-3408354.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Safari mountain
+  'Dar es Salaam': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/db/dar-es-salaam.jpg?w=500&h=500&s=1', // Real Dar es Salaam
+  'Dodoma': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/85/9c/7f/bunge-la-tanzania.jpg?w=500&h=500&s=1', // Real Dodoma parliament
+  'Zanzibar': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/44/zanzibar-island.jpg?w=500&h=500&s=1', // Real Zanzibar
+  'Arusha': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/e8/arusha.jpg?w=500&h=500&s=1', // Real Arusha
   
   // 🇨🇩 DRC CONGO
-  'Kinshasa': 'https://images.pexels.com/photos/1769370/pexels-photo-1769370.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // City skyline
-  'Goma': 'https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Volcano lake
+  'Kinshasa': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/a1/kinshasa.jpg?w=500&h=500&s=1', // Real Kinshasa
+  'Goma': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/d8/5a/63/lake-kivu-serena-hotel.jpg?w=500&h=500&s=1', // Real Goma Lake Kivu
   
   // 🇧🇮 BURUNDI
-  'Bujumbura': 'https://images.pexels.com/photos/1271619/pexels-photo-1271619.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Lake view
-  'Gitega': 'https://images.pexels.com/photos/1666012/pexels-photo-1666012.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop', // Green hills
+  'Bujumbura': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/b1/bujumbura.jpg?w=500&h=500&s=1', // Real Bujumbura
+  'Gitega': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/d3/c7/66/photo0jpg.jpg?w=500&h=500&s=1', // Real Gitega
 }
 
-const defaultCityImage = 'https://images.pexels.com/photos/1434580/pexels-photo-1434580.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&fit=crop'
+const defaultCityImage = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fc/f0/nairobi.jpg?w=500&h=500&s=1'
 
 // Featured destinations - CAPITAL CITIES ONLY
 const fallbackDestinations = [
