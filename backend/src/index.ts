@@ -8,7 +8,7 @@ import aiRoutes from './routes/ai.js';
 import paymentRoutes from './routes/payments.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { initializeDatabase } from './db/index.js';
-import { verifyEmailConfig } from './services/email.js';
+import { verifyEmailConfig, getEmailConfigStatus, sendTestEmail } from './services/email.js';
 
 dotenv.config();
 
@@ -95,6 +95,25 @@ app.use('/api/payments', paymentRoutes);
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Email configuration status (for debugging)
+app.get('/api/email-status', (req, res) => {
+  const status = getEmailConfigStatus();
+  res.json({ 
+    status: status.configured ? 'configured' : 'not_configured',
+    details: status
+  });
+});
+
+// Test email endpoint
+app.post('/api/test-email', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email address required' });
+  }
+  const result = await sendTestEmail(email);
+  res.json(result);
 });
 
 // Error handling

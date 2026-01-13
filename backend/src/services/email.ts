@@ -38,12 +38,59 @@ export async function verifyEmailConfig(): Promise<boolean> {
       console.log('   Email verification will work in demo mode');
       return false;
     }
+    console.log(`📧 Testing SMTP connection to ${EMAIL_CONFIG.host}:${EMAIL_CONFIG.port}...`);
+    console.log(`   SMTP_USER: ${EMAIL_CONFIG.auth.user}`);
+    console.log(`   SMTP_PASS: ${EMAIL_CONFIG.auth.pass ? '****' + EMAIL_CONFIG.auth.pass.slice(-4) : 'NOT SET'}`);
     await transporter.verify();
     console.log('✅ Email service configured and ready');
     return true;
   } catch (error) {
-    console.log('⚠️  Email service not available:', (error as Error).message);
+    console.log('❌ Email service connection FAILED:', (error as Error).message);
     return false;
+  }
+}
+
+// Get email configuration status (for debugging)
+export function getEmailConfigStatus(): { configured: boolean; host: string; port: number; user: string; hasPassword: boolean } {
+  return {
+    configured: IS_SMTP_CONFIGURED,
+    host: EMAIL_CONFIG.host,
+    port: EMAIL_CONFIG.port,
+    user: EMAIL_CONFIG.auth.user || 'NOT SET',
+    hasPassword: !!EMAIL_CONFIG.auth.pass
+  };
+}
+
+// Send test email
+export async function sendTestEmail(toEmail: string): Promise<{ success: boolean; message: string }> {
+  if (!IS_SMTP_CONFIGURED) {
+    return { success: false, message: 'SMTP not configured. Set SMTP_USER and SMTP_PASS environment variables.' };
+  }
+
+  try {
+    await transporter.sendMail({
+      from: `"Twende Travel" <${EMAIL_CONFIG.auth.user}>`,
+      to: toEmail,
+      subject: '🧪 Test Email from Twende Travel',
+      html: `
+        <div style="font-family: sans-serif; padding: 20px; background: #f4f4f5;">
+          <div style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px;">
+            <h1 style="color: #22c55e; margin: 0;">✅ Email Works!</h1>
+            <p style="color: #52525b; margin-top: 20px;">
+              This is a test email from your Twende Travel platform.
+              If you received this, your email configuration is working correctly!
+            </p>
+            <p style="color: #a1a1aa; font-size: 12px; margin-top: 30px;">
+              Sent at: ${new Date().toISOString()}
+            </p>
+          </div>
+        </div>
+      `,
+      text: `Test email from Twende Travel. Your email configuration is working! Sent at: ${new Date().toISOString()}`
+    });
+    return { success: true, message: `Test email sent to ${toEmail}` };
+  } catch (error) {
+    return { success: false, message: `Failed to send: ${(error as Error).message}` };
   }
 }
 
