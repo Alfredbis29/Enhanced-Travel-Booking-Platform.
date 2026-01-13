@@ -5,6 +5,7 @@ import { body, validationResult } from 'express-validator';
 import { query } from '../db/index.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
+import { sendSignupWelcomeEmail } from '../services/email.js';
 
 const router = Router();
 
@@ -72,6 +73,11 @@ router.post('/register', registerValidation, async (req: Request, res: Response,
 
     const user = result.rows[0] as DbUser;
     const token = generateToken(user.id, user.email);
+
+    // Send welcome email (async, don't wait for it)
+    sendSignupWelcomeEmail(user.email, user.first_name).catch(err => {
+      console.error('Failed to send welcome email:', err);
+    });
 
     res.status(201).json({
       success: true,

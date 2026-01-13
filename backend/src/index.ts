@@ -8,6 +8,7 @@ import aiRoutes from './routes/ai.js';
 import paymentRoutes from './routes/payments.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { initializeDatabase } from './db/index.js';
+import { verifyEmailConfig } from './services/email.js';
 
 dotenv.config();
 
@@ -101,7 +102,10 @@ app.use(errorHandler);
 
 // Initialize database and start server
 initializeDatabase()
-  .then(() => {
+  .then(async () => {
+    // Verify email configuration
+    await verifyEmailConfig();
+    
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
       console.log(`📊 Health check: http://localhost:${PORT}/api/health`);

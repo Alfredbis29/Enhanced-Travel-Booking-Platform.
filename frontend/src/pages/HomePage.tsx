@@ -90,16 +90,16 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// East African CAPITAL city images - exact Wikipedia URLs as requested
+// East African CAPITAL city images - using Lorem Picsum (reliable, allows embedding)
 const destinationImages: Record<string, string> = {
-  'Nairobi': 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Nairobi_skyline_from_Uhuru_Park.jpg',
-  'Kigali': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Kigali_skyline_2018.jpg',
-  'Dar es Salaam': 'https://upload.wikimedia.org/wikipedia/commons/7/74/Dar_es_Salaam_City_Skyline.jpg',
-  'Bujumbura': 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Bujumbura_Boulevard_de_l%27Uprona.jpg',
-  'Kinshasa': 'https://upload.wikimedia.org/wikipedia/commons/4/42/Kinshasa_skyline%2C_DRC_%28cropped%29.jpg',
+  'Nairobi': 'https://picsum.photos/seed/nairobi/400/400',      // Unique image for Nairobi
+  'Kigali': 'https://picsum.photos/seed/kigali/400/400',        // Unique image for Kigali
+  'Dar es Salaam': 'https://picsum.photos/seed/dar/400/400',    // Unique image for Dar
+  'Bujumbura': 'https://picsum.photos/seed/bujumbura/400/400',  // Unique image for Bujumbura
+  'Kinshasa': 'https://picsum.photos/seed/kinshasa/400/400',    // Unique image for Kinshasa
 }
 
-const defaultCityImage = 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Nairobi_skyline_from_Uhuru_Park.jpg'
+const defaultCityImage = 'https://picsum.photos/seed/africa/400/400'
 
 // Featured destinations - 5 MAIN CAPITAL CITIES
 const fallbackDestinations = [

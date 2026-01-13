@@ -5,6 +5,7 @@ import { query } from '../db/index.js';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth.js';
 import { AppError } from '../middleware/errorHandler.js';
 import { safirioService } from '../services/safirio.js';
+import { sendBookingConfirmationEmail } from '../services/email.js';
 
 const router = Router();
 
@@ -94,6 +95,26 @@ router.post('/', [
     );
 
     const booking = result.rows[0] as DbBooking;
+
+    // Send booking confirmation email (async, don't block response)
+    if (passenger_email) {
+      sendBookingConfirmationEmail({
+        bookingReference,
+        passengerName: passenger_name,
+        passengerEmail: passenger_email,
+        origin: trip.origin,
+        destination: trip.destination,
+        departureTime: trip.departure_time,
+        arrivalTime: trip.arrival_time,
+        seats,
+        price: totalPrice,
+        currency: trip.currency,
+        travelMode: trip.travel_mode,
+        providerName: trip.provider_name
+      }).catch(err => {
+        console.error('Failed to send booking confirmation email:', err);
+      });
+    }
 
     res.status(201).json({
       success: true,
