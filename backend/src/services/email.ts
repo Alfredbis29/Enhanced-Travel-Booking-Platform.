@@ -1,21 +1,59 @@
 import { Resend } from 'resend';
 
+// ============================================
+// EMAIL CONFIGURATION
+// ============================================
+// Required environment variables on Render:
+// - RESEND_API_KEY: Your Resend API key from https://resend.com/api-keys
+// - FROM_EMAIL: Your verified sender (e.g., "Twende Travel <bookings@yourdomain.com>")
+// - FRONTEND_URL: Your deployed frontend URL (e.g., https://enhanced-travel-booking-platform-fr.vercel.app)
+//
+// IMPORTANT: To send emails to ANY recipient, you must:
+// 1. Go to https://resend.com/domains
+// 2. Add and verify your domain (add DNS records)
+// 3. Set FROM_EMAIL to use that domain
+// ============================================
+
 // Initialize Resend with API key
 const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 // Check if Resend is configured
 export const IS_EMAIL_CONFIGURED = !!process.env.RESEND_API_KEY;
 
-// From email address (must be verified in Resend, or use onboarding@resend.dev for testing)
+// From email address - MUST match a verified domain in Resend
+// For testing only: use 'onboarding@resend.dev' (can only send to your own Resend account email)
+// For production: use your verified domain like 'bookings@yourdomain.com'
 const FROM_EMAIL = process.env.FROM_EMAIL || 'Twende Travel <onboarding@resend.dev>';
+
+// Production frontend URL
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://enhanced-travel-booking-platform-fr.vercel.app';
 
 // Verify email configuration
 export async function verifyEmailConfig(): Promise<boolean> {
+  console.log('📧 Email Configuration:');
+  console.log(`   - RESEND_API_KEY: ${process.env.RESEND_API_KEY ? '✅ Set' : '❌ Missing'}`);
+  console.log(`   - FROM_EMAIL: ${FROM_EMAIL}`);
+  console.log(`   - FRONTEND_URL: ${FRONTEND_URL}`);
+  
   if (!process.env.RESEND_API_KEY) {
-    console.log('⚠️  Email service not configured (RESEND_API_KEY missing)');
-    console.log('   Get your free API key at: https://resend.com');
+    console.log('');
+    console.log('⚠️  Email service not configured!');
+    console.log('   To enable email sending:');
+    console.log('   1. Get API key at: https://resend.com/api-keys');
+    console.log('   2. Add domain at: https://resend.com/domains');
+    console.log('   3. Set these env vars on Render:');
+    console.log('      - RESEND_API_KEY=re_xxxxxxxxx');
+    console.log('      - FROM_EMAIL=Twende Travel <bookings@yourdomain.com>');
     return false;
   }
+  
+  if (FROM_EMAIL.includes('onboarding@resend.dev')) {
+    console.log('');
+    console.log('⚠️  Using Resend TEST MODE (onboarding@resend.dev)');
+    console.log('   Emails can ONLY be sent to your Resend account email!');
+    console.log('   To send to any email, verify a domain at: https://resend.com/domains');
+  }
+  
   console.log('✅ Email service configured (Resend)');
   return true;
 }
@@ -33,7 +71,7 @@ export function getEmailConfigStatus(): { configured: boolean; provider: string;
 export async function sendTestEmail(toEmail: string): Promise<{ success: boolean; message: string }> {
   if (!IS_EMAIL_CONFIGURED) {
     return { success: false, message: 'RESEND_API_KEY not set. Get your free key at https://resend.com' };
-  }
+    }
 
   try {
     const { data, error } = await resend.emails.send({
@@ -67,7 +105,8 @@ export async function sendTestEmail(toEmail: string): Promise<{ success: boolean
 
 // Send signup welcome email
 export async function sendSignupWelcomeEmail(email: string, firstName: string): Promise<boolean> {
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  console.log(`📧 Attempting to send welcome email to: ${email}`);
+  console.log(`   FROM: ${FROM_EMAIL}`);
 
   if (!IS_EMAIL_CONFIGURED) {
     console.log(`📧 [DEMO MODE] Welcome email would be sent to: ${email}`);
@@ -77,26 +116,26 @@ export async function sendSignupWelcomeEmail(email: string, firstName: string): 
   try {
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
-      to: email,
+    to: email,
       subject: '🎉 Welcome to Twende Travel - Start Your Journey!',
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f5;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-            <div style="background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%); padding: 40px; border-radius: 16px 16px 0 0; text-align: center;">
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f5;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+          <div style="background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%); padding: 40px; border-radius: 16px 16px 0 0; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 48px;">🎉</h1>
               <h2 style="color: white; margin: 10px 0 0;">Welcome to Twende!</h2>
-            </div>
+          </div>
+          
+          <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="color: #18181b; margin: 0 0 20px;">Hello ${firstName}! 👋</h2>
             
-            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-              <h2 style="color: #18181b; margin: 0 0 20px;">Hello ${firstName}! 👋</h2>
-              
-              <p style="color: #52525b; line-height: 1.6; margin: 0 0 20px;">
+            <p style="color: #52525b; line-height: 1.6; margin: 0 0 20px;">
                 Thank you for joining Twende Travel! Your account has been created successfully. You're now ready to explore and book amazing trips across East Africa.
               </p>
               
@@ -109,22 +148,22 @@ export async function sendSignupWelcomeEmail(email: string, firstName: string): 
                   <li>🎫 Get instant e-tickets sent to your email</li>
                 </ul>
               </div>
-              
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${frontendUrl}/search" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%); color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${FRONTEND_URL}/search" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%); color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
                   🔍 Search Trips Now
-                </a>
+              </a>
               </div>
             </div>
             
             <div style="text-align: center; padding: 20px;">
               <p style="color: #a1a1aa; font-size: 12px; margin: 0;">
                 © ${new Date().getFullYear()} Twende Travel. Your journey starts here! 🌍
-              </p>
-            </div>
+            </p>
           </div>
-        </body>
-        </html>
+        </div>
+      </body>
+      </html>
       `
     });
 
@@ -158,7 +197,10 @@ interface BookingDetails {
 
 // Send booking confirmation email
 export async function sendBookingConfirmationEmail(booking: BookingDetails): Promise<boolean> {
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  console.log(`📧 Attempting to send booking confirmation to: ${booking.passengerEmail}`);
+  console.log(`   FROM: ${FROM_EMAIL}`);
+  console.log(`   Booking Reference: ${booking.bookingReference}`);
+  
   const departureDate = new Date(booking.departureTime);
   const formattedDate = departureDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -190,27 +232,27 @@ export async function sendBookingConfirmationEmail(booking: BookingDetails): Pro
       from: FROM_EMAIL,
       to: booking.passengerEmail,
       subject: `${travelModeEmoji} Booking Confirmed! ${booking.origin} → ${booking.destination} | Ref: ${booking.bookingReference}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head>
-        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f5;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f5;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
             <!-- Header -->
-            <div style="background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%); padding: 40px; border-radius: 16px 16px 0 0; text-align: center;">
+          <div style="background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%); padding: 40px; border-radius: 16px 16px 0 0; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 48px;">${travelModeEmoji}</h1>
               <h2 style="color: white; margin: 10px 0 0;">Booking Confirmed!</h2>
               <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0; font-size: 14px;">Reference: <strong>${booking.bookingReference}</strong></p>
-            </div>
-            
+          </div>
+          
             <!-- Ticket Card -->
-            <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <div style="background: white; padding: 40px; border-radius: 0 0 16px 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
               <h2 style="color: #18181b; margin: 0 0 20px;">Hello ${booking.passengerName}! 👋</h2>
-              
-              <p style="color: #52525b; line-height: 1.6; margin: 0 0 20px;">
+            
+            <p style="color: #52525b; line-height: 1.6; margin: 0 0 20px;">
                 Your booking has been confirmed! Here are your trip details:
               </p>
               
@@ -274,25 +316,25 @@ export async function sendBookingConfirmationEmail(booking: BookingDetails): Pro
                   <strong>⚠️ Important:</strong> Please arrive at least 30 minutes before departure. Show this email or your booking reference at check-in.
                 </p>
               </div>
-              
-              <!-- View Booking Button -->
-              <div style="text-align: center; margin: 30px 0;">
-                <a href="${frontendUrl}/bookings" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%); color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                  View My Bookings →
-                </a>
-              </div>
-            </div>
             
-            <!-- Footer -->
-            <div style="text-align: center; padding: 20px;">
-              <p style="color: #a1a1aa; font-size: 12px; margin: 0;">
-                © ${new Date().getFullYear()} Twende Travel. Safe travels! 🌍
-              </p>
+              <!-- View Booking Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${FRONTEND_URL}/bookings" style="display: inline-block; background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%); color: white; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                  View My Bookings →
+              </a>
             </div>
           </div>
-        </body>
-        </html>
-      `
+          
+            <!-- Footer -->
+          <div style="text-align: center; padding: 20px;">
+            <p style="color: #a1a1aa; font-size: 12px; margin: 0;">
+                © ${new Date().getFullYear()} Twende Travel. Safe travels! 🌍
+            </p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
     });
 
     if (error) {
