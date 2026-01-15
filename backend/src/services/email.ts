@@ -2,20 +2,20 @@
 // EMAIL SERVICE - Multiple Provider Support
 // ============================================
 //
-// OPTION 1: MAILJET (Easiest - No phone verification!)
-// - Sign up at: https://www.mailjet.com (free, email only)
-// - Get API keys from: Account Settings → API Keys
+// OPTION 1: ELASTIC EMAIL (Simplest - 100 emails/day free!)
+// - Sign up at: https://elasticemail.com
+// - Get API key from: Settings → Manage API Keys → Create
 // - Set on Render:
-//   - MAILJET_API_KEY=your-api-key
-//   - MAILJET_SECRET_KEY=your-secret-key
+//   - ELASTIC_EMAIL_API_KEY=your-api-key
 //   - FROM_EMAIL=kalumunabisimwa5@gmail.com
 //
-// OPTION 2: BREVO (If you have phone access)
-// - Sign up at: https://www.brevo.com
-// - Get API key from: Settings → SMTP & API
-// - Set on Render:
-//   - BREVO_API_KEY=xkeysib-xxxxxxxx
-//   - FROM_EMAIL=kalumunabisimwa5@gmail.com
+// OPTION 2: MAILJET 
+// - Sign up at: https://www.mailjet.com
+// - Set: MAILJET_API_KEY + MAILJET_SECRET_KEY
+//
+// OPTION 3: BREVO
+// - Sign up at: https://www.brevo.com  
+// - Set: BREVO_API_KEY
 //
 // ============================================
 
@@ -27,11 +27,18 @@ const FROM_EMAIL = process.env.FROM_EMAIL || 'kalumunabisimwa5@gmail.com';
 const FROM_NAME = 'Twende Travel';
 
 // Check which email provider is configured
+const USE_ELASTIC = !!process.env.ELASTIC_EMAIL_API_KEY;
 const USE_MAILJET = !!(process.env.MAILJET_API_KEY && process.env.MAILJET_SECRET_KEY);
 const USE_BREVO = !!process.env.BREVO_API_KEY;
-export const IS_EMAIL_CONFIGURED = USE_MAILJET || USE_BREVO;
+export const IS_EMAIL_CONFIGURED = USE_ELASTIC || USE_MAILJET || USE_BREVO;
 
 // API response types
+interface ElasticResponse {
+  success?: boolean;
+  data?: { messageid?: string };
+  error?: string;
+}
+
 interface MailjetResponse {
   Messages?: Array<{ Status: string; To: Array<{ MessageID: string }> }>;
   ErrorMessage?: string;
@@ -41,6 +48,37 @@ interface BrevoResponse {
   messageId?: string;
   message?: string;
   code?: string;
+}
+
+// Send email via Elastic Email API (simplest option!)
+async function sendWithElastic(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
+  try {
+    const params = new URLSearchParams({
+      apikey: process.env.ELASTIC_EMAIL_API_KEY!,
+      from: FROM_EMAIL,
+      fromName: FROM_NAME,
+      to: to,
+      subject: subject,
+      bodyHtml: htmlContent,
+      isTransactional: 'true'
+    });
+
+    const response = await fetch('https://api.elasticemail.com/v2/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+
+    const data = await response.json() as ElasticResponse;
+    
+    if (!data.success) {
+      return { success: false, error: data.error || 'Elastic Email API error' };
+    }
+    
+    return { success: true, id: data.data?.messageid };
+  } catch (error) {
+    return { success: false, error: (error as Error).message };
+  }
 }
 
 // Send email via Mailjet API
@@ -115,14 +153,16 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
     return { success: true, id: 'demo-mode' };
   }
 
-  const provider = USE_MAILJET ? 'Mailjet' : 'Brevo';
+  const provider = USE_ELASTIC ? 'Elastic Email' : USE_MAILJET ? 'Mailjet' : 'Brevo';
   console.log(`📧 Sending email via ${provider}...`);
   console.log(`   To: ${to}`);
   console.log(`   From: ${FROM_NAME} <${FROM_EMAIL}>`);
   console.log(`   Subject: ${subject}`);
 
   let result;
-  if (USE_MAILJET) {
+  if (USE_ELASTIC) {
+    result = await sendWithElastic(to, subject, htmlContent);
+  } else if (USE_MAILJET) {
     result = await sendWithMailjet(to, subject, htmlContent);
   } else {
     result = await sendWithBrevo(to, subject, htmlContent);
@@ -141,11 +181,16 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
 export async function verifyEmailConfig(): Promise<boolean> {
   console.log('');
   console.log('📧 Email Configuration:');
+  console.log(`   - ELASTIC_EMAIL_API_KEY: ${process.env.ELASTIC_EMAIL_API_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - MAILJET_API_KEY: ${process.env.MAILJET_API_KEY ? '✅ Set' : '❌ Missing'}`);
-  console.log(`   - MAILJET_SECRET_KEY: ${process.env.MAILJET_SECRET_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - BREVO_API_KEY: ${process.env.BREVO_API_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - FROM_EMAIL: ${FROM_EMAIL}`);
   console.log(`   - FRONTEND_URL: ${FRONTEND_URL}`);
+  
+  if (USE_ELASTIC) {
+    console.log('✅ Email service configured (Elastic Email - 100 emails/day free)');
+    return true;
+  }
   
   if (USE_MAILJET) {
     console.log('✅ Email service configured (Mailjet - 200 emails/day free)');
@@ -160,12 +205,11 @@ export async function verifyEmailConfig(): Promise<boolean> {
   console.log('');
   console.log('⚠️  Email service NOT configured!');
   console.log('');
-  console.log('   EASIEST OPTION (no phone verification):');
-  console.log('   1. Sign up at: https://www.mailjet.com');
-  console.log('   2. Go to: Account Settings → API Keys');
+  console.log('   EASIEST OPTION:');
+  console.log('   1. Sign up at: https://elasticemail.com');
+  console.log('   2. Go to: Settings → Manage API Keys → Create');
   console.log('   3. Add to Render environment:');
-  console.log('      - MAILJET_API_KEY=your-api-key');
-  console.log('      - MAILJET_SECRET_KEY=your-secret-key');
+  console.log('      - ELASTIC_EMAIL_API_KEY=your-api-key');
   console.log('      - FROM_EMAIL=kalumunabisimwa5@gmail.com');
   console.log('');
   return false;
@@ -174,7 +218,8 @@ export async function verifyEmailConfig(): Promise<boolean> {
 // Get email configuration status
 export function getEmailConfigStatus(): { configured: boolean; provider: string; fromEmail: string } {
   let provider = 'Not configured';
-  if (USE_MAILJET) provider = 'Mailjet';
+  if (USE_ELASTIC) provider = 'Elastic Email';
+  else if (USE_MAILJET) provider = 'Mailjet';
   else if (USE_BREVO) provider = 'Brevo';
   
   return {
@@ -189,10 +234,11 @@ export async function sendTestEmail(toEmail: string): Promise<{ success: boolean
   if (!IS_EMAIL_CONFIGURED) {
     return { 
       success: false, 
-      message: 'Email not configured. Set MAILJET_API_KEY + MAILJET_SECRET_KEY (easiest, no phone needed!) on Render.' 
+      message: 'Email not configured. Set ELASTIC_EMAIL_API_KEY on Render (sign up at elasticemail.com)' 
     };
   }
 
+  const provider = USE_ELASTIC ? 'Elastic Email' : USE_MAILJET ? 'Mailjet' : 'Brevo';
   const subject = '🧪 Test Email from Twende Travel';
   const html = `
     <div style="font-family: sans-serif; padding: 20px; background: #f4f4f5;">
@@ -203,7 +249,7 @@ export async function sendTestEmail(toEmail: string): Promise<{ success: boolean
           If you received this, your email configuration is working correctly!
         </p>
         <p style="color: #a1a1aa; font-size: 12px; margin-top: 30px;">
-          Provider: ${USE_MAILJET ? 'Mailjet' : 'Brevo'}<br>
+          Provider: ${provider}<br>
           Sent at: ${new Date().toISOString()}
         </p>
       </div>
