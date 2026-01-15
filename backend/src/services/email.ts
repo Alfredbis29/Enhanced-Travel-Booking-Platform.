@@ -1,16 +1,22 @@
 // ============================================
-// EMAIL SERVICE - Using Brevo (No domain needed!)
+// EMAIL SERVICE - Multiple Provider Support
 // ============================================
 //
-// SETUP INSTRUCTIONS:
-// 1. Go to: https://www.brevo.com and create a free account
-// 2. Go to: Settings → SMTP & API → API Keys
-// 3. Click "Generate a new API key"
-// 4. Add to Render environment variables:
-//    - BREVO_API_KEY=xkeysib-xxxxxxxx
-//    - FROM_EMAIL=kalumunabisimwa5@gmail.com
+// OPTION 1: MAILJET (Easiest - No phone verification!)
+// - Sign up at: https://www.mailjet.com (free, email only)
+// - Get API keys from: Account Settings → API Keys
+// - Set on Render:
+//   - MAILJET_API_KEY=your-api-key
+//   - MAILJET_SECRET_KEY=your-secret-key
+//   - FROM_EMAIL=kalumunabisimwa5@gmail.com
 //
-// FREE TIER: 300 emails/day - no domain verification needed!
+// OPTION 2: BREVO (If you have phone access)
+// - Sign up at: https://www.brevo.com
+// - Get API key from: Settings → SMTP & API
+// - Set on Render:
+//   - BREVO_API_KEY=xkeysib-xxxxxxxx
+//   - FROM_EMAIL=kalumunabisimwa5@gmail.com
+//
 // ============================================
 
 // Production frontend URL
@@ -20,42 +26,69 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'https://enhanced-travel-bookin
 const FROM_EMAIL = process.env.FROM_EMAIL || 'kalumunabisimwa5@gmail.com';
 const FROM_NAME = 'Twende Travel';
 
-// Check if email is configured
-export const IS_EMAIL_CONFIGURED = !!process.env.BREVO_API_KEY;
+// Check which email provider is configured
+const USE_MAILJET = !!(process.env.MAILJET_API_KEY && process.env.MAILJET_SECRET_KEY);
+const USE_BREVO = !!process.env.BREVO_API_KEY;
+export const IS_EMAIL_CONFIGURED = USE_MAILJET || USE_BREVO;
 
-// Brevo API response type
+// API response types
+interface MailjetResponse {
+  Messages?: Array<{ Status: string; To: Array<{ MessageID: string }> }>;
+  ErrorMessage?: string;
+}
+
 interface BrevoResponse {
   messageId?: string;
   message?: string;
   code?: string;
 }
 
-// Send email via Brevo API
-async function sendEmail(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
-  if (!process.env.BREVO_API_KEY) {
-    console.log(`📧 [DEMO MODE] Email would be sent to: ${to}`);
-    console.log(`   Subject: ${subject}`);
-    return { success: true, id: 'demo-mode' };
-  }
-
+// Send email via Mailjet API
+async function sendWithMailjet(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
   try {
-    console.log(`📧 Sending email via Brevo...`);
-    console.log(`   To: ${to}`);
-    console.log(`   From: ${FROM_NAME} <${FROM_EMAIL}>`);
-    console.log(`   Subject: ${subject}`);
+    const auth = Buffer.from(`${process.env.MAILJET_API_KEY}:${process.env.MAILJET_SECRET_KEY}`).toString('base64');
+    
+    const response = await fetch('https://api.mailjet.com/v3.1/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${auth}`
+      },
+      body: JSON.stringify({
+        Messages: [{
+          From: { Email: FROM_EMAIL, Name: FROM_NAME },
+          To: [{ Email: to }],
+          Subject: subject,
+          HTMLPart: htmlContent
+        }]
+      })
+    });
 
+    const data = await response.json() as MailjetResponse;
+    
+    if (!response.ok || data.ErrorMessage) {
+      return { success: false, error: data.ErrorMessage || 'Mailjet API error' };
+    }
+    
+    const messageId = data.Messages?.[0]?.To?.[0]?.MessageID;
+    return { success: true, id: messageId };
+  } catch (error) {
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+// Send email via Brevo API
+async function sendWithBrevo(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
+  try {
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'accept': 'application/json',
-        'api-key': process.env.BREVO_API_KEY,
+        'api-key': process.env.BREVO_API_KEY!,
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        sender: { 
-          name: FROM_NAME,
-          email: FROM_EMAIL
-        },
+        sender: { name: FROM_NAME, email: FROM_EMAIL },
         to: [{ email: to }],
         subject,
         htmlContent
@@ -65,51 +98,88 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
     const data = await response.json() as BrevoResponse;
     
     if (!response.ok) {
-      console.error(`❌ Brevo API error: ${data.message || data.code || 'Unknown error'}`);
       return { success: false, error: data.message || data.code || 'Brevo API error' };
     }
     
-    console.log(`✅ Email sent successfully! Message ID: ${data.messageId}`);
     return { success: true, id: data.messageId };
   } catch (error) {
-    console.error(`❌ Failed to send email:`, error);
     return { success: false, error: (error as Error).message };
   }
+}
+
+// Main send email function - tries available providers
+async function sendEmail(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
+  if (!IS_EMAIL_CONFIGURED) {
+    console.log(`📧 [DEMO MODE] Email would be sent to: ${to}`);
+    console.log(`   Subject: ${subject}`);
+    return { success: true, id: 'demo-mode' };
+  }
+
+  const provider = USE_MAILJET ? 'Mailjet' : 'Brevo';
+  console.log(`📧 Sending email via ${provider}...`);
+  console.log(`   To: ${to}`);
+  console.log(`   From: ${FROM_NAME} <${FROM_EMAIL}>`);
+  console.log(`   Subject: ${subject}`);
+
+  let result;
+  if (USE_MAILJET) {
+    result = await sendWithMailjet(to, subject, htmlContent);
+  } else {
+    result = await sendWithBrevo(to, subject, htmlContent);
+  }
+
+  if (result.success) {
+    console.log(`✅ Email sent successfully via ${provider}! ID: ${result.id}`);
+  } else {
+    console.error(`❌ Failed to send email via ${provider}: ${result.error}`);
+  }
+
+  return result;
 }
 
 // Verify email configuration
 export async function verifyEmailConfig(): Promise<boolean> {
   console.log('');
   console.log('📧 Email Configuration:');
+  console.log(`   - MAILJET_API_KEY: ${process.env.MAILJET_API_KEY ? '✅ Set' : '❌ Missing'}`);
+  console.log(`   - MAILJET_SECRET_KEY: ${process.env.MAILJET_SECRET_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - BREVO_API_KEY: ${process.env.BREVO_API_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - FROM_EMAIL: ${FROM_EMAIL}`);
   console.log(`   - FRONTEND_URL: ${FRONTEND_URL}`);
   
-  if (!process.env.BREVO_API_KEY) {
-    console.log('');
-    console.log('⚠️  Email service NOT configured!');
-    console.log('');
-    console.log('   To enable email sending:');
-    console.log('   1. Sign up at: https://www.brevo.com (free)');
-    console.log('   2. Go to: Settings → SMTP & API → API Keys');
-    console.log('   3. Generate new API key');
-    console.log('   4. Add to Render environment:');
-    console.log('      - BREVO_API_KEY=xkeysib-xxxxxxxx');
-    console.log('      - FROM_EMAIL=kalumunabisimwa5@gmail.com');
-    console.log('');
-    return false;
+  if (USE_MAILJET) {
+    console.log('✅ Email service configured (Mailjet - 200 emails/day free)');
+    return true;
   }
   
-  console.log('✅ Email service configured (Brevo - 300 emails/day free)');
+  if (USE_BREVO) {
+    console.log('✅ Email service configured (Brevo - 300 emails/day free)');
+    return true;
+  }
+  
   console.log('');
-  return true;
+  console.log('⚠️  Email service NOT configured!');
+  console.log('');
+  console.log('   EASIEST OPTION (no phone verification):');
+  console.log('   1. Sign up at: https://www.mailjet.com');
+  console.log('   2. Go to: Account Settings → API Keys');
+  console.log('   3. Add to Render environment:');
+  console.log('      - MAILJET_API_KEY=your-api-key');
+  console.log('      - MAILJET_SECRET_KEY=your-secret-key');
+  console.log('      - FROM_EMAIL=kalumunabisimwa5@gmail.com');
+  console.log('');
+  return false;
 }
 
 // Get email configuration status
 export function getEmailConfigStatus(): { configured: boolean; provider: string; fromEmail: string } {
+  let provider = 'Not configured';
+  if (USE_MAILJET) provider = 'Mailjet';
+  else if (USE_BREVO) provider = 'Brevo';
+  
   return {
     configured: IS_EMAIL_CONFIGURED,
-    provider: IS_EMAIL_CONFIGURED ? 'Brevo' : 'Not configured',
+    provider,
     fromEmail: FROM_EMAIL
   };
 }
@@ -119,7 +189,7 @@ export async function sendTestEmail(toEmail: string): Promise<{ success: boolean
   if (!IS_EMAIL_CONFIGURED) {
     return { 
       success: false, 
-      message: 'BREVO_API_KEY not set. Sign up at https://www.brevo.com (free, no domain needed!)' 
+      message: 'Email not configured. Set MAILJET_API_KEY + MAILJET_SECRET_KEY (easiest, no phone needed!) on Render.' 
     };
   }
 
@@ -133,7 +203,7 @@ export async function sendTestEmail(toEmail: string): Promise<{ success: boolean
           If you received this, your email configuration is working correctly!
         </p>
         <p style="color: #a1a1aa; font-size: 12px; margin-top: 30px;">
-          Provider: Brevo<br>
+          Provider: ${USE_MAILJET ? 'Mailjet' : 'Brevo'}<br>
           Sent at: ${new Date().toISOString()}
         </p>
       </div>
