@@ -20,18 +20,55 @@ interface DbUser {
   created_at?: string;
 }
 
-// Validation middleware
+// Custom password validator
+const isStrongPassword = (password: string): boolean => {
+  if (password.length < 8) return false;
+  if (!/[a-z]/.test(password)) return false; // lowercase
+  if (!/[A-Z]/.test(password)) return false; // uppercase
+  if (!/\d/.test(password)) return false; // number
+  if (!/[@$!%*?&#^()_+=\-]/.test(password)) return false; // special char
+  return true;
+};
+
+// Validation middleware with XSS protection
 const registerValidation = [
-  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('first_name').trim().notEmpty().withMessage('First name required'),
-  body('last_name').trim().notEmpty().withMessage('Last name required'),
-  body('phone').optional().trim()
+  body('email')
+    .isEmail().withMessage('Valid email required')
+    .normalizeEmail()
+    .isLength({ max: 100 }).withMessage('Email too long'),
+  body('password')
+    .isLength({ min: 8, max: 100 }).withMessage('Password must be 8-100 characters')
+    .custom((value) => {
+      if (!isStrongPassword(value)) {
+        throw new Error('Password must contain: uppercase, lowercase, number, and special character (@$!%*?&#^)');
+      }
+      return true;
+    }),
+  body('first_name')
+    .trim()
+    .notEmpty().withMessage('First name required')
+    .isLength({ max: 50 }).withMessage('First name too long')
+    .escape(), // XSS protection
+  body('last_name')
+    .trim()
+    .notEmpty().withMessage('Last name required')
+    .isLength({ max: 50 }).withMessage('Last name too long')
+    .escape(), // XSS protection
+  body('phone')
+    .optional()
+    .trim()
+    .isLength({ max: 20 }).withMessage('Phone number too long')
+    .matches(/^[\d\s\+\-\(\)]*$/).withMessage('Invalid phone format')
 ];
 
 const loginValidation = [
-  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
-  body('password').notEmpty().withMessage('Password required')
+  body('email')
+    .isEmail().withMessage('Valid email required')
+    .normalizeEmail()
+    .isLength({ max: 100 }),
+  body('password')
+    .notEmpty().withMessage('Password required')
+    .isLength({ max: 100 })
 ];
 
 // Helper to generate JWT
@@ -170,9 +207,23 @@ router.get('/me', authenticate, async (req: AuthenticatedRequest, res: Response,
 
 // Update user profile
 router.put('/me', authenticate, [
-  body('first_name').optional().trim().notEmpty(),
-  body('last_name').optional().trim().notEmpty(),
-  body('phone').optional().trim()
+  body('first_name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .isLength({ max: 50 })
+    .escape(),
+  body('last_name')
+    .optional()
+    .trim()
+    .notEmpty()
+    .isLength({ max: 50 })
+    .escape(),
+  body('phone')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .matches(/^[\d\s\+\-\(\)]*$/).withMessage('Invalid phone format')
 ], async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const errors = validationResult(req);

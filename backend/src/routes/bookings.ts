@@ -34,13 +34,28 @@ interface DbBooking {
 // All booking routes require authentication
 router.use(authenticate);
 
-// Create a new booking
+// Create a new booking with input validation & sanitization
 router.post('/', [
-  body('trip_id').notEmpty().withMessage('Trip ID is required'),
-  body('seats').isInt({ min: 1, max: 10 }).withMessage('Number of seats must be between 1 and 10'),
-  body('passenger_name').trim().notEmpty().withMessage('Passenger name is required'),
-  body('passenger_phone').trim().notEmpty().withMessage('Passenger phone is required'),
-  body('passenger_email').optional().isEmail().withMessage('Valid email required')
+  body('trip_id')
+    .notEmpty().withMessage('Trip ID is required')
+    .isLength({ max: 100 }).withMessage('Invalid trip ID'),
+  body('seats')
+    .isInt({ min: 1, max: 10 }).withMessage('Number of seats must be between 1 and 10'),
+  body('passenger_name')
+    .trim()
+    .notEmpty().withMessage('Passenger name is required')
+    .isLength({ max: 100 }).withMessage('Passenger name too long')
+    .escape(), // XSS protection
+  body('passenger_phone')
+    .trim()
+    .notEmpty().withMessage('Passenger phone is required')
+    .isLength({ max: 20 }).withMessage('Phone number too long')
+    .matches(/^[\d\s\+\-\(\)]*$/).withMessage('Invalid phone format'),
+  body('passenger_email')
+    .optional()
+    .isEmail().withMessage('Valid email required')
+    .normalizeEmail()
+    .isLength({ max: 100 }).withMessage('Email too long')
 ], async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const errors = validationResult(req);
