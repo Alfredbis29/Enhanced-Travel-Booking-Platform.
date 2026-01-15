@@ -90,20 +90,28 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// East African CAPITAL city images - using Lorem Picsum (reliable, allows embedding)
+// East African CAPITAL city images - Real city photos
 const destinationImages: Record<string, string> = {
-  'Nairobi': 'https://picsum.photos/seed/nairobi/400/400',      // Unique image for Nairobi
-  'Kigali': 'https://picsum.photos/seed/kigali/400/400',        // Unique image for Kigali
-  'Dar es Salaam': 'https://picsum.photos/seed/dar/400/400',    // Unique image for Dar
-  'Bujumbura': 'https://picsum.photos/seed/bujumbura/400/400',  // Unique image for Bujumbura
-  'Kinshasa': 'https://picsum.photos/seed/kinshasa/400/400',    // Unique image for Kinshasa
+  // Nairobi, Kenya - City skyline with KICC
+  'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80',
+  // Kigali, Rwanda - Beautiful clean city
+  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80',
+  // Dar es Salaam, Tanzania - Coastal port city  
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80',
+  // Bujumbura, Burundi - Lake Tanganyika city
+  'Bujumbura': 'https://images.unsplash.com/photo-1504150558240-0b4fd8946624?w=400&h=400&fit=crop&q=80',
+  // Kinshasa, DRC - Vibrant African city
+  'Kinshasa': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
+  // Kampala, Uganda - City of seven hills
+  'Kampala': 'https://images.unsplash.com/photo-1594820753102-86a7c0e16d41?w=400&h=400&fit=crop&q=80',
 }
 
-const defaultCityImage = 'https://picsum.photos/seed/africa/400/400'
+const defaultCityImage = 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80'
 
-// Featured destinations - 5 MAIN CAPITAL CITIES
+// Featured destinations - 6 MAIN CAPITAL CITIES
 const fallbackDestinations = [
   'Nairobi',       // 🇰🇪 Kenya capital
+  'Kampala',       // 🇺🇬 Uganda capital  
   'Kigali',        // 🇷🇼 Rwanda capital
   'Dar es Salaam', // 🇹🇿 Tanzania capital
   'Bujumbura',     // 🇧🇮 Burundi capital
