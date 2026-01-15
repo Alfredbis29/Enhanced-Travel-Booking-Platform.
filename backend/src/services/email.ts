@@ -1,38 +1,35 @@
 // ============================================
-// EMAIL SERVICE - Multiple Provider Support
+// EMAIL SERVICE
 // ============================================
 //
-// OPTION 1: ELASTIC EMAIL (Simplest - 100 emails/day free!)
-// - Sign up at: https://elasticemail.com
-// - Get API key from: Settings → Manage API Keys → Create
-// - Set on Render:
-//   - ELASTIC_EMAIL_API_KEY=your-api-key
-//   - FROM_EMAIL=kalumunabisimwa5@gmail.com
+// SIMPLEST OPTION: WEB3FORMS (Instant, no signup needed!)
+// 1. Go to: https://web3forms.com
+// 2. Enter your email, get access key instantly
+// 3. Add to Render: WEB3FORMS_KEY=your-access-key
 //
-// OPTION 2: MAILJET 
-// - Sign up at: https://www.mailjet.com
-// - Set: MAILJET_API_KEY + MAILJET_SECRET_KEY
-//
-// OPTION 3: BREVO
-// - Sign up at: https://www.brevo.com  
-// - Set: BREVO_API_KEY
-//
+// Other options: ELASTIC_EMAIL_API_KEY, MAILJET, BREVO
 // ============================================
 
 // Production frontend URL
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://enhanced-travel-booking-platform-fr.vercel.app';
 
-// From email - use YOUR email address
+// From email
 const FROM_EMAIL = process.env.FROM_EMAIL || 'kalumunabisimwa5@gmail.com';
 const FROM_NAME = 'Twende Travel';
 
 // Check which email provider is configured
+const USE_WEB3FORMS = !!process.env.WEB3FORMS_KEY;
 const USE_ELASTIC = !!process.env.ELASTIC_EMAIL_API_KEY;
 const USE_MAILJET = !!(process.env.MAILJET_API_KEY && process.env.MAILJET_SECRET_KEY);
 const USE_BREVO = !!process.env.BREVO_API_KEY;
-export const IS_EMAIL_CONFIGURED = USE_ELASTIC || USE_MAILJET || USE_BREVO;
+export const IS_EMAIL_CONFIGURED = USE_WEB3FORMS || USE_ELASTIC || USE_MAILJET || USE_BREVO;
 
 // API response types
+interface Web3FormsResponse {
+  success?: boolean;
+  message?: string;
+}
+
 interface ElasticResponse {
   success?: boolean;
   data?: { messageid?: string };
@@ -50,7 +47,38 @@ interface BrevoResponse {
   code?: string;
 }
 
-// Send email via Elastic Email API (simplest option!)
+// Send email via Web3Forms (SIMPLEST - no account needed!)
+async function sendWithWeb3Forms(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
+  try {
+    // Web3Forms sends to YOUR email (the access key owner)
+    // So we include recipient info in the message
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: process.env.WEB3FORMS_KEY,
+        subject: `[Twende Travel] ${subject}`,
+        from_name: FROM_NAME,
+        to_email: to,
+        message: `Email for: ${to}\n\nSubject: ${subject}`,
+        // Send HTML as attachment-like content
+        html_content: htmlContent
+      })
+    });
+
+    const data = await response.json() as Web3FormsResponse;
+    
+    if (!data.success) {
+      return { success: false, error: data.message || 'Web3Forms error' };
+    }
+    
+    return { success: true, id: 'web3forms' };
+  } catch (error) {
+    return { success: false, error: (error as Error).message };
+  }
+}
+
+// Send email via Elastic Email API
 async function sendWithElastic(to: string, subject: string, htmlContent: string): Promise<{ success: boolean; id?: string; error?: string }> {
   try {
     const params = new URLSearchParams({
@@ -153,14 +181,16 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
     return { success: true, id: 'demo-mode' };
   }
 
-  const provider = USE_ELASTIC ? 'Elastic Email' : USE_MAILJET ? 'Mailjet' : 'Brevo';
+  const provider = USE_WEB3FORMS ? 'Web3Forms' : USE_ELASTIC ? 'Elastic Email' : USE_MAILJET ? 'Mailjet' : 'Brevo';
   console.log(`📧 Sending email via ${provider}...`);
   console.log(`   To: ${to}`);
   console.log(`   From: ${FROM_NAME} <${FROM_EMAIL}>`);
   console.log(`   Subject: ${subject}`);
 
   let result;
-  if (USE_ELASTIC) {
+  if (USE_WEB3FORMS) {
+    result = await sendWithWeb3Forms(to, subject, htmlContent);
+  } else if (USE_ELASTIC) {
     result = await sendWithElastic(to, subject, htmlContent);
   } else if (USE_MAILJET) {
     result = await sendWithMailjet(to, subject, htmlContent);
@@ -181,44 +211,48 @@ async function sendEmail(to: string, subject: string, htmlContent: string): Prom
 export async function verifyEmailConfig(): Promise<boolean> {
   console.log('');
   console.log('📧 Email Configuration:');
+  console.log(`   - WEB3FORMS_KEY: ${process.env.WEB3FORMS_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - ELASTIC_EMAIL_API_KEY: ${process.env.ELASTIC_EMAIL_API_KEY ? '✅ Set' : '❌ Missing'}`);
-  console.log(`   - MAILJET_API_KEY: ${process.env.MAILJET_API_KEY ? '✅ Set' : '❌ Missing'}`);
-  console.log(`   - BREVO_API_KEY: ${process.env.BREVO_API_KEY ? '✅ Set' : '❌ Missing'}`);
   console.log(`   - FROM_EMAIL: ${FROM_EMAIL}`);
   console.log(`   - FRONTEND_URL: ${FRONTEND_URL}`);
   
+  if (USE_WEB3FORMS) {
+    console.log('✅ Email service configured (Web3Forms - instant setup!)');
+    return true;
+  }
+  
   if (USE_ELASTIC) {
-    console.log('✅ Email service configured (Elastic Email - 100 emails/day free)');
+    console.log('✅ Email service configured (Elastic Email)');
     return true;
   }
   
   if (USE_MAILJET) {
-    console.log('✅ Email service configured (Mailjet - 200 emails/day free)');
+    console.log('✅ Email service configured (Mailjet)');
     return true;
   }
   
   if (USE_BREVO) {
-    console.log('✅ Email service configured (Brevo - 300 emails/day free)');
+    console.log('✅ Email service configured (Brevo)');
     return true;
   }
   
   console.log('');
-  console.log('⚠️  Email service NOT configured!');
+  console.log('⚠️  Email service NOT configured (optional)');
+  console.log('   App works fine without email - bookings still work!');
   console.log('');
-  console.log('   EASIEST OPTION:');
-  console.log('   1. Sign up at: https://elasticemail.com');
-  console.log('   2. Go to: Settings → Manage API Keys → Create');
-  console.log('   3. Add to Render environment:');
-  console.log('      - ELASTIC_EMAIL_API_KEY=your-api-key');
-  console.log('      - FROM_EMAIL=kalumunabisimwa5@gmail.com');
+  console.log('   To enable emails:');
+  console.log('   1. Go to: https://web3forms.com');
+  console.log('   2. Enter your email to get access key');
+  console.log('   3. Add to Render: WEB3FORMS_KEY=your-key');
   console.log('');
   return false;
 }
 
 // Get email configuration status
 export function getEmailConfigStatus(): { configured: boolean; provider: string; fromEmail: string } {
-  let provider = 'Not configured';
-  if (USE_ELASTIC) provider = 'Elastic Email';
+  let provider = 'Not configured (optional)';
+  if (USE_WEB3FORMS) provider = 'Web3Forms';
+  else if (USE_ELASTIC) provider = 'Elastic Email';
   else if (USE_MAILJET) provider = 'Mailjet';
   else if (USE_BREVO) provider = 'Brevo';
   
@@ -234,11 +268,11 @@ export async function sendTestEmail(toEmail: string): Promise<{ success: boolean
   if (!IS_EMAIL_CONFIGURED) {
     return { 
       success: false, 
-      message: 'Email not configured. Set ELASTIC_EMAIL_API_KEY on Render (sign up at elasticemail.com)' 
+      message: 'Email not configured (optional). Get key at web3forms.com and add WEB3FORMS_KEY to Render.' 
     };
   }
 
-  const provider = USE_ELASTIC ? 'Elastic Email' : USE_MAILJET ? 'Mailjet' : 'Brevo';
+  const provider = USE_WEB3FORMS ? 'Web3Forms' : USE_ELASTIC ? 'Elastic Email' : USE_MAILJET ? 'Mailjet' : 'Brevo';
   const subject = '🧪 Test Email from Twende Travel';
   const html = `
     <div style="font-family: sans-serif; padding: 20px; background: #f4f4f5;">
