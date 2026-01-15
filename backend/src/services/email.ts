@@ -306,6 +306,7 @@ interface BookingDetails {
   origin: string;
   destination: string;
   departureTime: string;
+  arrivalTime?: string | null;
   seats: number;
   price: number;
   currency: string;
