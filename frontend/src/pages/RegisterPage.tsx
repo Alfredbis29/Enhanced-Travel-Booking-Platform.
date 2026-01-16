@@ -19,10 +19,21 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { setFormData(prev => ({ ...prev, [e.target.name]: e.target.value })) }
 
+  // Password validation to match backend requirements
+  const validatePassword = (password: string): string | null => {
+    if (password.length < 8) return 'Password must be at least 8 characters'
+    if (!/[a-z]/.test(password)) return 'Password must contain a lowercase letter'
+    if (!/[A-Z]/.test(password)) return 'Password must contain an uppercase letter'
+    if (!/\d/.test(password)) return 'Password must contain a number'
+    if (!/[@$!%*?&#^()_+=\-]/.test(password)) return 'Password must contain a special character (@$!%*?&#^)'
+    return null
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.first_name || !formData.last_name || !formData.email || !formData.password) { toast({ title: 'Missing fields', description: 'Please fill in all required fields', variant: 'destructive' }); return }
-    if (formData.password.length < 6) { toast({ title: 'Password too short', description: 'Password must be at least 6 characters', variant: 'destructive' }); return }
+    const passwordError = validatePassword(formData.password)
+    if (passwordError) { toast({ title: 'Weak password', description: passwordError, variant: 'destructive' }); return }
     if (formData.password !== formData.confirmPassword) { toast({ title: 'Passwords don\'t match', description: 'Please make sure your passwords match', variant: 'destructive' }); return }
     setIsLoading(true)
     try {
@@ -30,7 +41,11 @@ export default function RegisterPage() {
       setAuth(response.data.user, response.data.token)
       toast({ title: 'Welcome to Twende!', description: 'Your account has been created. Let\'s Go!', variant: 'success' })
       navigate('/')
-    } catch (error: unknown) { console.error('Registration failed:', error); toast({ title: 'Registration failed', description: 'Registration failed. Please try again.', variant: 'destructive' }) } 
+    } catch (error: unknown) { 
+      console.error('Registration failed:', error)
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Registration failed. Please try again.'
+      toast({ title: 'Registration failed', description: errorMessage, variant: 'destructive' }) 
+    } 
     finally { setIsLoading(false) }
   }
 
@@ -46,7 +61,7 @@ export default function RegisterPage() {
             <div className="grid grid-cols-2 gap-4"><div className="space-y-2"><Label htmlFor="first_name">First Name</Label><Input id="first_name" name="first_name" placeholder="John" value={formData.first_name} onChange={handleChange} icon={<User className="h-4 w-4" />} /></div><div className="space-y-2"><Label htmlFor="last_name">Last Name</Label><Input id="last_name" name="last_name" placeholder="Doe" value={formData.last_name} onChange={handleChange} /></div></div>
             <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} icon={<Mail className="h-4 w-4" />} autoComplete="email" /></div>
             <div className="space-y-2"><Label htmlFor="phone">Phone (Optional)</Label><Input id="phone" name="phone" type="tel" placeholder="+254 700 123 456" value={formData.phone} onChange={handleChange} icon={<Phone className="h-4 w-4" />} /></div>
-            <div className="space-y-2"><Label htmlFor="password">Password</Label><Input id="password" name="password" type="password" placeholder="••••••••" value={formData.password} onChange={handleChange} icon={<Lock className="h-4 w-4" />} autoComplete="new-password" /></div>
+            <div className="space-y-2"><Label htmlFor="password">Password</Label><Input id="password" name="password" type="password" placeholder="••••••••" value={formData.password} onChange={handleChange} icon={<Lock className="h-4 w-4" />} autoComplete="new-password" /><p className="text-xs text-muted-foreground">Min 8 chars with uppercase, lowercase, number & special char</p></div>
             <div className="space-y-2"><Label htmlFor="confirmPassword">Confirm Password</Label><Input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} icon={<Lock className="h-4 w-4" />} autoComplete="new-password" /></div>
             <Button type="submit" variant="gradient" className="w-full" size="lg" disabled={isLoading}>{isLoading ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating account...</>) : (<>Create Account<ArrowRight className="ml-2 h-4 w-4" /></>)}</Button>
           </form>
