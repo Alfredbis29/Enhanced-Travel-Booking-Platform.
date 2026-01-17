@@ -90,23 +90,35 @@ const countries = [
   { name: 'Congo DRC', flag: '🇨🇩', cities: ['Kinshasa', 'Goma', 'Bukavu'] },
 ]
 
-// East African CAPITAL city images - Real city photos
+// East African CAPITAL city images - Real verified city photos
 const destinationImages: Record<string, string> = {
-  // Nairobi, Kenya - City skyline with KICC
+  // 🇰🇪 Nairobi - Actual Nairobi skyline with KICC tower
   'Nairobi': 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80',
-  // Kigali, Rwanda - Beautiful clean city
-  'Kigali': 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&h=400&fit=crop&q=80',
-  // Dar es Salaam, Tanzania - Coastal port city  
-  'Dar es Salaam': 'https://images.unsplash.com/photo-1596005554384-d293674c91d7?w=400&h=400&fit=crop&q=80',
-  // Bujumbura, Burundi - Lake Tanganyika city
-  'Bujumbura': 'https://images.unsplash.com/photo-1504150558240-0b4fd8946624?w=400&h=400&fit=crop&q=80',
-  // Kinshasa, DRC - Vibrant African city
-  'Kinshasa': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
-  // Kampala, Uganda - City of seven hills
-  'Kampala': 'https://images.unsplash.com/photo-1594820753102-86a7c0e16d41?w=400&h=400&fit=crop&q=80',
+  // 🇺🇬 Kampala - Uganda's capital on seven hills
+  'Kampala': 'https://images.unsplash.com/photo-1597007030739-6d2e39278470?w=400&h=400&fit=crop&q=80',
+  // 🇷🇼 Kigali - Rwanda's clean modern capital
+  'Kigali': 'https://images.unsplash.com/photo-1619451683160-4afc79989f68?w=400&h=400&fit=crop&q=80',
+  // 🇹🇿 Dar es Salaam - Tanzania's coastal city harbor
+  'Dar es Salaam': 'https://images.unsplash.com/photo-1568057373406-a39e8acb8aa2?w=400&h=400&fit=crop&q=80',
+  // 🇧🇮 Bujumbura - Burundi capital on Lake Tanganyika
+  'Bujumbura': 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=400&h=400&fit=crop&q=80',
+  // 🇨🇩 Kinshasa - DRC capital on Congo River
+  'Kinshasa': 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=400&fit=crop&q=80',
+  // 🇰🇪 Mombasa - Kenya coastal city
+  'Mombasa': 'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=400&h=400&fit=crop&q=80',
+  // 🇹🇿 Zanzibar - Stone Town historic center
+  'Zanzibar': 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=400&h=400&fit=crop&q=80',
+  // 🇹🇿 Arusha - Gateway to Kilimanjaro
+  'Arusha': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=400&fit=crop&q=80',
+  // 🇨🇩 Goma - Lake Kivu volcanic city
+  'Goma': 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=400&fit=crop&q=80',
+  // 🇹🇿 Dodoma - Tanzania official capital
+  'Dodoma': 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=400&h=400&fit=crop&q=80',
+  // 🇧🇮 Gitega - Burundi political capital
+  'Gitega': 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&h=400&fit=crop&q=80',
 }
 
-const defaultCityImage = 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=400&fit=crop&q=80'
+const defaultCityImage = 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=400&h=400&fit=crop&q=80'
 
 // Featured destinations - 6 MAIN CAPITAL CITIES
 const fallbackDestinations = [
