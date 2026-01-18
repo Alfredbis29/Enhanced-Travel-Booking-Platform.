@@ -35,7 +35,14 @@ function App() {
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
             <Route path="/city/:cityName" element={<CityDetailsPage />} />
-            <Route path="/booking/:tripId" element={<BookingPage />} />
+            <Route
+              path="/booking/:tripId"
+              element={
+                <ProtectedRoute>
+                  <BookingPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/bookings"
               element={

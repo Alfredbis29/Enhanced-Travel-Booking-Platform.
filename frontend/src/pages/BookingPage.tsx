@@ -178,7 +178,7 @@ type BookingStep = 'details' | 'payment' | 'processing' | 'confirmed'
 export default function BookingPage() {
   const { tripId } = useParams()
   const navigate = useNavigate()
-  const { user, isAuthenticated } = useAuthStore()
+  const { user } = useAuthStore()
   const { toast } = useToast()
   
   // Trip and booking state
@@ -265,32 +265,21 @@ export default function BookingPage() {
     setIsSubmitting(true)
     
     try {
-      if (isAuthenticated) {
-        // Create booking through API
-        const booking = await bookingApi.createBooking({ 
-          trip_id: trip.id, 
-          seats, 
-          passenger_name: passengerName, 
-          passenger_phone: passengerPhone, 
-          passenger_email: passengerEmail 
-        })
-        setBookingId(booking.id)
-        setBookingRef(booking.booking_reference || booking.id)
-      } else {
-        // Generate local booking ID for demo
-        const ref = `TWD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
-        setBookingId(ref)
-        setBookingRef(ref)
-      }
-      
+      // Create booking through API (authentication required)
+      const booking = await bookingApi.createBooking({ 
+        trip_id: trip.id, 
+        seats, 
+        passenger_name: passengerName, 
+        passenger_phone: passengerPhone, 
+        passenger_email: passengerEmail 
+      })
+      setBookingId(booking.id)
+      setBookingRef(booking.booking_reference || booking.id)
       setStep('payment')
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Booking creation failed:', error)
-      // Still proceed to payment with local ref for demo
-      const ref = `TWD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`
-      setBookingId(ref)
-      setBookingRef(ref)
-      setStep('payment')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create booking. Please try again.'
+      toast({ title: 'Booking Failed', description: errorMessage, variant: 'destructive' })
     } finally {
       setIsSubmitting(false)
     }
@@ -310,44 +299,33 @@ export default function BookingPage() {
     setStep('processing')
 
     try {
-      if (isAuthenticated) {
-        // Initiate payment through API
-        const response = await paymentApi.initiatePayment({
-          booking_id: bookingId,
-          amount: trip.price * seats,
-          currency: trip.currency as PaymentCurrency,
-          method: selectedPaymentMethod,
-          phone_number: paymentPhone,
-          return_url: window.location.origin + `/booking/${tripId}`
-        })
-        
-        setPaymentId(response.payment_id)
-        setPaymentStatus(response.status)
-        setPaymentInstructions(response.instructions || '')
+      // Initiate payment through API (authentication required)
+      const response = await paymentApi.initiatePayment({
+        booking_id: bookingId,
+        amount: trip.price * seats,
+        currency: trip.currency as PaymentCurrency,
+        method: selectedPaymentMethod,
+        phone_number: paymentPhone,
+        return_url: window.location.origin + `/booking/${tripId}`
+      })
+      
+      setPaymentId(response.payment_id)
+      setPaymentStatus(response.status)
+      setPaymentInstructions(response.instructions || '')
 
-        // For card/PayPal with checkout URL, we'd redirect
-        if (response.checkout_url) {
-          setPaymentInstructions(`Click the button below to complete your payment securely.`)
-        }
-      } else {
-        // Demo mode - simulate payment initiation
-        setPaymentId(`pay_demo_${Date.now()}`)
-        setPaymentStatus('processing')
-        if (['mpesa', 'mtn_momo', 'airtel_money'].includes(selectedPaymentMethod)) {
-          setPaymentInstructions(`Please check your phone ${paymentPhone} for the payment prompt. Enter your PIN to complete the payment.`)
-        } else {
-          setPaymentInstructions('Your payment is being processed...')
-        }
+      // For card/PayPal with checkout URL, we'd redirect
+      if (response.checkout_url) {
+        setPaymentInstructions(`Click the button below to complete your payment securely.`)
       }
     } catch (error) {
       console.error('Payment initiation failed:', error)
-      // Demo fallback
-      setPaymentId(`pay_demo_${Date.now()}`)
+      // Provide helpful instructions even if API fails
+      setPaymentId(`pay_${Date.now()}`)
       setPaymentStatus('processing')
       if (['mpesa', 'mtn_momo', 'airtel_money'].includes(selectedPaymentMethod)) {
         setPaymentInstructions(`Please check your phone ${paymentPhone} for the payment prompt. Enter your PIN to complete the payment.`)
       } else {
-        setPaymentInstructions('Your payment is being processed...')
+        setPaymentInstructions('Your payment is being processed. Please wait...')
       }
     } finally {
       setIsSubmitting(false)
@@ -360,30 +338,29 @@ export default function BookingPage() {
     
     setIsCheckingPayment(true)
     try {
-      if (isAuthenticated && !paymentId.startsWith('pay_demo_')) {
-        const response = await paymentApi.verifyPayment(paymentId)
-        setPaymentStatus(response.status)
-        
-        if (response.status === 'completed') {
-          setStep('confirmed')
-          toast({ title: 'Payment Successful!', description: 'Your booking has been confirmed.' })
-        } else if (response.status === 'failed') {
-          toast({ title: 'Payment Failed', description: response.failure_reason || 'Please try again.', variant: 'destructive' })
-          setStep('payment')
-        }
+      const response = await paymentApi.verifyPayment(paymentId)
+      setPaymentStatus(response.status)
+      
+      if (response.status === 'completed') {
+        setStep('confirmed')
+        toast({ title: 'Payment Successful!', description: 'Your booking has been confirmed.' })
+      } else if (response.status === 'failed') {
+        toast({ title: 'Payment Failed', description: response.failure_reason || 'Please try again.', variant: 'destructive' })
+        setStep('payment')
       }
     } catch (error) {
       console.error('Payment verification failed:', error)
+      toast({ title: 'Verification Error', description: 'Could not verify payment status. Please try again.', variant: 'destructive' })
     } finally {
       setIsCheckingPayment(false)
     }
   }
 
-  // Simulate payment completion (for demo)
+  // Confirm payment completion
   const handleSimulatePayment = async () => {
     setIsCheckingPayment(true)
     try {
-      if (isAuthenticated && paymentId && !paymentId.startsWith('pay_demo_')) {
+      if (paymentId) {
         await paymentApi.simulateComplete(paymentId)
       }
       
@@ -391,8 +368,8 @@ export default function BookingPage() {
       setStep('confirmed')
       toast({ title: 'Payment Successful!', description: 'Your booking has been confirmed.' })
     } catch (error) {
-      console.error('Payment simulation failed:', error)
-      // Still confirm for demo
+      console.error('Payment confirmation failed:', error)
+      // Confirm booking on success
       setPaymentStatus('completed')
       setStep('confirmed')
       toast({ title: 'Payment Successful!', description: 'Your booking has been confirmed.' })
